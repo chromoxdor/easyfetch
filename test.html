@@ -75,7 +75,7 @@
         cursor: default;
         padding: 4.2px;
         border-radius: 5px;
-        width: 140px;
+        width: 150px;
         min-height: 75px;
         flex-direction: column;
         background: #ebebeb;
@@ -150,7 +150,7 @@
     }
 
     .slidersmall {
-        width: 115% !important;
+        width: 113% !important;
     }
 
     .slider::-webkit-slider-thumb {
@@ -274,7 +274,7 @@
         padding: 4.2px;
         flex-wrap: nowrap;
         border-radius: 5px;
-        width: 140px;
+        width: 150px;
         overflow: hidden;
         position: relative;
         align-items: stretch;
@@ -417,7 +417,7 @@
         }
 
         .slider {
-            width: 115%;
+            width: 113%;
         }
 
         #sliderList {
@@ -557,8 +557,10 @@
         var nodeNr;
         var modeIp;
         var nodePath;
+        var nodePath2;
         window.isittime = 1;
         async function fetchJson() {
+            someoneEn = 0;
             if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
             if (isittime) {
                 response = await fetch(jsonPath);
@@ -569,137 +571,159 @@
                 unit = myJson.WiFi.Hostname;
                 document.getElementById('unitId').innerHTML = unit;
                 document.getElementById('unitT').innerHTML = unit;
-                myJson.Sensors.forEach(sensor => {
-                    utton = sensor.TaskName;
-                    /* Has the entry TaskValues
-                    and is is not in Blacklist? */
-                    if (sensor.TaskValues && !blackList.includes(sensor.TaskName) && sensor.TaskEnabled.includes("true") && !sensor.TaskName.includes("XX")) {
-                        firstItem = true;
-                        sensor.TaskValues.forEach(item => {
-                            if (firstItem) {
-                                firstItem = false;
-                                sliderValue = item.Value;
-                                num2Value = item.Value.toFixed(item.NrDecimals);
-                                slMax = 1023;
-                                slMin = 0;
-                                slStep = 1;
-                                whichSl = 0;
-                                slT1 = 0;
-                                slT2 = 1440;
-                                if ((item.Name).includes("btnState")) {
-                                    if (item.Name === "btnStateC" || item.Value === 1) {
-                                        html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
+                console.log("???", someoneEn);
+                if (!myJson.Sensors.length) {
+                    html += '<div class="sensorset clickables" onclick="window.location.href =nodePath;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
+                    html2 += '<div></div>';
+                    html3 += '<div></div>';
+                    document.getElementById('sensorList').innerHTML = html;
+                    document.getElementById('sliderList').innerHTML = html2;
+                    document.getElementById('bigNumber').innerHTML = html3;
+                    console.log("nix", myJson.Sensors);
+                }
+                else {
+                    myJson.Sensors.forEach(sensor => {
+                        utton = sensor.TaskName;
+                        /* Has the entry TaskValues
+                        and is is not in Blacklist? */
+                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !blackList.includes(sensor.TaskName) && !sensor.TaskName.includes("XX")) {
+                            someoneEn = 1;
+                            firstItem = true;
+                            sensor.TaskValues.forEach(item => {
+                                if (firstItem) {
+                                    firstItem = false;
+                                    sliderValue = item.Value;
+                                    num2Value = item.Value.toFixed(item.NrDecimals);
+                                    slMax = 1023;
+                                    slMin = 0;
+                                    slStep = 1;
+                                    whichSl = 0;
+                                    slT1 = 0;
+                                    slT2 = 1440;
+                                    if ((item.Name).includes("btnState")) {
+                                        if (item.Name === "btnStateC" || item.Value === 1) {
+                                            html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
+                                        }
+                                        else {
+                                            html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
+                                        }
                                     }
+                                    else if (item.Name === "allNodes") {
+
+                                        html += '<div class="nodec sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
+                                    }
+                                    /*slider*/
+                                    else if (item.Name === "slT") {
+                                        whichSl = 4;
+                                    }
+                                    else if ((item.Name).includes("slVal")) {
+                                        whichSl = 1;
+                                        if (item.Name === "noslVal") {
+                                            whichSl = 2;
+                                        }
+                                        else {
+                                            whichSl = 3;
+                                        }
+                                    }
+                                    /*big*/
+                                    else if ((sensor.TaskName).includes("bigVal")) {
+
+                                        if (sensor.TaskValues.length === 1) {
+                                            bigLength = 1;
+                                        }
+                                        else if (sensor.TaskValues.length === 2 && bigLength < 3) {
+                                            bigLength = 2;
+                                        }
+                                        else if (sensor.TaskValues.length === 3 && bigLength < 4) {
+                                            bigLength = 3;
+                                        }
+                                        else if (sensor.TaskValues.length === 4) {
+                                            bigLength = 4;
+                                        }
+                                        html3 += '<div class="bigNum">';
+                                    }
+                                    /*everything else*/
                                     else {
+
                                         html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
                                     }
                                 }
-                                else if (item.Name === "allNodes") {
+                                /*add container with name and value to HTML:*/
 
-                                    html += '<div class="nodec sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
+                                if ((item.Name).includes("btnState")) {
+                                    html += '<div class="values">&nbsp;</div>';
                                 }
-                                /*slider*/
-                                else if (item.Name === "slT") {
-                                    whichSl = 4;
+                                else if (item.Name === "allNodes") {
+                                    html += '<div class="values">&nbsp;</div>';
                                 }
                                 else if ((item.Name).includes("slVal")) {
-                                    whichSl = 1;
-                                    if (item.Name === "noslVal") {
-                                        whichSl = 2;
+                                }
+                                else if (item.Name === "slMin") {
+                                    slMin = item.Value;
+                                }
+                                else if (item.Name === "slMax") {
+                                    slMax = item.Value;
+
+                                }
+                                else if (item.Name === "slStep") {
+                                    slStep = item.Value;
+                                }
+                                else if (item.Name === "slT") {
+                                    slT1 = item.Value;
+                                }
+                                else if (item.Name === "slT2") {
+                                    slT2 = item.Value;
+                                }
+                                else if ((sensor.TaskName).includes("bigVal")) {
+                                    if ((item.Name).toLowerCase().includes("temp")) {
+                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">&#8451;</span> </div>' + '</div>';
+                                    } else if ((item.Name).toLowerCase().includes("hum")) {
+                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
+                                    }
+                                    else if ((item.Name).toLowerCase().includes("clock", "uhr")) {
+                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                     else {
-                                        whichSl = 3;
+                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                 }
-                                /*big*/
-                                else if ((sensor.TaskName).includes("bigVal")) {
-
-                                    if (sensor.TaskValues.length === 1) {
-                                        bigLength = 1;
-                                    }
-                                    else if (sensor.TaskValues.length === 2 && bigLength < 3) {
-                                        bigLength = 2;
-                                    }
-                                    else if (sensor.TaskValues.length === 3 && bigLength < 4) {
-                                        bigLength = 3;
-                                    }
-                                    else if (sensor.TaskValues.length === 4) {
-                                        bigLength = 4;
-                                    }
-                                    html3 += '<div class="bigNum">';
+                                else if (!(item.Name === "slMax" || item.Name === "slMin" || item.Name === "slStep" || item.Name === "slValT" || item.Name === "slValT2")) {
+                                    html += '<div class="values">' + '<div>' + item.Name + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                 }
-                                /*everything else*/
-                                else {
+                            });
 
-                                    html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
-                                }
+                            html += '</div>';
+                            if (whichSl === 2) {
+                                html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '</div>' + '</div>';
                             }
-                            /*add container with name and value to HTML:*/
-
-                            if ((item.Name).includes("btnState")) {
-                                html += '<div class="values">&nbsp;</div>';
+                            else if (whichSl === 3) {
+                                html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + '</div>' + '</div>' + '</div>';
                             }
-                            else if (item.Name === "allNodes") {
-                                html += '<div class="values">&nbsp;</div>';
+                            else if (whichSl === 4) {
+                                var hour1 = Math.floor(slT1 / 60);
+                                var minute1 = slT1 % 60;
+                                const padded1 = minute1.toString().padStart(2, "0");
+                                var hour2 = Math.floor(slT2 / 60);
+                                var minute2 = slT2 % 60;
+                                const padded2 = minute2.toString().padStart(2, "0");
+                                html2 += '<div class="slTimeSetWrap" style="font-weight:bold;font-size: 14pt;">' + utton + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + utton + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + utton + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
                             }
-                            else if ((item.Name).includes("slVal")) {
-                            }
-                            else if (item.Name === "slMin") {
-                                slMin = item.Value;
-                            }
-                            else if (item.Name === "slMax") {
-                                slMax = item.Value;
-
-                            }
-                            else if (item.Name === "slStep") {
-                                slStep = item.Value;
-                            }
-                            else if (item.Name === "slT") {
-                                slT1 = item.Value;
-                            }
-                            else if (item.Name === "slT2") {
-                                slT2 = item.Value;
-                            }
-                            else if ((sensor.TaskName).includes("bigVal")) {
-                                if ((item.Name).toLowerCase().includes("temp")) {
-                                    html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">&#8451;</span> </div>' + '</div>';
-                                } else if ((item.Name).toLowerCase().includes("hum")) {
-                                    html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
-                                }
-                                else if ((item.Name).toLowerCase().includes("clock", "uhr")) {
-                                    html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
-                                }
-                                else {
-                                    html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
-                                }
-                            }
-                            else if (!(item.Name === "slMax" || item.Name === "slMin" || item.Name === "slStep" || item.Name === "slValT" || item.Name === "slValT2")) {
-                                html += '<div class="values">' + '<div>' + item.Name + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
-                            }
-                        });
-
-                        html += '</div>';
-                        if (whichSl === 2) {
-                            html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '</div>' + '</div>';
+                            html3 += '</div>';
+                            document.getElementById('sensorList').innerHTML = html;
+                            document.getElementById('sliderList').innerHTML = html2;
+                            document.getElementById('bigNumber').innerHTML = html3;
                         }
-                        else if (whichSl === 3) {
-                            html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + '</div>' + '</div>' + '</div>';
+                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; }
+                        else if (sensor.TaskEnabled === "false" && !someoneEn) {
+                            html += '<div class="sensorset clickables" onclick="window.location.href =nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
+                            html2 += '<div></div>';
+                            html3 += '<div></div>';
+                            document.getElementById('sensorList').innerHTML = html;
+                            document.getElementById('sliderList').innerHTML = html2;
+                            document.getElementById('bigNumber').innerHTML = html3;
                         }
-                        else if (whichSl === 4) {
-                            var hour1 = Math.floor(slT1 / 60);
-                            var minute1 = slT1 % 60;
-                            const padded1 = minute1.toString().padStart(2, "0");
-                            var hour2 = Math.floor(slT2 / 60);
-                            var minute2 = slT2 % 60;
-                            const padded2 = minute2.toString().padStart(2, "0");
-                            html2 += '<div class="slTimeSetWrap" style="font-weight:bold;font-size: 14pt;">' + utton + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + utton + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + utton + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
-                        }
-                        html3 += '</div>';
-                        document.getElementById('sensorList').innerHTML = html;
-                        document.getElementById('sliderList').innerHTML = html2;
-                        document.getElementById('bigNumber').innerHTML = html3;
-                    }else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled.includes("true") && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; }
-                });
+                    });
+                }
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
                     firstRun = false;
@@ -859,7 +883,8 @@
             setTimeout(fetchJson, 300);
         }
         function openNav(event) {
-            event.stopPropagation();
+
+            //event.stopPropagation();
             document.getElementById("mySidenav").style.width = "280px";
             document.getElementById("menueList").style.color = "white";
         }
@@ -875,7 +900,7 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                html4 += '<a id="' + node.name + '" class="nc" onclick="nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
+                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
                     var xhr = new XMLHttpRequest();
                     if (isLongNode) {
@@ -889,12 +914,14 @@
             })
             i = 0
             document.getElementById('menueList').innerHTML = html4;
+            longPressN();
             isLongNode = 0;
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
             nodeNr = nodeInfos.nr;
             nodePath = `http://${nodeInfos.ip}/tools`;
+            nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
             window.isittime = 1;
             setTimeout(fetchJson, 10);
@@ -931,12 +958,26 @@
                 element.msRequestFullscreen();
             }
         }
+        function longPressN(event) {
+            const longButtons = document.querySelectorAll(".nc");
+            longButtons.forEach(longButton => {
+                longButton.addEventListener('long-press', function (e) {
+                    console.log("hit");
+                    nodeInfos = nodeInfos[event];
+                    nodePath = `http://${nodeInfos.ip}/tools`;
+                    window.open(nodePath, '_blank');
+                });
+            });
+        }
+
+
         function longPressB() {
             const longButtons = document.querySelectorAll(".clickables");
             longButtons.forEach(longButton => {
                 longButton.addEventListener('long-press', function (e) {
                     const lBName = longButton.querySelector(".sensors");
                     const lBNode = longButton.querySelector(".nodes");
+                    console.log(lBName, lBNode);
                     var xhr = new XMLHttpRequest();
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4) {
@@ -948,13 +989,14 @@
                         getNodes();
                     }
                     else {
-                        xhr.open('get', '/control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true);
+                        xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true);
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
 
                         setTimeout(fetchJson, 300);
                     }
+
                 });
             });
         }
@@ -984,7 +1026,7 @@
             }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
                 var e = t.target,
 
-                    u = parseInt(e.getAttribute("data-long-press-delay") || "900", 10);
+                    u = parseInt(e.getAttribute("data-long-press-delay") || "800", 10);
                 o = setTimeout(n.bind(e), u)
                 window.isittime = 0;
             }), e.addEventListener(a, function (t) {
@@ -1000,7 +1042,7 @@
 
 </body>
 
-<body onclick="closeNav()">
+<body>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a id="menueList">no nodes found...</a>
