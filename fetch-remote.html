@@ -356,7 +356,7 @@
         left: 0;
         background-color: #111111d9;
         overflow-x: hidden;
-        transition: 0.5s;
+        transition: 0.8s;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -370,8 +370,9 @@
         text-decoration: none;
         font-size: 25px;
         display: block;
-        transition: 0.3s;
-        color: white;
+        transition-timing-function: ease-out !important;
+        transition: 0.2s;
+        color: inherit;
         background: transparent;
         overflow-wrap: anywhere;
     }
@@ -538,7 +539,7 @@
         }
 
         .sidenav a {
-            color: white
+            color: inherit;
         }
     }
 </STYLE>
@@ -555,9 +556,10 @@
         var jsonPath;
         var nodeNr;
         var modeIp;
+        var nodePath;
         window.isittime = 1;
         async function fetchJson() {
-            if (!jsonPath) { jsonPath = `json`; }
+            if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
             if (isittime) {
                 response = await fetch(jsonPath);
                 myJson = await response.json();
@@ -861,9 +863,11 @@
         function openNav(event) {
             event.stopPropagation();
             document.getElementById("mySidenav").style.width = "280px";
+            document.getElementById("menueList").style.color = "white";   
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("menueList").style.color = "transparent";
         }
         async function getNodes(utton) {
             response = await fetch("json");
@@ -873,7 +877,7 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                html4 += '<a id="' + node.name + '" onclick="nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
+                html4 += '<a id="' + node.name + '" class="nc" onclick="nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
                     var xhr = new XMLHttpRequest();
                     if (isLongNode) {

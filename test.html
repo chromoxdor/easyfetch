@@ -553,10 +553,15 @@
         var bigLength = 0;
         var isLongNode;
         var lutton;
+        var jsonPath;
+        var nodeNr;
+        var modeIp;
+        var nodePath;
         window.isittime = 1;
         async function fetchJson() {
+            if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
             if (isittime) {
-                response = await fetch("json");
+                response = await fetch(jsonPath);
                 myJson = await response.json();
                 let html = '';
                 let html2 = '';
@@ -822,7 +827,7 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=event,' + slider.id + '=' + event.target.value, true);
+            xhr.open('get', '/control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '=' + event.target.value + '"', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -837,7 +842,7 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=event,' + slider.id + 'event=' + sliderAmount, true);
+            xhr.open('get', '/control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + 'event=' + sliderAmount + '"', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -849,7 +854,7 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=event,' + utton + 'Event', true);
+            xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -868,8 +873,11 @@
             response = await fetch("json");
             myJson = await response.json();
             let html4 = '';
+            nodeInfos = myJson.nodes;
+            let i = -1;
             myJson.nodes.forEach(node => {
-                html4 += `<a id="${node.name}" onclick="window.location.href = 'http://${node.ip}'">${node.name}<span class="numberUnit"> ${node.nr}</span></a>`;
+                i++
+                html4 += '<a id="' + node.name + '" class="nc" onclick="nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
                     var xhr = new XMLHttpRequest();
                     if (isLongNode) {
@@ -877,12 +885,21 @@
                     }
                     else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"', true); }
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
+                    window.isittime = 1;
+                    setTimeout(fetchJson, 300);
                 }
             })
+            i = 0
             document.getElementById('menueList').innerHTML = html4;
             isLongNode = 0;
+        }
+        function nodeChange(event) {
+            nodeInfos = nodeInfos[event];
+            nodeNr = nodeInfos.nr;
+            nodePath = `http://${nodeInfos.ip}/tools`;
+            jsonPath = `http://${nodeInfos.ip}/json`;
             window.isittime = 1;
-            setTimeout(fetchJson, 300);
+            setTimeout(fetchJson, 10);
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth
@@ -933,7 +950,7 @@
                         getNodes();
                     }
                     else {
-                        xhr.open('get', 'control?cmd=event,' + lBName.textContent + 'Long', true);
+                        xhr.open('get', '/control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true);
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
@@ -999,7 +1016,7 @@
         </div>
         <div id="opener">
             <span style="font-size:30px;cursor:pointer" onclick="openNav(event); getNodes()">&#9776;</span>
-            <span style="font-size:30px;cursor:pointer" onclick="window.location.href = '/tools';">&#8962;</span>
+            <span style="font-size:30px;cursor:pointer" onclick="window.location.href = nodePath;">&#8962;</span>
         </div>
     </div>
 </body>

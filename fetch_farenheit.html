@@ -356,7 +356,7 @@
         left: 0;
         background-color: #111111d9;
         overflow-x: hidden;
-        transition: 0.5s;
+        transition: 0.8s;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -370,8 +370,9 @@
         text-decoration: none;
         font-size: 25px;
         display: block;
-        transition: 0.3s;
-        color: white;
+        transition-timing-function: ease-out !important;
+        transition: 0.2s;
+        color: inherit;
         background: transparent;
         overflow-wrap: anywhere;
     }
@@ -505,9 +506,11 @@
             height: 100vh;
             background: #444444;
         }
-        .nodec{
+
+        .nodec {
             background-color: #253341 !important
         }
+
         .on {
             background-color: #44607a !important
         }
@@ -536,7 +539,7 @@
         }
 
         .sidenav a {
-            color: white
+            color: inherit;
         }
     }
 </STYLE>
@@ -605,7 +608,7 @@
                                 }
                                 /*big*/
                                 else if ((sensor.TaskName).includes("bigVal")) {
-                                    
+
                                     if (sensor.TaskValues.length === 1) {
                                         bigLength = 1;
                                     }
@@ -759,7 +762,6 @@
                 for (var i = 0; i < list2.length; ++i) {
                     list2[i].classList.add('slidersmall');
                 }
-                console.log(bigLength, numSet)
             }
             else {
                 list = document.querySelectorAll(".slTS");
@@ -856,9 +858,11 @@
         function openNav(event) {
             event.stopPropagation();
             document.getElementById("mySidenav").style.width = "280px";
+            document.getElementById("menueList").style.color = "white";
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("menueList").style.color = "transparent";
         }
         async function getNodes(utton) {
             response = await fetch("json");
@@ -912,7 +916,7 @@
                 element.msRequestFullscreen();
             }
         }
-        function longPressB() {           
+        function longPressB() {
             const longButtons = document.querySelectorAll(".sensorset");
             longButtons.forEach(longButton => {
                 longButton.addEventListener('long-press', function (e) {
@@ -933,49 +937,49 @@
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
-                       
+
                         setTimeout(fetchJson, 300);
                     }
                 });
             });
         }
-! function(t, e) {
-  "use strict";
-  function n() {
-    this.dispatchEvent(new CustomEvent("long-press", {
-    
-      bubbles: !0,
-      cancelable: !0
-    })), clearTimeout(o)
-  }
-  var o = null,
-    u = "ontouchstart" in t || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
-    s = u ? "touchstart" : "mousedown",
-    i = u ? "touchcancel" : "mouseout",
-    a = u ? "touchend" : "mouseup",
-    c = u ? "touchmove" : "mousemove";
-  "initCustomEvent" in e.createEvent("CustomEvent") && (t.CustomEvent = function(t, n) {
-    n = n || {
-      bubbles: !1,
-      cancelable: !1,
-      detail: void 0
-    };
-    var o = e.createEvent("CustomEvent");
-    return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
-  }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function(t) {
-    var e = t.target,
-    
-      u = parseInt(e.getAttribute("data-long-press-delay") || "900", 10);
-    o = setTimeout(n.bind(e), u)
-    window.isittime = 0;
-  }), e.addEventListener(a, function(t) {
-    clearTimeout(o)
-  }), e.addEventListener(i, function(t) {
-    clearTimeout(o)
-  }), e.addEventListener(c, function(t) {
-    clearTimeout(o)
-  })
-}(this, document);
+        ! function (t, e) {
+            "use strict";
+            function n() {
+                this.dispatchEvent(new CustomEvent("long-press", {
+
+                    bubbles: !0,
+                    cancelable: !0
+                })), clearTimeout(o)
+            }
+            var o = null,
+                u = "ontouchstart" in t || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+                s = u ? "touchstart" : "mousedown",
+                i = u ? "touchcancel" : "mouseout",
+                a = u ? "touchend" : "mouseup",
+                c = u ? "touchmove" : "mousemove";
+            "initCustomEvent" in e.createEvent("CustomEvent") && (t.CustomEvent = function (t, n) {
+                n = n || {
+                    bubbles: !1,
+                    cancelable: !1,
+                    detail: void 0
+                };
+                var o = e.createEvent("CustomEvent");
+                return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
+            }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
+                var e = t.target,
+
+                    u = parseInt(e.getAttribute("data-long-press-delay") || "900", 10);
+                o = setTimeout(n.bind(e), u)
+                window.isittime = 0;
+            }), e.addEventListener(a, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(i, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(c, function (t) {
+                clearTimeout(o)
+            })
+        }(this, document);
 
     </script>
 
