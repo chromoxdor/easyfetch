@@ -561,6 +561,7 @@
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
+            onceNoTa=0;
             if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
             if (isittime) {
                 response = await fetch(jsonPath);
@@ -712,13 +713,14 @@
                             document.getElementById('bigNumber').innerHTML = html3;
                         }
                         else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; }
-                        else if (sensor.TaskEnabled === "false" && !someoneEn) {
+                        else if (sensor.TaskEnabled === "false" && !someoneEn && !onceNoTa) {
                             html += '<div class="sensorset clickables" onclick="window.location.href =nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
                             html2 += '<div></div>';
                             html3 += '<div></div>';
                             document.getElementById('sensorList').innerHTML = html;
                             document.getElementById('sliderList').innerHTML = html2;
                             document.getElementById('bigNumber').innerHTML = html3;
+                            onceNoTa=1;
                         }
                     });
                 }
