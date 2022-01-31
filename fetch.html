@@ -565,6 +565,7 @@
                 document.getElementById('unitId').innerHTML = unit;
                 document.getElementById('unitT').innerHTML = unit;
                 myJson.Sensors.forEach(sensor => {
+                    utton = sensor.TaskName;
                     /* Has the entry TaskValues
                     and is is not in Blacklist? */
                     if (sensor.TaskValues && !blackList.includes(sensor.TaskName) && sensor.TaskEnabled.includes("true") && !sensor.TaskName.includes("XX")) {
@@ -572,7 +573,6 @@
                         sensor.TaskValues.forEach(item => {
                             if (firstItem) {
                                 firstItem = false;
-                                utton = sensor.TaskName;
                                 sliderValue = item.Value;
                                 num2Value = item.Value.toFixed(item.NrDecimals);
                                 slMax = 1023;
@@ -737,7 +737,6 @@
             else if (bigLength === 4 || numSet > 9) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
                 document.getElementById("sensorList").classList.add('sensorL4');
-                list3[0].classList.remove('bigNumOne');
 
             }
             else {
@@ -917,7 +916,7 @@
             }
         }
         function longPressB() {
-            const longButtons = document.querySelectorAll(".sensorset");
+            const longButtons = document.querySelectorAll(".clickables");
             longButtons.forEach(longButton => {
                 longButton.addEventListener('long-press', function (e) {
                     const lBName = longButton.querySelector(".sensors");
