@@ -1,3 +1,6 @@
+If you like this please support the ESPeasy project and consider a donation: 
+https://github.com/letscontrolit/ESPEasy
+
 # easyfetch
 an alternative dashboard site in tile optic for espeasy
 some infos about how to use it can be found here: https://www.letscontrolit.com/forum/viewtopic.php?f=6&t=8811
