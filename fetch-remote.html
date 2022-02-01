@@ -867,7 +867,6 @@
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    alert("bad connection? try again....");
                 }
             }
             xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true);
@@ -899,7 +898,6 @@
                     var xhr = new XMLHttpRequest();
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4) {
-                            alert("bad connection? try again....");
                         }
                     }
                     if (isLongNode) {
