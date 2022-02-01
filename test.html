@@ -917,7 +917,7 @@
                     }
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
                 }
-                console.log(node.nr, unitNr);
+                console.log(node.nr, unitNr1);
             })
 
             i = 0
@@ -1002,7 +1002,7 @@
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
-                        setTimeout(fetchJson, 300);
+                        setTimeout(fetchJson, 100);
                     }
                 });
             });
