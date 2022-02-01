@@ -1,8 +1,11 @@
-# easyfetch
-an alternative dashboard site in tile optic for espeasy
-some infos about how to use it can be found here: https://www.letscontrolit.com/forum/viewtopic.php?f=6&t=8811
+I am not involved in the ESPeasy project but if you like my work please support the ESPeasy project and consider a donation: 
+https://github.com/letscontrolit/ESPEasy
 
-a manual will follow...
+# easyfetch
+An alternative dashboard site in tile optic for espeasy.
+Some infos about how to use it can be found here: https://www.letscontrolit.com/forum/viewtopic.php?f=6&t=8811
+
+A manual will follow...
 
 <img width="131" alt="level1" src="https://user-images.githubusercontent.com/33860956/151799468-3334ad98-c723-461a-8e8b-644e23a7b0a0.png">
 
