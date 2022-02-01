@@ -571,9 +571,6 @@
                     html += '<div class="sensorset clickables" onclick="window.location.href =nodePath;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
                     html3 += '<div></div>';
-                    document.getElementById('sensorList').innerHTML = html;
-                    document.getElementById('sliderList').innerHTML = html2;
-                    document.getElementById('bigNumber').innerHTML = html3;
                 }
                 else {
                     myJson.Sensors.forEach(sensor => {
@@ -703,22 +700,19 @@
                                 html2 += '<div class="slTimeSetWrap" style="font-weight:bold;font-size: 14pt;">' + utton + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + utton + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + utton + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
                             }
                             html3 += '</div>';
-                            document.getElementById('sensorList').innerHTML = html;
-                            document.getElementById('sliderList').innerHTML = html2;
-                            document.getElementById('bigNumber').innerHTML = html3;
                         }
                         else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                         else if (sensor.TaskEnabled === "false" && !someoneEn && !onceNoTask) {
                             html += '<div class="sensorset clickables" onclick="window.location.href =nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
                             html2 += '<div></div>';
                             html3 += '<div></div>';
-                            document.getElementById('sensorList').innerHTML = html;
-                            document.getElementById('sliderList').innerHTML = html2;
-                            document.getElementById('bigNumber').innerHTML = html3;
                             onceNoTask = 1;
                         }
                     });
                 }
+                document.getElementById('sensorList').innerHTML = html;
+                document.getElementById('sliderList').innerHTML = html2;
+                document.getElementById('bigNumber').innerHTML = html3;
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
                     firstRun = false;
@@ -946,10 +940,8 @@
                 longButton.addEventListener('long-press', function (e) {
                     const lBNode1 = longButton.querySelector(".numberUnit");
                     nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
-                    console.log(nodeInfos2);
-
                     window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
-                    isittime=1;
+                    isittime = 1;
                 });
             });
         }
