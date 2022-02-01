@@ -573,7 +573,7 @@
                 document.getElementById('unitId').innerHTML = unit;
                 document.getElementById('unitT').innerHTML = unit;
                 if (!myJson.Sensors.length) {
-                    html += '<div class="sensorset clickables" onclick="window.location.href =nodePath;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
+                    html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
                     html3 += '<div></div>';
                 }
@@ -708,7 +708,7 @@
                         }
                         else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                         else if (sensor.TaskEnabled === "false" && !someoneEn && !onceNoTask) {
-                            html += '<div class="sensorset clickables" onclick="window.location.href =nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
+                            html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
                             html2 += '<div></div>';
                             html3 += '<div></div>';
                             onceNoTask = 1;
