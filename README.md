@@ -1,4 +1,4 @@
-If you like this please support the ESPeasy project and consider a donation: 
+I am not involved in the ESPeasy project but if you like my work please support the ESPeasy project and consider a donation: 
 https://github.com/letscontrolit/ESPEasy
 
 # easyfetch
