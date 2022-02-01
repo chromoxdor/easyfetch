@@ -558,6 +558,8 @@
         var nodeIp;
         var nodePath;
         var nodePath2;
+        var unitNr;
+        var unitNr1;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
@@ -570,6 +572,7 @@
                 let html2 = '';
                 let html3 = '';
                 unit = myJson.WiFi.Hostname;
+                unitNr = myJson.System['Unit Number'];
                 document.getElementById('unitId').innerHTML = unit;
                 document.getElementById('unitT').innerHTML = unit;
                 if (!myJson.Sensors.length) {
@@ -719,6 +722,7 @@
                 document.getElementById('bigNumber').innerHTML = html3;
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
+                    unitNr1 = myJson.System['Unit Number'];
                     firstRun = false;
                 }
                 paramS();
@@ -842,7 +846,8 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '=' + event.target.value + '"', true);
+            if (unitNr = nodeNr) { xhr.open('get', 'control?cmd=event,' + slider.id + '=' + event.target.value, true); }
+            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '=' + event.target.value + '"', true); }
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -857,7 +862,8 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + 'event=' + sliderAmount + '"', true);
+            if (unitNr === unitNr1) { xhr.open('get', 'control?cmd=event,' + slider.id + 'event=' + sliderAmount, true); }
+            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + 'event=' + sliderAmount + '"', true); }
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -869,7 +875,8 @@
                 if (xhr.readyState === 4) {
                 }
             }
-            xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true);
+            if (unitNr === unitNr1) { xhr.open('get', 'control?cmd=event,' + utton + 'Event', true); }
+            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true); }
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.send();
             window.isittime = 1;
@@ -901,18 +908,23 @@
                         }
                     }
                     if (isLongNode) {
-                        xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"', true);
+                        if (node.nr === unitNr1) { xhr.open('get', 'control?cmd=event,' + lutton + 'Long', true); }
+                        else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"', true); }
                     }
-                    else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"', true); }
+                    else {
+                        if (node.nr === unitNr1) { xhr.open('get', 'control?cmd=event,' + utton + 'Event', true); }
+                        else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"', true); }
+                    }
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
-                    window.isittime = 1;
-                    setTimeout(fetchJson, 300);
                 }
             })
+
             i = 0
             document.getElementById('menueList').innerHTML = html4;
             longPressN();
             isLongNode = 0;
+            window.isittime = 1;
+            setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
@@ -922,7 +934,7 @@
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.screen.width < 1024) { closeNav(); }
             window.isittime = 1;
-            setTimeout(fetchJson, 10);
+            setTimeout(fetchJson, 100);
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth
@@ -967,6 +979,7 @@
             });
         }
         function longPressB() {
+            var executed = false;
             const longButtons = document.querySelectorAll(".sensorset");
             longButtons.forEach(longButton => {
                 longButton.addEventListener('long-press', function (e) {
@@ -983,11 +996,12 @@
                         getNodes();
                     }
                     else {
-                        xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true);
+                        if (unitNr === unitNr1 && !executed) { xhr.open('get', 'control?cmd=event,' + lBName.textContent + 'Long', true); executed = true; }
+                        else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
-                        setTimeout(fetchJson, 300);
+                        setTimeout(fetchJson, 100);
                     }
                 });
             });

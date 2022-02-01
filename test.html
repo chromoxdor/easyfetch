@@ -917,7 +917,6 @@
                     }
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
                 }
-                console.log(node.nr, unitNr1);
             })
 
             i = 0
@@ -925,7 +924,7 @@
             longPressN();
             isLongNode = 0;
             window.isittime = 1;
-            setTimeout(fetchJson, 300);
+            setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
