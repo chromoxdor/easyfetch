@@ -687,7 +687,6 @@
                                     html += '<div class="values">' + '<div>' + item.Name + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                 }
                             });
-
                             html += '</div>';
                             if (whichSl === 2) {
                                 html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '</div>' + '</div>';
@@ -878,10 +877,10 @@
             setTimeout(fetchJson, 300);
         }
         function openNav() {
-            if(document.getElementById('mySidenav').offsetWidth=== 0){
-            document.getElementById("mySidenav").style.width = "280px";
-            document.getElementById("menueList").style.color = "white";
-            } else {closeNav();}
+            if (document.getElementById('mySidenav').offsetWidth === 0) {
+                document.getElementById("mySidenav").style.width = "280px";
+                document.getElementById("menueList").style.color = "white";
+            } else { closeNav(); }
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
