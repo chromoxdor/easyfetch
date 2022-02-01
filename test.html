@@ -868,6 +868,7 @@
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
+                    alert("bad connection? try again....");
                 }
             }
             xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true);
@@ -876,11 +877,11 @@
             window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
-        function openNav(event) {
-
-            //event.stopPropagation();
+        function openNav() {
+            if(document.getElementById('mySidenav').offsetWidth=== 0){
             document.getElementById("mySidenav").style.width = "280px";
             document.getElementById("menueList").style.color = "white";
+            } else {closeNav();}
         }
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
@@ -927,7 +928,6 @@
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth
-
             const resizeText = ({ element, elements, minSize = 10, maxSize = 30, step = 1, unit = 'pt' }) => {
                 (elements || [element]).forEach(el => {
                     let i = minSize
@@ -968,7 +968,6 @@
                 });
             });
         }
-
         function longPressB() {
             const longButtons = document.querySelectorAll(".sensorset");
             longButtons.forEach(longButton => {
@@ -1020,7 +1019,6 @@
                 return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
             }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
                 var e = t.target,
-
                     u = parseInt(e.getAttribute("data-long-press-delay") || "800", 10);
                 o = setTimeout(n.bind(e), u)
             }), e.addEventListener(a, function (t) {
@@ -1031,9 +1029,7 @@
                 clearTimeout(o)
             })
         }(this, document);
-
     </script>
-
 </body>
 
 <body>
