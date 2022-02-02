@@ -932,7 +932,7 @@
             nodePath = `http://${nodeInfos.ip}/tools`;
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
-            if (window.screen.width < 1024) { closeNav(); }
+            if (window.innerWidth < 1024) { closeNav(); }
             window.isittime = 1;
             setTimeout(fetchJson, 100);
         }
