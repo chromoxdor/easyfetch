@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang='en'>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title id="unitT"></title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8' />
+    <title id="unitT"></title>
+</head>
 <STYLE>
     * {
         box-sizing: border-box;
@@ -76,7 +80,7 @@
         padding: 4.2px;
         border-radius: 5px;
         width: 150px;
-        min-height: 75px;
+        height: 75px;
         flex-direction: column;
         background: #ebebeb;
         flex-wrap: nowrap;
@@ -416,6 +420,11 @@
             max-width: 300px;
         }
 
+        .bigSpan:nth-child(1) {
+            grid-row: 1 / span 2;
+            height: 100%;
+        }
+
         .slider {
             width: 113%;
         }
@@ -553,11 +562,11 @@
         var bigLength = 0;
         var isLongNode;
         var lutton;
+        var nodePath2 = `/devices`;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
             onceNoTask = 0;
-            console.log(isittime);
             if (isittime) {
                 response = await fetch("json");
                 myJson = await response.json();
@@ -568,7 +577,7 @@
                 document.getElementById('unitId').innerHTML = unit;
                 document.getElementById('unitT').innerHTML = unit;
                 if (!myJson.Sensors.length) {
-                    html += '<div class="sensorset clickables" onclick="window.location.href =nodePath;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
+                    html += '<div class="sensorset clickables" onclick="window.location.href =nodePath2 ;">' + '<div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
                     html3 += '<div></div>';
                 }
@@ -618,24 +627,11 @@
                                     }
                                     /*big*/
                                     else if ((sensor.TaskName).includes("bigVal")) {
-
-                                        if (sensor.TaskValues.length === 1) {
-                                            bigLength = 1;
-                                        }
-                                        else if (sensor.TaskValues.length === 2 && bigLength < 3) {
-                                            bigLength = 2;
-                                        }
-                                        else if (sensor.TaskValues.length === 3 && bigLength < 4) {
-                                            bigLength = 3;
-                                        }
-                                        else if (sensor.TaskValues.length === 4) {
-                                            bigLength = 4;
-                                        }
+                                        if (bigLength < sensor.TaskValues.length) { bigLength = sensor.TaskValues.length };
                                         html3 += '<div class="bigNum">';
                                     }
                                     /*everything else*/
                                     else {
-
                                         html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
                                     }
                                 }
@@ -654,7 +650,6 @@
                                 }
                                 else if (item.Name === "slMax") {
                                     slMax = item.Value;
-
                                 }
                                 else if (item.Name === "slStep") {
                                     slStep = item.Value;
@@ -666,23 +661,24 @@
                                     slT2 = item.Value;
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
+                                    if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigSpan">'; }
+                                    else { html3 += '<div class="bigNumWrap">'; }
                                     if ((item.Name).toLowerCase().includes("temp")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">&#8457;</span> </div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight: bold; font-size: 14pt; text-align: left; ">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background: none; ">&#8457;</span> </div>' + '</div>';
                                     } else if ((item.Name).toLowerCase().includes("hum")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
                                     }
                                     else if ((item.Name).toLowerCase().includes("clock", "uhr")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                     else {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                 }
                                 else if (!(item.Name === "slMax" || item.Name === "slMin" || item.Name === "slStep" || item.Name === "slValT" || item.Name === "slValT2")) {
                                     html += '<div class="values">' + '<div>' + item.Name + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                 }
                             });
-
                             html += '</div>';
                             if (whichSl === 2) {
                                 html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '</div>' + '</div>';
@@ -701,8 +697,8 @@
                             }
                             html3 += '</div>';
                         }
-                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled==="true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
-                        else if (sensor.TaskEnabled==="false" && !someoneEn && !onceNoTask) {
+                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                        else if (sensor.TaskEnabled === "false" && !someoneEn && !onceNoTask) {
                             html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;font-size: 14pt;">no tasks enabled. click here...</div>';
                             html2 += '<div></div>';
                             html3 += '<div></div>';
@@ -738,11 +734,7 @@
             if ((bigLength < 2 || numBigger === 1) && numSet < 2) {
                 document.getElementById("sensorList").classList.add('sensorL1');
                 document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
-                if (list3.length) {
-                    for (var i = 0; i < list3.length; ++i) {
-                        list3[i].classList.add('bigNumOne');
-                    }
-                }
+                if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
             }
             else if (bigLength < 3 && numSet < 5 && numSet > 1) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
@@ -896,17 +888,17 @@
                     }
                     else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"', true); }
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
-                    window.isittime = 1;
-                    setTimeout(fetchJson, 300);
                 }
             })
             document.getElementById('menueList').innerHTML = html4;
             longPressN();
             isLongNode = 0;
+            window.isittime = 1;
+            setTimeout(fetchJson, 100);
         }
         function resizeText() {
-            const isOverflown = ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth
-            const resizeText = ({ element, elements, minSize = 10, maxSize = 30, step = 1, unit = 'pt' }) => {
+            const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
+            const resizeText = ({ element, elements, minSize = 10, maxSize = 55, step = 1, unit = 'pt' }) => {
                 (elements || [element]).forEach(el => {
                     let i = minSize
                     let overflow = false
@@ -967,7 +959,7 @@
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
                         xhr.send();
                         window.isittime = 1;
-                        setTimeout(fetchJson, 300);
+                        setTimeout(fetchJson, 100);
                     }
                 });
             });
@@ -1008,7 +1000,6 @@
             })
         }(this, document);
     </script>
-
 </body>
 
 <body onclick="closeNav()">
