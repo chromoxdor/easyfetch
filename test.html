@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang='en'>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title id="unitT"></title>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8' />
+    <title id="unitT"></title>
+</head>
 <STYLE>
     * {
         box-sizing: border-box;
@@ -76,7 +80,7 @@
         padding: 4.2px;
         border-radius: 5px;
         width: 150px;
-        min-height: 75px;
+        height: 75px;
         flex-direction: column;
         background: #ebebeb;
         flex-wrap: nowrap;
@@ -416,6 +420,11 @@
             max-width: 300px;
         }
 
+        .bigSpan:nth-child(1) {
+            grid-row: 1 / span 2;
+            height: 100%;
+        }
+
         .slider {
             width: 113%;
         }
@@ -626,24 +635,11 @@
                                     }
                                     /*big*/
                                     else if ((sensor.TaskName).includes("bigVal")) {
-
-                                        if (sensor.TaskValues.length === 1) {
-                                            bigLength = 1;
-                                        }
-                                        else if (sensor.TaskValues.length === 2 && bigLength < 3) {
-                                            bigLength = 2;
-                                        }
-                                        else if (sensor.TaskValues.length === 3 && bigLength < 4) {
-                                            bigLength = 3;
-                                        }
-                                        else if (sensor.TaskValues.length === 4) {
-                                            bigLength = 4;
-                                        }
+                                        if (bigLength < sensor.TaskValues.length) { bigLength = sensor.TaskValues.length };
                                         html3 += '<div class="bigNum">';
                                     }
                                     /*everything else*/
                                     else {
-
                                         html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
                                     }
                                 }
@@ -662,7 +658,6 @@
                                 }
                                 else if (item.Name === "slMax") {
                                     slMax = item.Value;
-
                                 }
                                 else if (item.Name === "slStep") {
                                     slStep = item.Value;
@@ -674,16 +669,18 @@
                                     slT2 = item.Value;
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
+                                    if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigSpan">'; }
+                                    else { html3 += '<div class="bigNumWrap">'; }
                                     if ((item.Name).toLowerCase().includes("temp")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">&#8451;</span> </div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight: bold; font-size: 14pt; text-align: left; ">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background: none; ">&#8451;</span> </div>' + '</div>';
                                     } else if ((item.Name).toLowerCase().includes("hum")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">%</span> </div>' + '</div>';
                                     }
                                     else if ((item.Name).toLowerCase().includes("clock", "uhr")) {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div id="clock" class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                     else {
-                                        html3 += '<div class="bigNumWrap">' + '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
+                                        html3 += '<div class="valuesBig" style="font-weight:bold; font-size: 14pt; text-align:left;">' + item.Name + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '</div>' + '</div>';
                                     }
                                 }
                                 else if (!(item.Name === "slMax" || item.Name === "slMin" || item.Name === "slStep" || item.Name === "slValT" || item.Name === "slValT2")) {
@@ -721,7 +718,7 @@
                 document.getElementById('sliderList').innerHTML = html2;
                 document.getElementById('bigNumber').innerHTML = html3;
                 if (firstRun) {
-                    setInterval(fetchJson, 10000);
+                    setInterval(fetchJson, 1000000);
                     unitNr1 = myJson.System['Unit Number'];
                     firstRun = false;
                 }
@@ -729,9 +726,11 @@
                 changeCss();
                 resizeText();
                 longPressB();
+
             }
         }
         function changeCss() {
+            console.log(bigLength);
             var numSl = document.querySelectorAll('input[type=range]').length;
             if (!numSl) {/*changes grid-row-gap when sliders are missing*/
                 document.getElementById("allList").classList.add('allExtra');
@@ -746,11 +745,7 @@
             if ((bigLength < 2 || numBigger === 1) && numSet < 2) {
                 document.getElementById("sensorList").classList.add('sensorL1');
                 document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
-                if (list3.length) {
-                    for (var i = 0; i < list3.length; ++i) {
-                        list3[i].classList.add('bigNumOne');
-                    }
-                }
+                if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
             }
             else if (bigLength < 3 && numSet < 5 && numSet > 1) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
@@ -934,11 +929,11 @@
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.innerWidth < 1024) { closeNav(); }
             window.isittime = 1;
-            setTimeout(fetchJson, 100);
+            //setTimeout(fetchJson, 100);
         }
         function resizeText() {
-            const isOverflown = ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth
-            const resizeText = ({ element, elements, minSize = 10, maxSize = 30, step = 1, unit = 'pt' }) => {
+            const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
+            const resizeText = ({ element, elements, minSize = 10, maxSize = 55, step = 1, unit = 'pt' }) => {
                 (elements || [element]).forEach(el => {
                     let i = minSize
                     let overflow = false
