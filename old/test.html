@@ -606,8 +606,6 @@
                                     slMin = 0;
                                     slStep = 1;
                                     whichSl = 0;
-                                    slT1 = 0;
-                                    slT2 = 1440;
                                     if ((item.Name).includes("btnState")) {
                                         if (item.Name === "btnStateC" || item.Value === 1) {
                                             html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>';
@@ -663,10 +661,8 @@
                                     slStep = item.Value;
                                 }
                                 else if (item.Name === "slT") {
-                                    slT1 = item.Value;
-                                }
-                                else if (item.Name === "slT2") {
-                                    slT2 = item.Value;
+                                    slT1 = item.Value.toFixed(4);
+                                    
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
                                     if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigSpan">'; }
@@ -695,13 +691,16 @@
                                 html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;font-size: 14pt;">' + sensor.TaskName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + '</div>' + '</div>' + '</div>';
                             }
                             else if (whichSl === 4) {
+                                slT2 = (slT1+"").split(".")[1];
+                                slT1 = Math.floor(slT1);
                                 var hour1 = Math.floor(slT1 / 60);
                                 var minute1 = slT1 % 60;
                                 const padded1 = minute1.toString().padStart(2, "0");
                                 var hour2 = Math.floor(slT2 / 60);
                                 var minute2 = slT2 % 60;
                                 const padded2 = minute2.toString().padStart(2, "0");
-                                html2 += '<div class="slTimeSetWrap" style="font-weight:bold;font-size: 14pt;">' + utton + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + utton + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + utton + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
+                                console.log(slT1,slT2);
+                                html2 += '<div id="' + utton + '" class="slTimeSetWrap" style="font-weight:bold;font-size: 14pt;">' + utton + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + utton + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + utton + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
                             }
                             html3 += '</div>';
                         }
@@ -728,8 +727,11 @@
                 longPressB();
             }
         }
+        async function getUrl(url) {
+            fetch(url)
+        }
         function changeCss() {
-            console.log(bigLength);
+
             var numSl = document.querySelectorAll('input[type=range]').length;
             if (!numSl) {/*changes grid-row-gap when sliders are missing*/
                 document.getElementById("allList").classList.add('allExtra');
@@ -741,12 +743,12 @@
             var numBig = document.getElementsByClassName('valuesBig').length;
             var element = document.getElementById("sensorList");
             var numSet = element.getElementsByClassName('clickables').length;
-            if ((bigLength < 2 || numBigger === 1) && numSet < 2) {
+            if ((bigLength < 2 && numBigger === 1) || (numBigger === 0 && numSet < 2)) {
                 document.getElementById("sensorList").classList.add('sensorL1');
                 document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
                 if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
             }
-            else if (bigLength < 3 && numSet < 5 && numSet > 1) {
+            else if (bigLength === 2 || (numSet < 5 && numSet > 1)) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL2');
             }
@@ -835,15 +837,11 @@
         }
         function sliderChTS(event) {
             slider = event.target;
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                }
-            }
-            if (unitNr = nodeNr) { xhr.open('get', 'control?cmd=event,' + slider.id + '=' + event.target.value, true); }
-            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '=' + event.target.value + '"', true); }
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            xhr.send();
+            const slTName = slider.parentNode.parentNode;
+            if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R");  }
+            else { var secVal = document.getElementById(slTName.id + "L");}
+            if (unitNr = unitNr1) { getUrl('control?cmd=event,' + slider.id + '=' + event.target.value); if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.id + ',1,' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.id + ',1,' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); } }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '=' + event.target.value + '"'); }
             window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
@@ -851,28 +849,14 @@
             slider = event.target;
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                }
-            }
-            if (unitNr === unitNr1) { xhr.open('get', 'control?cmd=event,' + slider.id + 'event=' + sliderAmount, true); }
-            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + 'event=' + sliderAmount + '"', true); }
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            xhr.send();
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + slider.id + 'event=' + sliderAmount); getUrl('control?cmd=taskvalueset,' + slider.id + ',1,' + sliderAmount); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + 'event=' + sliderAmount + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.id + ',1,' + sliderAmount + '"'); }
             window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
         function buttonClick(utton) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                }
-            }
-            if (unitNr === unitNr1) { xhr.open('get', 'control?cmd=event,' + utton + 'Event', true); }
-            else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"', true); }
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            xhr.send();
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
             window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
@@ -896,23 +880,16 @@
                 i++
                 html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4) {
-                        }
-                    }
                     if (isLongNode) {
-                        if (node.nr === unitNr1) { xhr.open('get', 'control?cmd=event,' + lutton + 'Long', true); }
-                        else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"', true); }
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
                     }
                     else {
-                        if (node.nr === unitNr1) { xhr.open('get', 'control?cmd=event,' + utton + 'Event', true); }
-                        else { xhr.open('get', '/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"', true); }
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
                     }
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); xhr.send();
                 }
             })
-
             i = 0
             document.getElementById('menueList').innerHTML = html4;
             longPressN();
@@ -928,7 +905,6 @@
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.innerWidth < 1024) { closeNav(); }
             window.isittime = 1;
-            //setTimeout(fetchJson, 100);
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
@@ -979,21 +955,14 @@
                 longButton.addEventListener('long-press', function (e) {
                     const lBName = longButton.querySelector(".sensors");
                     const lBNode = longButton.querySelector(".nodes");
-                    var xhr = new XMLHttpRequest();
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4) {
-                        }
-                    }
                     if (lBNode) {
                         lutton = lBNode.textContent;
                         isLongNode = 1;
                         getNodes();
                     }
                     else {
-                        if (unitNr === unitNr1 && !executed) { xhr.open('get', 'control?cmd=event,' + lBName.textContent + 'Long', true); executed = true; }
-                        else { xhr.open('get', 'control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
-                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-                        xhr.send();
+                        if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                        else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                         window.isittime = 1;
                         setTimeout(fetchJson, 100);
                     }
