@@ -1,5 +1,6 @@
 I am not involved in the ESPeasy project but if you like my work please support the ESPeasy project and consider a donation: 
 https://github.com/letscontrolit/ESPEasy
+If you are looking for nice styling of the espeasy ui try my css: https://github.com/chromoxdor/espeasy_custom-css
 
 # easyfetch
 An alternative dashboard site in tile optic for espeasy.
