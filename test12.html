@@ -91,7 +91,7 @@
     }
 
     .bigC {
-        background: #FBD9BB !important;
+        background: #f2dbc6 !important;
     }
 
     .bigL2 {
@@ -482,7 +482,7 @@
         }
 
         .bigC {
-            background: #7A5D44 !important;
+            background: #554130 !important;
         }
 
         .slTS {
@@ -634,7 +634,7 @@
                                 if (firstItem) {
                                     firstItem = false;
                                     if ((item.Name).includes("btnState")) {
-                                        if ((item.Name === "btnStateC" && item.Value < 2) || item.Value === 1) {
+                                        if ((item.Name === "btnStateC"&& item.Value < 2) || item.Value === 1) {
                                             html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
                                         }
                                         else if (item.Value === 2) {
@@ -645,8 +645,7 @@
                                         }
                                     }
                                     else if (item.Name === "allNodes") {
-
-                                        html += '<div class="nodec sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        html += '<div class="on sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>';
                                     }
                                     /*slider*/
                                     else if (sensor.TaskName === "tSlider") {
