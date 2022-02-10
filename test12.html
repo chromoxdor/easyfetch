@@ -19,14 +19,6 @@
         margin: 0;
     }
 
-    #main {
-        display: flex;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-    }
-
     #container {
         display: flex;
         position: absolute;
@@ -366,7 +358,7 @@
         bottom: 0;
         background: #000000a8;
         z-index: 1;
-        height: 40px;
+        height: 60px;
         width: 100%;
         position: fixed;
     }
@@ -432,12 +424,19 @@
         .sidenav a {
             font-size: 18px;
         }
+        #opener {
+            height: 40px;
+        }
     }
 
     @media screen and (max-width: 450px) {
         #allList {
             grid-row-gap: 5px;
             min-width: unset;
+        }
+
+        #opener {
+            height: 40px;
         }
 
         .allExtra {
@@ -1040,29 +1039,27 @@
             })
         }(this, document);
     </script>
-</body>
 
-<body>
     <div id="container">
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a id="menueList">no nodes found...</a>
-    </div>
-    <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a id="menueList">no nodes found...</a>
+        </div>
+        <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
         <div id="allList">
             <div id="bigNumber">&nbsp;</div>
             <div id="sliderList">&nbsp;</div>
             <div id="sensorList">&nbsp;</div>
         </div>
-    <div id="opener">
-        <div class="open">
-            <span style="font-size:30px;cursor:pointer;background: none;"
-                onclick="openNav(event); getNodes()">&#9776;</span>
-            <span style="font-size:30px;cursor:pointer;background: none;"
-                onclick="window.location.href = nodePath;">&#8962;</span>
+        <div id="opener">
+            <div class="open">
+                <span style="font-size:30px;cursor:pointer;background:none;"
+                    onclick="openNav(event); getNodes()">&#9776;</span>
+                <span style="font-size:30px;cursor:pointer;background:none;"
+                    onclick="window.location.href = nodePath;">&#8962;</span>
+            </div>
         </div>
     </div>
-</div>
 </body>
 
 </html>
