@@ -19,33 +19,45 @@
         margin: 0;
     }
 
-    #container {
-        height: 110%;
+    #main {
         display: flex;
+        position: absolute;
+        height: 100%;
+        width: 100%;
         justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        margin: auto;
-        align-content: center
+    }
+
+    #container {
+        display: flex;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        justify-content: center;
     }
 
     #unitId {
-        padding-bottom: 5px;
-        top: 10px;
-        background: transparent;
+        padding: 2vh;
+        background: #000000a8;
         z-index: 1;
-        position: fixed
+        left: 50%;
+        top: 0;
+        height: 40px;
+        display: flex;
+        transform: translate(-50%);
+        width: 100%;
+        position: fixed;
+        justify-content: center;
     }
 
     #allList {
-        display: inline-grid;
+        display: flex;
         grid-row-gap: 2vh;
-        top: 50%;
-        transform: translateY(-50%);
-        overflow-x: auto;
-        position: absolute;
+        margin: auto;
         padding: 5px;
         transition: 0.8s ease-out;
+        flex-direction: column;
+        padding-bottom: 40px;
+        padding-top: 40px;
     }
 
     .allExtra {
@@ -351,25 +363,28 @@
     }
 
     #opener {
-        bottom: 2%;
-        min-width: 200px;
-        max-width: 257px;
-        display: flex;
+        bottom: 0;
+        background: #000000a8;
+        z-index: 1;
+        height: 40px;
         width: 100%;
         position: fixed;
-        justify-content: space-around
     }
 
-    #opener,
-    #opener span {
-        background: transparent;
+    .open {
+        background: none;
+        display: flex;
+        max-width: 200px;
+        align-items: center;
+        margin: auto;
+        justify-content: space-between;
     }
 
     .sidenav {
         height: 100%;
         width: 0;
         position: fixed;
-        z-index: 1;
+        z-index: 20;
         top: 0;
         left: 0;
         background-color: #111111d9;
@@ -636,7 +651,7 @@
                                 if (firstItem) {
                                     firstItem = false;
                                     if ((item.Name).includes("btnState")) {
-                                        if ((item.Name === "btnStateC"&& item.Value < 2) || item.Value === 1) {
+                                        if ((item.Name === "btnStateC" && item.Value < 2) || item.Value === 1) {
                                             html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
                                         }
                                         else if (item.Value === 2) {
@@ -1032,16 +1047,21 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a id="menueList">no nodes found...</a>
     </div>
+    <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
+
     <div id="container">
-        <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
+
         <div id="allList">
             <div id="bigNumber">&nbsp;</div>
             <div id="sliderList">&nbsp;</div>
             <div id="sensorList">&nbsp;</div>
         </div>
-        <div id="opener">
-            <span style="font-size:30px;cursor:pointer" onclick="openNav(event); getNodes()">&#9776;</span>
-            <span style="font-size:30px;cursor:pointer" onclick="window.location.href = nodePath;">&#8962;</span>
+    </div>
+
+    <div id="opener">
+        <div class="open">
+            <span style="font-size:30px;cursor:pointer;background: none;" onclick="openNav(event); getNodes()">&#9776;</span>
+            <span style="font-size:30px;cursor:pointer;background: none;" onclick="window.location.href = nodePath;">&#8962;</span>
         </div>
     </div>
 </body>
