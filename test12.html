@@ -761,7 +761,7 @@
                 document.getElementById('sliderList').innerHTML = html2;
                 document.getElementById('bigNumber').innerHTML = html3;
                 if (firstRun) {
-                    setInterval(fetchJson, 1000000);
+                    setInterval(fetchJson, 10000);
                     unitNr1 = myJson.System['Unit Number'];
                     firstRun = false;
                 }
@@ -996,8 +996,8 @@
                         getNodes();
                     }
                     else {
-                        if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
-                        else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
+                        if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                        else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                         window.isittime = 1;
                         setTimeout(fetchJson, 100);
                     }
