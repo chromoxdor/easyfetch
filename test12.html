@@ -3,6 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--http-equiv="refresh" content="300"-->
     <meta charset='utf-8' />
     <title id="unitT"></title>
 </head>
@@ -424,6 +425,7 @@
         .sidenav a {
             font-size: 18px;
         }
+
         #opener {
             height: 40px;
         }
@@ -701,17 +703,20 @@
                                 }
                                 else if ((sensor.TaskName).includes("vSlider")) {
                                     slName = item.Name;
-                                    if ((itemSl.match(/\?/g) || []).length === 3) {
+                                    slKind = "";
+                                    if ((itemSl.match(/\?/g) || []).length >= 3) {
                                         slName = itemSl.split("?")[0];
                                         slMin = itemSl.split("?")[1];
                                         slMax = itemSl.split("?")[2];
                                         slStep = itemSl.split("?")[3];
+                                        slKind = itemSl.split("?")[4];
                                     }
+                                    if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                     if ((sensor.TaskName).includes("nvSlider")) {
-                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + ' noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div>' + '</div>' + '</div>';
+                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + ' noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div></div></div>';
                                     }
                                     else {
-                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + '">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + '</div>' + '</div>' + '</div>';
+                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + '">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>';
                                     }
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
@@ -763,6 +768,9 @@
                     setInterval(fetchJson, 10000);
                     unitNr1 = myJson.System['Unit Number'];
                     firstRun = false;
+                    /*  setInterval(function () {
+                          window.location.reload();
+                      }, 300000);*/
                 }
                 paramS();
                 changeCss();
@@ -863,8 +871,10 @@
         function updateSlider(event) {
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
+            slKind=slider.id.split("?")[4];
+            if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
             if (!slider.className.includes("noVal")) {
-                sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
+                sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
                 amount.textContent = sliderAmount;
             }
             window.isittime = 0;
