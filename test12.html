@@ -893,7 +893,8 @@
             slider = event.target;
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
-            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + slider.id); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
+            if ((slider.id.match(/\?/g) || []).length >= 3) {sliderId = slider.id.split("?")[0];}else{sliderId= slider.id;}
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slider.id + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
             window.isittime = 1;
             setTimeout(fetchJson, 300);
