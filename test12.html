@@ -585,7 +585,469 @@
 
 <body onload="fetchJson()">
     <script>
-     const blackList=[];var whichSl,sliderAmount,isLongNode,lutton,jsonPath,nodeNr,nodeIp,nodePath,nodePath2,unitNr,unitNr1,firstRun=!0,bigLength=0;async function fetchJson(){if(someoneEn=0,onceNoTask=0,jsonPath||(jsonPath="json",nodePath="/tools"),isittime){response=await fetch(jsonPath),myJson=await response.json();let n="",i="",l="";var e=myJson.System["Local Time"],t=e.split(" ")[1];(t=t.split(":")).pop(),t=t.join(":");var s=e.split(" ")[0];dateD=s.split("-")[2],dateM=s.split("-")[1],dateY=s.split("-")[0],unit=myJson.WiFi.Hostname,unitNr=myJson.System["Unit Number"],document.getElementById("unitId").innerHTML=unit,document.getElementById("unitT").innerHTML=unit,myJson.Sensors.length?(myJson.Sensors.forEach(e=>{utton=e.TaskName,"true"!==e.TaskEnabled||!e.TaskValues||blackList.includes(e.TaskName)||e.TaskName.includes("XX")?blackList.includes(e.TaskName)||"true"!==e.TaskEnabled||e.TaskName.includes("XX")||(n+='<div  class="sensorset clickables"><div class="sensors" style="font-weight:bold;">'+e.TaskName+"</div><div></div><div></div></div>",someoneEn=1,document.getElementById("sensorList").innerHTML=n):(someoneEn=1,firstItem=!0,e.TaskValues.forEach(s=>{if(itemSl=s.Name,itemA=s.Name,itemN=itemA.split("?")[0],kindN=itemA.split("?")[1],kindN||(kindN=""),"H"==kindN&&(kindN="%"),sliderValue=s.Value,num2Value=s.Value.toFixed(s.NrDecimals),slMax=1023,slMin=0,slStep=1,whichSl=0,firstItem&&(firstItem=!1,s.Name.includes("btnState")?"btnStateC"===s.Name&&s.Value<2||1===s.Value?n+='<div class="on sensorset clickables" onclick="buttonClick(\''+utton+'\')"><div  class="sensors" style="font-weight:bold;">'+e.TaskName+"</div>":2===s.Value?n+='<div class="alert sensorset clickables" onclick="buttonClick(\''+utton+'\')"><div  class="sensors" style="font-weight:bold;">'+e.TaskName+"</div>":n+='<div class="sensorset clickables" onclick="buttonClick(\''+utton+'\')"><div  class="sensors" style="font-weight:bold;">'+e.TaskName+"</div>":"allNodes"===s.Name?n+='<div class="on sensorset clickables" onclick="getNodes(\''+utton+'\')"><div  class="sensors nodes" style="font-weight:bold;">'+e.TaskName+"</div>":"tSlider"===e.TaskName||e.TaskName.includes("vSlider")||(e.TaskName.includes("bigVal")?(bigLength<e.TaskValues.length&&(bigLength=e.TaskValues.length),l+='<div class="bigNum">'):n+='<div class="sensorset clickables" onclick="buttonClick(\''+utton+'\')"><div  class="sensors" style="font-weight:bold;">'+e.TaskName+"</div>")),s.Name.includes("btnState")||s.Name.includes("XX"));else if("allNodes"===s.Name)n+='<div class="values">&nbsp;</div>';else if(e.TaskName.includes("tSlider")){slT1=s.Value.toFixed(4),slT2=(slT1+"").split(".")[1],slT1=Math.floor(slT1);var o=Math.floor(slT1/60);const e=(slT1%60).toString().padStart(2,"0");var a=Math.floor(slT2/60);const t=(slT2%60).toString().padStart(2,"0");i+='<div id="'+s.Name+'" class="slTimeSetWrap '+utton+'" style="font-weight:bold;">'+s.Name+'<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="'+slT1+'" id="'+s.Name+'L"><span class="slTimeText"> <span class="hAmount">'+o+'</span><span>:</span><span class="mAmount">'+e+'</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="'+slT2+'" id="'+s.Name+'R"><span class="slTimeText"> <span class="hAmount">'+a+'</span><span>:</span><span class="mAmount">'+t+"</span></span></div></div>"}else if(e.TaskName.includes("vSlider"))slName=s.Name,slKind="",(itemSl.match(/\?/g)||[]).length>=3&&(slName=itemSl.split("?")[0],slMin=itemSl.split("?")[1],slMax=itemSl.split("?")[2],slStep=itemSl.split("?")[3],slKind=itemSl.split("?")[4]),slKind||(slKind=""),"H"==slKind&&(slKind="%"),e.TaskName.includes("nvSlider")?i+='<div class="sensorset"><input type="range" min="'+slMin+'" max="'+slMax+'"  step="'+slStep+'" value="'+num2Value+'" id="'+s.Name+'"class="slider '+utton+' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">'+slName+"</div></div></div>":i+='<div class="sensorset"><input type="range" min="'+slMin+'" max="'+slMax+'"  step="'+slStep+'" value="'+num2Value+'" id="'+s.Name+'"class="slider '+utton+'"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">'+slName+'</div><div class="sliderAmount" style="text-align: right;">'+num2Value+slKind+"</div></div></div>";else if(e.TaskName.includes("bigVal")){e.TaskName.includes("bigValC")?3===e.TaskValues.length?l+='<div class="bigNumWrap bigC bigSpan">':l+='<div class="bigNumWrap bigC">':3===e.TaskValues.length?l+='<div class="bigNumWrap bigSpan">':l+='<div class="bigNumWrap">';let n='<div class="valuesBig" style="font-weight:bold;text-align:left;">';["clock","uhr","time"].some(e=>s.Name.toLowerCase().includes(e))?l+=n+s.Name+'</div><div id="clock" class="valueBig">'+t+"</div></div>":s.Name.toLowerCase().includes("datum")?l+=n+s.Name+'</div><div id="date" class="valueBig">'+dateD+"."+dateM.toString()+"</div></div>":s.Name.toLowerCase().includes("date")?l+=n+s.Name+'</div><div id="date" class="valueBig">'+dateM+"-"+dateD.toString()+"</div></div>":["year","jahr"].some(e=>s.Name.toLowerCase().includes(e))?l+=n+s.Name+'</div><div id="year" class="valueBig">'+dateY+"</div></div>":l+=n+itemN+'</div><div class="valueBig">'+s.Value.toFixed(s.NrDecimals)+'<span style="background:none;">'+kindN+"</span></div></div>"}else n+='<div class="values therest"><div>'+itemN+"</div><div>"+s.Value.toFixed(s.NrDecimals)+kindN+"</div></div>"}),n+="</div>",l+="</div>")}),someoneEn||(n+='<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>',i+="<div></div>",l+="<div></div>")):(n+='<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks configured. click here...</div>',i+="<div></div>",l+="<div></div>"),document.getElementById("sensorList").innerHTML=n,document.getElementById("sliderList").innerHTML=i,document.getElementById("bigNumber").innerHTML=l,firstRun&&(setInterval(fetchJson,1e4),unitNr1=myJson.System["Unit Number"],firstRun=!1),paramS(),changeCss(),resizeText(),longPressB()}}function getUrl(e){fetch(e)}function changeCss(){var e=document.querySelectorAll("input[type=range]").length;e?document.getElementById("allList").classList.remove("allExtra"):document.getElementById("allList").classList.add("allExtra");var t,s,n=document.querySelectorAll(".bigNum"),i=document.getElementsByClassName("bigNum").length,l=(document.getElementsByClassName("valuesBig").length,document.getElementById("sensorList").getElementsByClassName("clickables").length);if(bigLength<2&&1===i||0===i&&l<2){if(document.getElementById("sensorList").classList.add("sensorL1"),document.getElementById("sensorList").classList.remove("sensorL2","sensorL3","sensorL4"),n.length)for(var o=0;o<n.length;++o)n[o].classList.add("bigNumOne")}else 2===bigLength||!i&&l<5&&l>1?(document.getElementById("sensorList").classList.remove("sensorL1","sensorL3","sensorL4"),document.getElementById("sensorList").classList.add("sensorL2")):3===bigLength||l<10&&l>4?(document.getElementById("sensorList").classList.remove("sensorL1","sensorL2","sensorL4"),document.getElementById("sensorList").classList.add("sensorL3")):4===bigLength||l>9?(document.getElementById("sensorList").classList.remove("sensorL1","sensorL2","sensorL3"),document.getElementById("sensorList").classList.add("sensorL4")):(document.getElementById("sensorList").classList.remove("sensorL1","sensorL3","sensorL4"),document.getElementById("sensorList").classList.add("sensorL2"));if((bigLength>1||l>1)&&n.length)for(o=0;o<n.length;++o)n[o].classList.remove("bigNumOne");if(e&&bigLength<3&&l<5){t=document.querySelectorAll(".slTS"),s=document.querySelectorAll(".slider");for(o=0;o<t.length;++o)t[o].classList.add("slTSsmall");for(o=0;o<s.length;++o)s[o].classList.add("slidersmall")}else{t=document.querySelectorAll(".slTS"),s=document.querySelectorAll(".slider");for(o=0;o<t.length;++o)t[o].classList.remove("slTSsmall");for(o=0;o<s.length;++o)s[o].classList.remove("slidersmall")}bigLength=0}function paramS(){document.querySelectorAll(".slTS").forEach(e=>{e.addEventListener("input",updateSlTS),e.addEventListener("change",sliderChTS)}),document.querySelectorAll(".slider").forEach(e=>{e.addEventListener("input",updateSlider),e.addEventListener("change",sliderChange)})}function updateSlTS(e){slider=e.target;const t=slider.closest(".slTimeSet").querySelector(".hAmount"),s=slider.closest(".slTimeSet").querySelector(".mAmount");var n=Math.floor(slider.value/60);const i=(slider.value%60).toString().padStart(2,"0");t.textContent=n,s.textContent=i,window.isittime=0}function updateSlider(e){slider=e.target;const t=slider.closest("div.sensorset").querySelector(".sliderAmount");slKind=slider.id.split("?")[4],slKind||(slKind=""),"H"==slKind&&(slKind="%"),slider.className.includes("noVal")||(sliderAmount=Number(e.target.value).toFixed(void 0!==e.target.step.split(".")[1]&&e.target.step.split(".")[1].length)+slKind,t.textContent=sliderAmount),window.isittime=0}function sliderChTS(e){slider=e.target;const t=slider.parentNode.parentNode;if(slider.id==t.id+"L")var s=document.getElementById(t.id+"R");else s=document.getElementById(t.id+"L");unitNr===unitNr1?(getUrl("control?cmd=event,"+t.classList[1]),slider.id==t.id+"L"?getUrl("control?cmd=taskvalueset,"+t.classList[1]+","+t.id+","+e.target.value+"."+s.value.toString().padStart(4,"0")):getUrl("control?cmd=taskvalueset,"+t.classList[1]+","+t.id+","+s.value+"."+e.target.value.toString().padStart(4,"0"))):(getUrl("control?cmd=SendTo,"+nodeNr+',"event,'+t.classList[1]+'"'),slider.id==t.id+"L"?getUrl("control?cmd=SendTo,"+nodeNr+',"taskvalueset,'+t.classList[1]+","+t.id+","+e.target.value+"."+s.value.toString().padStart(4,"0")+'"'):getUrl("control?cmd=SendTo,"+nodeNr+',"taskvalueset,'+t.classList[1]+","+t.id+","+s.value+"."+e.target.value.toString().padStart(4,"0")+'"')),window.isittime=1,setTimeout(fetchJson,300)}function sliderChange(e){slider=e.target,parseFloat(e.target.value).toFixed(void 0!==e.target.step.split(".")[1]&&e.target.step.split(".")[1].length),sliderAmount=e.target.value,(slider.id.match(/\?/g)||[]).length>=3?sliderId=slider.id.split("?")[0]:sliderId=slider.id,unitNr===unitNr1?(getUrl("control?cmd=event,"+sliderId),getUrl("control?cmd=taskvalueset,"+slider.classList[1]+","+slider.id+","+sliderAmount)):(getUrl("control?cmd=SendTo,"+nodeNr+',"event,'+slider.id+'"'),getUrl("control?cmd=SendTo,"+nodeNr+',"taskvalueset,'+slider.classList[1]+","+slider.id+","+sliderAmount+'"')),window.isittime=1,setTimeout(fetchJson,300)}function buttonClick(e){getUrl(unitNr===unitNr1?"control?cmd=event,"+e+"Event":"control?cmd=SendTo,"+nodeNr+',"event,'+e+'Event"'),window.isittime=1,setTimeout(fetchJson,300)}function openNav(){0===document.getElementById("mySidenav").offsetWidth?(document.getElementById("mySidenav").style.width="280px",document.getElementById("menueList").style.color="white"):closeNav()}function closeNav(){document.getElementById("mySidenav").style.width="0",document.getElementById("menueList").style.color="transparent"}async function getNodes(e){response=await fetch("json"),myJson=await response.json();let t="";nodeInfos=myJson.nodes;let s=-1;myJson.nodes.forEach(n=>{s++,t+='<a id="'+n.name+'" class="nc" onclick="getNodes(); nodeChange('+s+')">'+n.name+'<span class="numberUnit">'+n.nr+"</span></a>",(e||isLongNode)&&(isLongNode?n.nr===unitNr1?getUrl("control?cmd=event,"+lutton+"Long"):getUrl("/control?cmd=SendTo,"+n.nr+',"event,'+lutton+'Long"'):n.nr===unitNr1?getUrl("control?cmd=event,"+e+"Event"):getUrl("/control?cmd=SendTo,"+n.nr+',"event,'+e+'Event"'))}),s=0,document.getElementById("menueList").innerHTML=t,longPressN(),isLongNode=0,window.isittime=1,setTimeout(fetchJson,100)}function nodeChange(e){nodeInfos=nodeInfos[e],nodeNr=nodeInfos.nr,nodePath=`http://${nodeInfos.ip}/tools`,nodePath2=`http://${nodeInfos.ip}/devices`,jsonPath=`http://${nodeInfos.ip}/json`,window.innerWidth<1024&&closeNav(),window.isittime=1}function resizeText(){const e=({clientWidth:e,clientHeight:t,scrollWidth:s,scrollHeight:n})=>s>e||n>t;(({element:t,elements:s,minSize:n=10,maxSize:i=55,step:l=1,unit:o="pt"})=>{(s||[t]).forEach(t=>{let s=n,a=!1;const d=t.parentNode;for(;!a&&s<i;)t.style.fontSize=`${s}${o}`,(a=e(d))||(s+=l);t.style.fontSize=`${s-l}${o}`})})({elements:document.querySelectorAll(".valueBig"),step:1})}function launchFs(e){e.requestFullscreen?e.requestFullscreen():e.mozRequestFullScreen?e.mozRequestFullScreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen()}function longPressN(){document.querySelectorAll(".nc").forEach(e=>{e.addEventListener("long-press",function(t){const s=e.querySelector(".numberUnit");nodeInfos2=nodeInfos.filter(e=>e.nr==s.textContent),window.open(`http://${nodeInfos2[0].ip}/devices`,"_blank"),isittime=1})})}function longPressB(){var e=!1;document.querySelectorAll(".sensorset").forEach(t=>{t.addEventListener("long-press",function(s){const n=t.querySelector(".sensors"),i=t.querySelector(".nodes");i?(lutton=i.textContent,isLongNode=1,getNodes()):(unitNr!==unitNr1||e?getUrl("control?cmd=SendTo,"+nodeNr+',"event,'+n.textContent+'Long"',!0):(getUrl("control?cmd=event,"+n.textContent+"Long"),e=!0),window.isittime=1,setTimeout(fetchJson,100))})})}window.isittime=1,function(e,t){"use strict";var s=null,n="ontouchstart"in e||navigator.MaxTouchPoints>0||navigator.msMaxTouchPoints>0,i=n?"touchstart":"mousedown",l=n?"touchcancel":"mouseout",o=n?"touchend":"mouseup",a=n?"touchmove":"mousemove";"initCustomEvent"in t.createEvent("CustomEvent")&&(e.CustomEvent=function(e,s){s=s||{bubbles:!1,cancelable:!1,detail:void 0};var n=t.createEvent("CustomEvent");return n.initCustomEvent(e,s.bubbles,s.cancelable,s.detail),n},e.CustomEvent.prototype=e.Event.prototype),t.addEventListener(i,function(e){var t=e.target,n=parseInt(t.getAttribute("data-long-press-delay")||"800",10);s=setTimeout(function(){this.dispatchEvent(new CustomEvent("long-press",{bubbles:!0,cancelable:!0})),clearTimeout(s)}.bind(t),n)}),t.addEventListener(o,function(e){clearTimeout(s)}),t.addEventListener(l,function(e){clearTimeout(s)}),t.addEventListener(a,function(e){clearTimeout(s)})}(this,document);
+        const blackList = []; /*Blacklist Devices e.g. ["Display", "Sensor"]*/
+        var firstRun = true;
+        var whichSl;
+        var sliderAmount;
+        var bigLength = 0;
+        var isLongNode;
+        var lutton;
+        var jsonPath;
+        var nodeNr;
+        var nodeIp;
+        var nodePath;
+        var nodePath2;
+        var unitNr;
+        var unitNr1;
+        window.isittime = 1;
+        async function fetchJson() {
+            someoneEn = 0;
+            onceNoTask = 0;
+            if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
+            if (isittime) {
+                response = await fetch(jsonPath);
+                myJson = await response.json();
+                let html = '';
+                let html2 = '';
+                let html3 = '';
+                var jsonT = myJson.System['Local Time'];
+                var clockBig = jsonT.split(" ")[1];
+                clockBig = clockBig.split(':');
+                clockBig.pop();
+                clockBig = clockBig.join(':');
+                var dateBig = jsonT.split(" ")[0];
+                dateD = dateBig.split('-')[2];
+                dateM = dateBig.split('-')[1];
+                dateY = dateBig.split('-')[0];
+                unit = myJson.WiFi.Hostname;
+                unitNr = myJson.System['Unit Number'];
+                document.getElementById('unitId').innerHTML = unit;
+                document.getElementById('unitT').innerHTML = unit;
+                if (!myJson.Sensors.length) {
+                    html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;">' + '<div  class="sensors nodes" style="font-weight:bold;">no tasks configured. click here...</div>';
+                    html2 += '<div></div>';
+                    html3 += '<div></div>';
+                }
+                else {
+                    myJson.Sensors.forEach(sensor => {
+                        utton = sensor.TaskName;
+                        /* Has the entry TaskValues
+                        and is is not in Blacklist? */
+                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !blackList.includes(sensor.TaskName) && !sensor.TaskName.includes("XX")) {
+                            someoneEn = 1;
+                            firstItem = true;
+                            sensor.TaskValues.forEach(item => {
+                                itemSl = item.Name;
+                                itemA = item.Name;
+                                itemN = itemA.split("?")[0];
+                                kindN = itemA.split("?")[1];
+                                if (!kindN) { kindN = ""; }
+                                if (kindN == "H") { kindN = "%"; }
+                                sliderValue = item.Value;
+                                num2Value = item.Value.toFixed(item.NrDecimals);
+                                slMax = 1023;
+                                slMin = 0;
+                                slStep = 1;
+                                whichSl = 0;
+                                if (firstItem) {
+                                    firstItem = false;
+                                    if ((item.Name).includes("btnState")) {
+                                        if ((item.Name === "btnStateC" && item.Value < 2) || item.Value === 1) {
+                                            html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        }
+                                        else if (item.Value === 2) {
+                                            html += '<div class="alert sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        }
+                                        else {
+                                            html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        }
+                                    }
+                                    else if (item.Name === "allNodes") {
+                                        html += '<div class="on sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                    }
+                                    /*slider*/
+                                    else if (sensor.TaskName === "tSlider") {
+
+                                    }
+                                    else if ((sensor.TaskName).includes("vSlider")) {
+                                    }
+                                    /*big*/
+                                    else if ((sensor.TaskName).includes("bigVal")) {
+                                        if (bigLength < sensor.TaskValues.length) { bigLength = sensor.TaskValues.length };
+                                        html3 += '<div class="bigNum">';
+                                    }
+                                    /*everything else*/
+                                    else {
+                                        html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                    }
+                                }
+                                /*add container with name and value to HTML:*/
+
+                                if ((item.Name).includes("btnState") || (item.Name).includes("XX")) {
+                                    // html += '<div class="values">&nbsp;</div>';
+                                }
+                                else if (item.Name === "allNodes") {
+                                    html += '<div class="values">&nbsp;</div>';
+                                }
+                                else if ((sensor.TaskName).includes("tSlider")) {
+                                    slT1 = item.Value.toFixed(4);
+                                    slT2 = (slT1 + "").split(".")[1];
+                                    slT1 = Math.floor(slT1);
+                                    var hour1 = Math.floor(slT1 / 60);
+                                    var minute1 = slT1 % 60;
+                                    const padded1 = minute1.toString().padStart(2, "0");
+                                    var hour2 = Math.floor(slT2 / 60);
+                                    var minute2 = slT2 % 60;
+                                    const padded2 = minute2.toString().padStart(2, "0");
+                                    html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + utton + '" style="font-weight:bold;">' + item.Name + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + item.Name + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
+                                }
+                                else if ((sensor.TaskName).includes("vSlider")) {
+                                    slName = item.Name;
+                                    slKind = "";
+                                    if ((itemSl.match(/\?/g) || []).length >= 3) {
+                                        slName = itemSl.split("?")[0];
+                                        slMin = itemSl.split("?")[1];
+                                        slMax = itemSl.split("?")[2];
+                                        slStep = itemSl.split("?")[3];
+                                        slKind = itemSl.split("?")[4];
+                                    }
+                                    if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
+                                    if ((sensor.TaskName).includes("nvSlider")) {
+                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + ' noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div></div></div>';
+                                    }
+                                    else {
+                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + '">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>';
+                                    }
+                                }
+                                else if ((sensor.TaskName).includes("bigVal")) {
+                                    if ((sensor.TaskName).includes("bigValC")) {
+                                        if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigC bigSpan">'; }
+                                        else { html3 += '<div class="bigNumWrap bigC">'; }
+                                    }
+                                    else {
+                                        if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigSpan">'; }
+                                        else { html3 += '<div class="bigNumWrap">'; }
+                                    }
+                                    let bigB = `<div class="valuesBig" style="font-weight:bold;text-align:left;">`;
+                                    if (["clock", "uhr", "time"].some(v => (item.Name).toLowerCase().includes(v))) {
+                                        html3 += bigB + item.Name + '</div>' + '<div id="clock" class="valueBig">' + clockBig + '</div>' + '</div>';
+                                    }
+                                    else if ((item.Name).toLowerCase().includes("datum")) {
+                                        html3 += bigB + item.Name + '</div>' + '<div id="date" class="valueBig">' + dateD + '.' + dateM.toString() + '</div>' + '</div>';
+                                    }
+                                    else if ((item.Name).toLowerCase().includes("date")) {
+                                        html3 += bigB + item.Name + '</div>' + '<div id="date" class="valueBig">' + dateM + '-' + dateD.toString() + '</div>' + '</div>';
+                                    }
+                                    else if (["year", "jahr"].some(v => (item.Name).toLowerCase().includes(v))) {
+                                        html3 += bigB + item.Name + '</div>' + '<div id="year" class="valueBig">' + dateY + '</div>' + '</div>';
+                                    }
+                                    else {
+                                        html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">' + kindN + '</span></div>' + '</div>';
+                                    }
+                                }
+                                else {//if (!((sensor.TaskName).includes("vSlider") || (sensor.TaskName).includes("tSlider"))) {
+                                    html += '<div class="values therest">' + '<div>' + itemN + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div>' + '</div>';
+                                }
+                            });
+                            html += '</div>';
+                            html3 += '</div>';
+                        }
+                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                    });
+                    if (!someoneEn) {
+                            html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>';
+                            html2 += '<div></div>';
+                            html3 += '<div></div>';
+                        }
+                }
+                document.getElementById('sensorList').innerHTML = html;
+                document.getElementById('sliderList').innerHTML = html2;
+                document.getElementById('bigNumber').innerHTML = html3;
+                if (firstRun) {
+                    setInterval(fetchJson, 10000);
+                    unitNr1 = myJson.System['Unit Number'];
+                    firstRun = false;
+                    /*  setInterval(function () {
+                          window.location.reload();
+                      }, 300000);*/
+                }
+                paramS();
+                changeCss();
+                resizeText();
+                longPressB();
+            }
+        }
+        function getUrl(url) {
+            fetch(url)
+        }
+        function changeCss() {
+            var numSl = document.querySelectorAll('input[type=range]').length;
+            if (!numSl) {/*changes grid-row-gap when sliders are missing*/
+                document.getElementById("allList").classList.add('allExtra');
+            } else {
+                document.getElementById("allList").classList.remove('allExtra');
+            }
+            var list3 = document.querySelectorAll(".bigNum");
+            var numBigger = document.getElementsByClassName('bigNum').length;
+            var numBig = document.getElementsByClassName('valuesBig').length;
+            var element = document.getElementById("sensorList");
+            var numSet = element.getElementsByClassName('clickables').length;
+            if ((bigLength < 2 && numBigger === 1) || (numBigger === 0 && numSet < 2)) {
+                document.getElementById("sensorList").classList.add('sensorL1');
+                document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
+                if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
+            }
+            else if (bigLength === 2 || (!numBigger && numSet < 5 && numSet > 1)) {
+                document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+                document.getElementById("sensorList").classList.add('sensorL2');
+            }
+            else if (bigLength === 3 || (numSet < 10 && numSet > 4)) {
+                document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL4');
+                document.getElementById("sensorList").classList.add('sensorL3');
+            }
+            else if (bigLength === 4 || numSet > 9) {
+                document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
+                document.getElementById("sensorList").classList.add('sensorL4');
+            }
+            else {
+                document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+                document.getElementById("sensorList").classList.add('sensorL2');
+            }
+            if (bigLength > 1 || numSet > 1) {
+                if (list3.length) {
+                    for (var i = 0; i < list3.length; ++i) {
+                        list3[i].classList.remove('bigNumOne');
+                    }
+                }
+            }
+            var list;
+            var list2;
+            if (numSl && (bigLength < 3 && numSet < 5)) {
+                list = document.querySelectorAll(".slTS");
+                list2 = document.querySelectorAll(".slider");
+                for (var i = 0; i < list.length; ++i) {
+                    list[i].classList.add('slTSsmall');
+                }
+                for (var i = 0; i < list2.length; ++i) {
+                    list2[i].classList.add('slidersmall');
+                }
+            }
+            else {
+                list = document.querySelectorAll(".slTS");
+                list2 = document.querySelectorAll(".slider");
+                for (var i = 0; i < list.length; ++i) {
+                    list[i].classList.remove('slTSsmall');
+                }
+                for (var i = 0; i < list2.length; ++i) {
+                    list2[i].classList.remove('slidersmall');
+                }
+            }
+            bigLength = 0;
+        }
+        function paramS() {
+            var sliders = document.querySelectorAll(".slTS");
+            sliders.forEach((slider) => {
+                slider.addEventListener("input", updateSlTS);
+                slider.addEventListener('change', sliderChTS);
+            });
+            var sliders = document.querySelectorAll(".slider");
+            sliders.forEach(slider => {
+                slider.addEventListener('input', updateSlider);
+                slider.addEventListener('change', sliderChange);
+            });
+        }
+        function updateSlTS(event) {
+            slider = event.target;
+            const amount = slider.closest(".slTimeSet").querySelector(".hAmount");
+            const amount2 = slider.closest(".slTimeSet").querySelector(".mAmount");
+            var hours = Math.floor(slider.value / 60);
+            var minutes = slider.value % 60;
+            const padded = minutes.toString().padStart(2, "0");
+            amount.textContent = hours;
+            amount2.textContent = padded;
+            window.isittime = 0;
+        }
+        function updateSlider(event) {
+            slider = event.target;
+            const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
+            slKind=slider.id.split("?")[4];
+            if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
+            if (!slider.className.includes("noVal")) {
+                sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
+                amount.textContent = sliderAmount;
+            }
+            window.isittime = 0;
+        }
+        function sliderChTS(event) {
+            slider = event.target;
+            const slTName = slider.parentNode.parentNode;
+            if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R"); }
+            else { var secVal = document.getElementById(slTName.id + "L"); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + slTName.classList[1]); if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); } }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slTName.classList[1] + '"'); if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); } }
+            window.isittime = 1;
+            setTimeout(fetchJson, 300);
+        }
+        function sliderChange(event) {
+            slider = event.target;
+            parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
+            sliderAmount = event.target.value;
+            if ((slider.id.match(/\?/g) || []).length >= 3) {sliderId = slider.id.split("?")[0];}else{sliderId= slider.id;}
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
+            window.isittime = 1;
+            setTimeout(fetchJson, 300);
+        }
+        function buttonClick(utton) {
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
+            window.isittime = 1;
+            setTimeout(fetchJson, 300);
+        }
+        function openNav() {
+            if (document.getElementById('mySidenav').offsetWidth === 0) {
+                document.getElementById("mySidenav").style.width = "280px";
+                document.getElementById("menueList").style.color = "white";
+            } else { closeNav(); }
+        }
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("menueList").style.color = "transparent";
+        }
+        async function getNodes(utton) {
+            response = await fetch("json");
+            myJson = await response.json();
+            let html4 = '';
+            nodeInfos = myJson.nodes;
+            let i = -1;
+            myJson.nodes.forEach(node => {
+                i++
+                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
+                if (utton || isLongNode) {
+                    if (isLongNode) {
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
+                    }
+                    else {
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
+                    }
+                }
+            })
+            i = 0
+            document.getElementById('menueList').innerHTML = html4;
+            longPressN();
+            isLongNode = 0;
+            window.isittime = 1;
+            setTimeout(fetchJson, 100);
+        }
+        function nodeChange(event) {
+            nodeInfos = nodeInfos[event];
+            nodeNr = nodeInfos.nr;
+            nodePath = `http://${nodeInfos.ip}/tools`;
+            nodePath2 = `http://${nodeInfos.ip}/devices`;
+            jsonPath = `http://${nodeInfos.ip}/json`;
+            if (window.innerWidth < 1024) { closeNav(); }
+            window.isittime = 1;
+        }
+        function resizeText() {
+            const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
+            const resizeText = ({ element, elements, minSize = 10, maxSize = 55, step = 1, unit = 'pt' }) => {
+                (elements || [element]).forEach(el => {
+                    let i = minSize
+                    let overflow = false
+                    const parent = el.parentNode
+                    while (!overflow && i < maxSize) {
+                        el.style.fontSize = `${i}${unit}`
+                        overflow = isOverflown(parent)
+                        if (!overflow) i += step
+                    }
+                    el.style.fontSize = `${i - step}${unit}`
+                })
+            }
+            resizeText({
+                elements: document.querySelectorAll('.valueBig'),
+                step: 1
+            })
+        }
+        function launchFs(element) {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+        }
+        function longPressN() {
+            const longButtons = document.querySelectorAll(".nc");
+            longButtons.forEach(longButton => {
+                longButton.addEventListener('long-press', function (e) {
+                    const lBNode1 = longButton.querySelector(".numberUnit");
+                    nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
+                    window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
+                    isittime = 1;
+                });
+            });
+        }
+        function longPressB() {
+            var executed = false;
+            const longButtons = document.querySelectorAll(".sensorset");
+            longButtons.forEach(longButton => {
+                longButton.addEventListener('long-press', function (e) {
+                    const lBName = longButton.querySelector(".sensors");
+                    const lBNode = longButton.querySelector(".nodes");
+                    if (lBNode) {
+                        lutton = lBNode.textContent;
+                        isLongNode = 1;
+                        getNodes();
+                    }
+                    else {
+                        if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                        else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
+                        window.isittime = 1;
+                        setTimeout(fetchJson, 100);
+                    }
+                });
+            });
+        }
+        ! function (t, e) {
+            "use strict";
+            function n() {
+                this.dispatchEvent(new CustomEvent("long-press", {
+
+                    bubbles: !0,
+                    cancelable: !0
+                })), clearTimeout(o)
+            }
+            var o = null,
+                u = "ontouchstart" in t || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+                s = u ? "touchstart" : "mousedown",
+                i = u ? "touchcancel" : "mouseout",
+                a = u ? "touchend" : "mouseup",
+                c = u ? "touchmove" : "mousemove";
+            "initCustomEvent" in e.createEvent("CustomEvent") && (t.CustomEvent = function (t, n) {
+                n = n || {
+                    bubbles: !1,
+                    cancelable: !1,
+                    detail: void 0
+                };
+                var o = e.createEvent("CustomEvent");
+                return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
+            }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
+                var e = t.target,
+                    u = parseInt(e.getAttribute("data-long-press-delay") || "800", 10);
+                o = setTimeout(n.bind(e), u)
+            }), e.addEventListener(a, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(i, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(c, function (t) {
+                clearTimeout(o)
+            })
+        }(this, document);
     </script>
 
     <div id="container">
