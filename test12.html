@@ -1008,7 +1008,7 @@
                         if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
                         else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                         window.isittime = 1;
-                        setTimeout(fetchJson, 100);
+                        setTimeout(fetchJson, 300);
                     }
                 });
             });
