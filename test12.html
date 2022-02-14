@@ -493,12 +493,14 @@
             background-color: rgb(0, 0, 0);
             color: #b3b3b3;
         }
+
         #opener {
-        background: #000000a8;
-    }
-    #unitId {
-        background: #000000a8;
-    }
+            background: #000000a8;
+        }
+
+        #unitId {
+            background: #000000a8;
+        }
 
         .bigNumWrap {
             background: #444444;
@@ -605,6 +607,7 @@
         var nodePath2;
         var unitNr;
         var unitNr1;
+        var nodeInterV;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
@@ -775,10 +778,10 @@
                           window.location.reload();
                       }, 300000);*/
                 }
-                if (unitNr === unitNr1) { styleU = "&#10026;"; }
-                    else { styleU = ""; }
-                    document.getElementById('unitId').innerHTML = styleU+unit;
-                    document.getElementById('unitT').innerHTML = styleU+unit;
+                if (unitNr === unitNr1) { styleU = "&#9737;"; }
+                else { styleU = ""; }
+                document.getElementById('unitId').innerHTML = styleU + unit;
+                document.getElementById('unitT').innerHTML = styleU + unit;
                 paramS();
                 changeCss();
                 resizeText();
@@ -913,12 +916,14 @@
             setTimeout(fetchJson, 300);
         }
         function openNav() {
+            nodeInterV = setInterval(getNodes, 10000);
             if (document.getElementById('mySidenav').offsetWidth === 0) {
                 document.getElementById("mySidenav").style.width = "280px";
                 document.getElementById("menueList").style.color = "white";
             } else { closeNav(); }
         }
         function closeNav() {
+            clearInterval(nodeInterV);
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("menueList").style.color = "transparent";
         }
@@ -930,26 +935,26 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                if (node.nr === unitNr1) { styleN = "&#10026;"; }
+                if (node.nr === unitNr1) { styleN = "&#9737;"; }
                 else { styleN = ""; }
-                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">'  + styleN+ node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
+                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + styleN + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
-                if (isLongNode) {
-                    if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
-                    else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
+                    if (isLongNode) {
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
+                    }
+                    else {
+                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
+                    }
                 }
-                else {
-                    if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
-                    else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
-                }
-            }
-        })
-        i = 0
-        document.getElementById('menueList').innerHTML = html4;
-        longPressN();
-        isLongNode = 0;
-        window.isittime = 1;
-        setTimeout(fetchJson, 100);
+            })
+            i = 0
+            document.getElementById('menueList').innerHTML = html4;
+            longPressN();
+            isLongNode = 0;
+            window.isittime = 1;
+            setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
@@ -992,13 +997,13 @@
             }
         }
         function longPressN() {
-            const longButtons = document.querySelectorAll(".nc");
-            longButtons.forEach(longButton => {
+            const longButtons2 = document.querySelectorAll(".nc");
+            longButtons2.forEach(longButton => {
                 longButton.addEventListener('long-press', function (e) {
                     const lBNode1 = longButton.querySelector(".numberUnit");
                     nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
                     window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
-                    isittime = 1;
+                    window.isittime = 1;
                 });
             });
         }
