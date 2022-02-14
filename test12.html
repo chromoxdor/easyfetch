@@ -30,7 +30,7 @@
 
     #unitId {
         padding: 2vh;
-        background: #000000a8;
+        background: #ffffffba;
         z-index: 2;
         left: 50%;
         top: 0;
@@ -357,7 +357,7 @@
 
     #opener {
         bottom: 0;
-        background: #000000a8;
+        background: #ffffffba;
         z-index: 2;
         height: 60px;
         width: 100%;
@@ -493,6 +493,12 @@
             background-color: rgb(0, 0, 0);
             color: #b3b3b3;
         }
+        #opener {
+        background: #000000a8;
+    }
+    #unitId {
+        background: #000000a8;
+    }
 
         .bigNumWrap {
             background: #444444;
@@ -621,8 +627,6 @@
                 dateY = dateBig.split('-')[0];
                 unit = myJson.WiFi.Hostname;
                 unitNr = myJson.System['Unit Number'];
-                document.getElementById('unitId').innerHTML = unit;
-                document.getElementById('unitT').innerHTML = unit;
                 if (!myJson.Sensors.length) {
                     html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;">' + '<div  class="sensors nodes" style="font-weight:bold;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
@@ -755,10 +759,10 @@
                         else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                     });
                     if (!someoneEn) {
-                            html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>';
-                            html2 += '<div></div>';
-                            html3 += '<div></div>';
-                        }
+                        html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>';
+                        html2 += '<div></div>';
+                        html3 += '<div></div>';
+                    }
                 }
                 document.getElementById('sensorList').innerHTML = html;
                 document.getElementById('sliderList').innerHTML = html2;
@@ -771,6 +775,10 @@
                           window.location.reload();
                       }, 300000);*/
                 }
+                if (unitNr === unitNr1) { styleU = "&#10026;"; }
+                    else { styleU = ""; }
+                    document.getElementById('unitId').innerHTML = styleU+unit;
+                    document.getElementById('unitT').innerHTML = styleU+unit;
                 paramS();
                 changeCss();
                 resizeText();
@@ -870,7 +878,7 @@
         function updateSlider(event) {
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
-            slKind=slider.id.split("?")[4];
+            slKind = slider.id.split("?")[4];
             if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
             if (!slider.className.includes("noVal")) {
                 sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
@@ -892,7 +900,7 @@
             slider = event.target;
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
-            if ((slider.id.match(/\?/g) || []).length >= 3) {sliderId = slider.id.split("?")[0];}else{sliderId= slider.id;}
+            if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
             window.isittime = 1;
@@ -922,24 +930,26 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
+                if (node.nr === unitNr1) { styleN = "&#10026;"; }
+                else { styleN = ""; }
+                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">'  + styleN+ node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
                 if (utton || isLongNode) {
-                    if (isLongNode) {
-                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
-                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
-                    }
-                    else {
-                        if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
-                        else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
-                    }
+                if (isLongNode) {
+                    if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
+                    else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
                 }
-            })
-            i = 0
-            document.getElementById('menueList').innerHTML = html4;
-            longPressN();
-            isLongNode = 0;
-            window.isittime = 1;
-            setTimeout(fetchJson, 100);
+                else {
+                    if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+                    else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
+                }
+            }
+        })
+        i = 0
+        document.getElementById('menueList').innerHTML = html4;
+        longPressN();
+        isLongNode = 0;
+        window.isittime = 1;
+        setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
