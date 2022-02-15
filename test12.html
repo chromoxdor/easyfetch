@@ -33,6 +33,7 @@
         transition: 0.8s;
         position: relative;
         z-index: 2;
+        background-color: white;
     }
 
     iframe {
@@ -457,7 +458,7 @@
             height: 40px;
         }
     }
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 1023px) {
         div#framie {
         position: absolute;
     }
@@ -997,7 +998,7 @@
             nodePath = `http://${nodeInfos.ip}/tools`;
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
-            if (window.innerWidth < 1024) { closeNav(); }
+            if (window.innerWidth < 1023) { closeNav(); }
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
