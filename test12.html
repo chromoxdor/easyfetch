@@ -40,6 +40,7 @@
         width: 100%;
         position: fixed;
         justify-content: center;
+        align-items: baseline;
     }
 
     #allList {
@@ -780,7 +781,7 @@
                 }
                 if (unitNr === unitNr1) { styleU = "&#9737;"; }
                 else { styleU = ""; }
-                document.getElementById('unitId').innerHTML = styleU + unit;
+                document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
                 document.getElementById('unitT').innerHTML = styleU + unit;
                 paramS();
                 changeCss();
@@ -907,7 +908,7 @@
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
             window.isittime = 1;
-            setTimeout(fetchJson, 300);
+            setTimeout(fetchJson, 400);
         }
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
