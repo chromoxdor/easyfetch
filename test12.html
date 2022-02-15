@@ -47,7 +47,7 @@
         grid-row-gap: 2vh;
         margin: auto;
         padding: 5px;
-        transition: 0.8s ease-out;
+        transition:all 800ms ease-out;
         flex-direction: column;
         padding-bottom: 40px;
         padding-top: 40px;
@@ -61,7 +61,7 @@
         display: inline-grid;
         grid-column-gap: 2vh;
         grid-row-gap: 2vh;
-        transition: 0.8s ease-out;
+        transition: all 800ms ease-out;;
     }
 
     .bigNum {
@@ -71,7 +71,7 @@
         grid-column-gap: 2vh;
         width: -webkit-fill-available;
         justify-content: start;
-        transition: 0.8s ease-out;
+        transition: all 800ms ease-out;
     }
 
     .bigNumOne {
@@ -112,7 +112,7 @@
         grid-column-gap: 2vh;
         grid-row-gap: 2vh;
         justify-content: start;
-        transition: 0.8s ease-out;
+        transition: all 800ms ease-out;
     }
 
     .sensorL4 {
@@ -138,7 +138,7 @@
         grid-row-gap: 2vh;
         width: 99.5%;
         min-width: 284px;
-        transition: 0.8s ease-out;
+        transition: all 800ms ease-out;
     }
 
     #sliderList .sensorset {
@@ -382,7 +382,7 @@
         left: 0;
         background-color: #111111d9;
         overflow-x: hidden;
-        transition: 0.8s;
+        transition: all 800ms ease-out;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -401,6 +401,7 @@
         color: inherit;
         background: transparent;
         overflow-wrap: anywhere;
+        word-break: break-word;
     }
 
     .numberUnit {
@@ -868,6 +869,7 @@
             });
         }
         function updateSlTS(event) {
+            window.isittime = 0;
             slider = event.target;
             const amount = slider.closest(".slTimeSet").querySelector(".hAmount");
             const amount2 = slider.closest(".slTimeSet").querySelector(".mAmount");
@@ -875,10 +877,10 @@
             var minutes = slider.value % 60;
             const padded = minutes.toString().padStart(2, "0");
             amount.textContent = hours;
-            amount2.textContent = padded;
-            window.isittime = 0;
+            amount2.textContent = padded;    
         }
         function updateSlider(event) {
+            window.isittime = 0;
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
             slKind = slider.id.split("?")[4];
@@ -886,8 +888,7 @@
             if (!slider.className.includes("noVal")) {
                 sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
                 amount.textContent = sliderAmount;
-            }
-            window.isittime = 0;
+            }         
         }
         function sliderChTS(event) {
             slider = event.target;
