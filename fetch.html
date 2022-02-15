@@ -28,10 +28,24 @@
         justify-content: center;
     }
 
+    div#framie {
+        height: 100%;
+        transition: 0.8s;
+        position: relative;
+        z-index: 2;
+    }
+
+    iframe {
+        width: 100%;
+    height: 100%;
+    border: 0px;
+    padding-bottom: 60px;
+    }
+
     #unitId {
         padding: 2vh;
         background: #ffffffba;
-        z-index: 2;
+        z-index: 1;
         left: 50%;
         top: 0;
         height: 40px;
@@ -162,9 +176,9 @@
         -webkit-appearance: none;
         position: absolute;
         border-radius: 5px;
-        width: 110%;
+        width: 108.5%;
         border-color: transparent;
-        margin-top: -9px;
+        margin-top: -4px;
         margin-left: -25px;
         mix-blend-mode: darken;
         border: 0px;
@@ -188,7 +202,7 @@
 
     .slider::-moz-range-thumb {
         width: 0px;
-        height: 50px;
+        height: 70px;
         cursor: pointer;
         box-shadow: -100vw 0 0 100vw #badcfb;
         border-left: 20px solid #badcfb;
@@ -435,9 +449,18 @@
             font-size: 18px;
         }
 
+        iframe {
+            padding-bottom: 40px;
+        }
+
         #opener {
             height: 40px;
         }
+    }
+    @media screen and (max-width: 1024px) {
+        div#framie {
+        position: absolute;
+    }
     }
 
     @media screen and (max-width: 450px) {
@@ -448,6 +471,10 @@
 
         #opener {
             height: 40px;
+        }
+
+        iframe {
+            padding-bottom: 40px;
         }
 
         .allExtra {
@@ -616,6 +643,7 @@
         var unitNr;
         var unitNr1;
         var nodeInterV;
+        var second;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
@@ -760,7 +788,7 @@
                                         html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">' + kindN + '</span></div>' + '</div>';
                                     }
                                 }
-                                else {//if (!((sensor.TaskName).includes("vSlider") || (sensor.TaskName).includes("tSlider"))) {
+                                else {
                                     html += '<div class="values therest">' + '<div>' + itemN + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div>' + '</div>';
                                 }
                             });
@@ -920,7 +948,7 @@
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
-            window.isittime = 1;
+            //window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
         function openNav() {
@@ -945,7 +973,7 @@
                 i++
                 if (node.nr === unitNr1) { styleN = "&#9737;"; }
                 else { styleN = ""; }
-                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';                if (utton || isLongNode) {
+                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + '); aF()">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
                     if (isLongNode) {
                         if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
                         else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
@@ -960,7 +988,7 @@
             document.getElementById('menueList').innerHTML = html4;
             longPressN();
             isLongNode = 0;
-            window.isittime = 1;
+            second = 0;
             setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
@@ -970,7 +998,6 @@
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.innerWidth < 1024) { closeNav(); }
-            window.isittime = 1;
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
@@ -1009,10 +1036,21 @@
                 longButton.addEventListener('long-press', function (e) {
                     const lBNode1 = longButton.querySelector(".numberUnit");
                     nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
-                    window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
-                    window.isittime = 1;
+                    // window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
+                    document.getElementById('framie').innerHTML = `<iframe src="http://${nodeInfos2[0].ip}/devices"></iframe>`;
+                    jsonPath = `http://${nodeInfos2[0].ip}/json`;
+                    document.getElementById('framie').style.width = "100%";
+                    closeNav();
+                    setTimeout(fetchJson, 100);
+                    second = 1
                 });
             });
+        }
+        function aF() {
+            if (second === 0) {
+                document.getElementById('framie').innerHTML = "";
+                document.getElementById('framie').style.width = "0";
+            }
         }
         function longPressB() {
             var executed = false;
@@ -1035,44 +1073,11 @@
                 });
             });
         }
-        ! function (t, e) {
-            "use strict";
-            function n() {
-                this.dispatchEvent(new CustomEvent("long-press", {
-
-                    bubbles: !0,
-                    cancelable: !0
-                })), clearTimeout(o)
-            }
-            var o = null,
-                u = "ontouchstart" in t || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
-                s = u ? "touchstart" : "mousedown",
-                i = u ? "touchcancel" : "mouseout",
-                a = u ? "touchend" : "mouseup",
-                c = u ? "touchmove" : "mousemove";
-            "initCustomEvent" in e.createEvent("CustomEvent") && (t.CustomEvent = function (t, n) {
-                n = n || {
-                    bubbles: !1,
-                    cancelable: !1,
-                    detail: void 0
-                };
-                var o = e.createEvent("CustomEvent");
-                return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
-            }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
-                var e = t.target,
-                    u = parseInt(e.getAttribute("data-long-press-delay") || "800", 10);
-                o = setTimeout(n.bind(e), u)
-            }), e.addEventListener(a, function (t) {
-                clearTimeout(o)
-            }), e.addEventListener(i, function (t) {
-                clearTimeout(o)
-            }), e.addEventListener(c, function (t) {
-                clearTimeout(o)
-            })
-        }(this, document);
+        !function (e, t) { "use strict"; var n = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = a ? "pointerdown" : i ? "touchstart" : "mousedown", r = a ? "pointerup" : i ? "touchend" : "mouseup", m = a ? "pointermove" : i ? "touchmove" : "mousemove", u = 0, s = 0, c = 10, l = 10; function v(e) { f(), e = function (e) { if (void 0 !== e.changedTouches) return e.changedTouches[0]; return e }(e), this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || t.addEventListener("click", function e(n) { t.removeEventListener("click", e, !0), function (e) { e.stopImmediatePropagation(), e.preventDefault(), e.stopPropagation() }(n) }, !0) } function d(a) { f(a); var i = a.target, o = parseInt(function (e, n, a) { for (; e && e !== t.documentElement;) { var i = e.getAttribute(n); if (i) return i; e = e.parentNode } return a }(i, "data-long-press-delay", "800"), 10); n = function (t, n) { if (!(e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame)) return e.setTimeout(t, n); var a = (new Date).getTime(), i = {}, o = function () { (new Date).getTime() - a >= n ? t.call() : i.value = requestAnimFrame(o) }; return i.value = requestAnimFrame(o), i }(v.bind(i, a), o) } function f(t) { var a; (a = n) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), n = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, n) { n = n || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = t.createEvent("CustomEvent"); return a.initCustomEvent(e, n.bubbles, n.cancelable, n.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (t) { e.setTimeout(t, 1e3 / 60) }, t.addEventListener(r, f, !0), t.addEventListener(m, function (e) { var t = Math.abs(u - e.clientX), n = Math.abs(s - e.clientY); (t >= c || n >= l) && f() }, !0), t.addEventListener("wheel", f, !0), t.addEventListener("scroll", f, !0), t.addEventListener(o, function (e) { u = e.clientX, s = e.clientY, d(e) }, !0) }(window, document);
     </script>
 
     <div id="container">
+        <div id="framie"></div>
         <div id="mySidenav" class="sidenav">
             <div href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</div>
             <div id="menueList">no nodes found...</div>
