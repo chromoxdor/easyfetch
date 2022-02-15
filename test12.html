@@ -532,6 +532,10 @@
             color: #b3b3b3;
         }
 
+        iframe {
+            background-color: black;
+        }
+
         #opener {
             background: #000000a8;
         }
@@ -851,11 +855,11 @@
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL2');
             }
-            else if (bigLength === 3 || (numSet < 10 && numSet > 4)) {
+            else if (bigLength === 3 || (!numBigger && numSet < 10 && numSet > 4)) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL3');
             }
-            else if (bigLength === 4 || numSet > 9) {
+            else if (bigLength === 4 || (!numBigger && numSet > 9)) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
                 document.getElementById("sensorList").classList.add('sensorL4');
             }
