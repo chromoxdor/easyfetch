@@ -392,16 +392,22 @@
         cursor: pointer;
     }
 
-    .sidenav a {
-        padding: 8px 8px 8px 8px;
+    .sidenav div {
+        padding: 3px;
         text-decoration: none;
         font-size: 25px;
-        display: block;
         transition-timing-function: ease-out !important;
         transition: 0.2s;
         color: inherit;
         background: transparent;
         overflow-wrap: anywhere;
+    }
+
+    .menueItem {
+        display: grid;
+        justify-content: start;
+        grid-template-columns: 25px auto;
+        align-items: center;
     }
 
     .numberUnit {
@@ -410,7 +416,7 @@
         background: transparent;
     }
 
-    .sidenav a:hover {
+    .sidenav div:hover {
         color: #444444
     }
 
@@ -423,7 +429,7 @@
     }
 
     @media screen and (max-height: 450px) {
-        .sidenav a {
+        .sidenav div {
             font-size: 18px;
         }
 
@@ -586,7 +592,7 @@
             color: #b3b3b3
         }
 
-        .sidenav a {
+        .sidenav div {
             color: inherit;
         }
     }
@@ -938,8 +944,7 @@
                 i++
                 if (node.nr === unitNr1) { styleN = "&#9737;"; }
                 else { styleN = ""; }
-                html4 += '<a id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + styleN + node.name + '<span class="numberUnit">' + node.nr + '</span></a>';
-                if (utton || isLongNode) {
+                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';                if (utton || isLongNode) {
                     if (isLongNode) {
                         if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
                         else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
@@ -1068,8 +1073,8 @@
 
     <div id="container">
         <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a id="menueList">no nodes found...</a>
+            <div href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</div>
+            <div id="menueList">no nodes found...</div>
         </div>
         <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
         <div id="allList">
