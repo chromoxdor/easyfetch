@@ -34,13 +34,13 @@
         position: relative;
         z-index: 2;
         box-shadow: 4px 0px 13px -7px #000000;
+        padding-bottom: 60px;
     }
 
     iframe {
         width: 100%;
         height: 100%;
         border: 0px;
-        padding-bottom: 60px;
         background-color: white;
     }
 
@@ -943,8 +943,8 @@
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
-            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); getUrl('control?cmd=event,' + sliderId); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
             window.isittime = 1;
             setTimeout(fetchJson, 400);
         }
