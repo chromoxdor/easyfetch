@@ -47,7 +47,7 @@
         grid-row-gap: 2vh;
         margin: auto;
         padding: 5px;
-        transition:all 800ms ease-out;
+        transition: 0.8s ease-out;
         flex-direction: column;
         padding-bottom: 40px;
         padding-top: 40px;
@@ -61,7 +61,7 @@
         display: inline-grid;
         grid-column-gap: 2vh;
         grid-row-gap: 2vh;
-        transition: all 800ms ease-out;;
+        transition: 0.8s ease-out;
     }
 
     .bigNum {
@@ -71,7 +71,7 @@
         grid-column-gap: 2vh;
         width: -webkit-fill-available;
         justify-content: start;
-        transition: all 800ms ease-out;
+        transition: 0.8s ease-out;
     }
 
     .bigNumOne {
@@ -112,7 +112,7 @@
         grid-column-gap: 2vh;
         grid-row-gap: 2vh;
         justify-content: start;
-        transition: all 800ms ease-out;
+        transition: 0.8s ease-out;
     }
 
     .sensorL4 {
@@ -138,7 +138,7 @@
         grid-row-gap: 2vh;
         width: 99.5%;
         min-width: 284px;
-        transition: all 800ms ease-out;
+        transition: 0.8s ease-out;
     }
 
     #sliderList .sensorset {
@@ -382,7 +382,7 @@
         left: 0;
         background-color: #111111d9;
         overflow-x: hidden;
-        transition: all 800ms ease-out;
+        transition: 0.8s;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -401,7 +401,6 @@
         color: inherit;
         background: transparent;
         overflow-wrap: anywhere;
-        word-break: break-word;
     }
 
     .numberUnit {
@@ -877,7 +876,7 @@
             var minutes = slider.value % 60;
             const padded = minutes.toString().padStart(2, "0");
             amount.textContent = hours;
-            amount2.textContent = padded;    
+            amount2.textContent = padded;
         }
         function updateSlider(event) {
             window.isittime = 0;
@@ -888,7 +887,7 @@
             if (!slider.className.includes("noVal")) {
                 sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
                 amount.textContent = sliderAmount;
-            }         
+            }
         }
         function sliderChTS(event) {
             slider = event.target;

@@ -868,6 +868,7 @@
             });
         }
         function updateSlTS(event) {
+            window.isittime = 0;
             slider = event.target;
             const amount = slider.closest(".slTimeSet").querySelector(".hAmount");
             const amount2 = slider.closest(".slTimeSet").querySelector(".mAmount");
@@ -876,9 +877,9 @@
             const padded = minutes.toString().padStart(2, "0");
             amount.textContent = hours;
             amount2.textContent = padded;
-            window.isittime = 0;
         }
         function updateSlider(event) {
+            window.isittime = 0;
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
             slKind = slider.id.split("?")[4];
@@ -887,7 +888,6 @@
                 sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
                 amount.textContent = sliderAmount;
             }
-            window.isittime = 0;
         }
         function sliderChTS(event) {
             slider = event.target;
