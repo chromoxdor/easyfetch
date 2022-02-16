@@ -687,6 +687,7 @@
                             someoneEn = 1;
                             firstItem = true;
                             sensor.TaskValues.forEach(item => {
+                                if (item.Value == "nan") {item.Value =0; item.NrDecimals = 0;}
                                 itemSl = item.Name;
                                 itemA = item.Name;
                                 itemN = itemA.split("?")[0];
