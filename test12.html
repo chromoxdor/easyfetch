@@ -635,7 +635,6 @@
 
 <body onload="fetchJson()">
     <script>
-        const blackList = []; /*Blacklist Devices e.g. ["Display", "Sensor"]*/
         var firstRun = true;
         var whichSl;
         var sliderAmount;
@@ -650,12 +649,12 @@
         var unitNr;
         var unitNr1;
         var nodeInterV;
-        var second;
+        var isOpen;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
             onceNoTask = 0;
-            if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
+            if (!jsonPath) { jsonPath = `json`;}
             if (isittime) {
                 response = await fetch(jsonPath);
                 myJson = await response.json();
@@ -673,6 +672,7 @@
                 dateY = dateBig.split('-')[0];
                 unit = myJson.WiFi.Hostname;
                 unitNr = myJson.System['Unit Number'];
+                nodeInfos = myJson.nodes;
                 if (!myJson.Sensors.length) {
                     html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;">' + '<div  class="sensors nodes" style="font-weight:bold;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
@@ -683,7 +683,7 @@
                         utton = sensor.TaskName;
                         /* Has the entry TaskValues
                         and is is not in Blacklist? */
-                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !blackList.includes(sensor.TaskName) && !sensor.TaskName.includes("XX")) {
+                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !sensor.TaskName.includes("XX")) {
                             someoneEn = 1;
                             firstItem = true;
                             sensor.TaskValues.forEach(item => {
@@ -802,7 +802,7 @@
                             html += '</div>';
                             html3 += '</div>';
                         }
-                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                        else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                     });
                     if (!someoneEn) {
                         html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>';
@@ -816,6 +816,7 @@
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
                     unitNr1 = myJson.System['Unit Number'];
+                    nodePath2='http://'+myJson.WiFi['IP Address']+'/devices'
                     firstRun = false;
                     /*  setInterval(function () {
                           window.location.reload();
@@ -955,7 +956,6 @@
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
-            //window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
         function openNav() {
@@ -980,7 +980,7 @@
                 i++
                 if (node.nr === unitNr1) { styleN = "&#9737;"; }
                 else { styleN = ""; }
-                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + '); aF()">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
+                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
                     if (isLongNode) {
                         if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
                         else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
@@ -993,15 +993,13 @@
             })
             i = 0
             document.getElementById('menueList').innerHTML = html4;
-            longPressN();
             isLongNode = 0;
-            second = 0;
             setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
             nodeNr = nodeInfos.nr;
-            nodePath = `http://${nodeInfos.ip}/tools`;
+           // nodePath = `http://${nodeInfos.ip}/tools`;
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.innerWidth < 1023) { closeNav(); }
@@ -1037,28 +1035,20 @@
                 element.msRequestFullscreen();
             }
         }
-        function longPressN() {
-            const longButtons2 = document.querySelectorAll(".nc");
-            longButtons2.forEach(longButton => {
-                longButton.addEventListener('long-press', function (e) {
-                    const lBNode1 = longButton.querySelector(".numberUnit");
-                    nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
-                    // window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
-                    document.getElementById('framie').innerHTML = `<iframe src="http://${nodeInfos2[0].ip}/devices"></iframe>`;
-                    jsonPath = `http://${nodeInfos2[0].ip}/json`;
-                    document.getElementById('framie').style.width = "100%";
-                    closeNav();
-                    setTimeout(fetchJson, 100);
-                    second = 1
-                });
-            });
-        }
-        function aF() {
-            if (second === 0) {
+       function splitOn() {
+            if (document.getElementById('framie').offsetWidth === 0) {
+                isOpen=1;
+                iFr(isOpen);
+                document.getElementById('framie').style.width = "100%";
+            } else {
                 document.getElementById('framie').innerHTML = "";
                 document.getElementById('framie').style.width = "0";
+                isOpen=0;
             }
+            setTimeout(fetchJson, 100);
         }
+        function iFr() { if(isOpen===1){document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav();}}
+        
         function longPressB() {
             var executed = false;
             const longButtons = document.querySelectorAll(".sensorset");
@@ -1100,7 +1090,7 @@
                 <span style="font-size:30px;cursor:pointer;background:none;"
                     onclick="openNav(event); getNodes()">&#9776;</span>
                 <span style="font-size:30px;cursor:pointer;background:none;"
-                    onclick="window.location.href = nodePath;">&#8962;</span>
+                    onclick="splitOn();">&#8962;</span>
             </div>
         </div>
     </div>
