@@ -34,6 +34,7 @@
         position: relative;
         z-index: 2;
         padding-bottom: 60px;
+        left: 0;
     }
 
     iframe {
@@ -532,10 +533,6 @@
             color: #b3b3b3;
         }
 
-        iframe {
-            background-color: black;
-        }
-
         #opener {
             background: #000000a8;
         }
@@ -654,7 +651,7 @@
         async function fetchJson() {
             someoneEn = 0;
             onceNoTask = 0;
-            if (!jsonPath) { jsonPath = `json`;}
+            if (!jsonPath) { jsonPath = `json`; }
             if (isittime) {
                 response = await fetch(jsonPath);
                 myJson = await response.json();
@@ -687,7 +684,7 @@
                             someoneEn = 1;
                             firstItem = true;
                             sensor.TaskValues.forEach(item => {
-                                if (item.Value == "nan") {item.Value =0; item.NrDecimals = 0;}
+                                if (item.Value == "nan") { item.Value = 0; item.NrDecimals = 0; }
                                 itemSl = item.Name;
                                 itemA = item.Name;
                                 itemN = itemA.split("?")[0];
@@ -817,13 +814,13 @@
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
                     unitNr1 = myJson.System['Unit Number'];
-                    nodePath2='http://'+myJson.WiFi['IP Address']+'/devices'
+                    nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices'
                     firstRun = false;
                     /*  setInterval(function () {
                           window.location.reload();
                       }, 300000);*/
                 }
-                if (unitNr === unitNr1) { styleU = "&#9737;"; }
+                if (unitNr === unitNr1) { styleU = "&#8857;"; }
                 else { styleU = ""; }
                 document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
                 document.getElementById('unitT').innerHTML = styleU + unit;
@@ -949,10 +946,10 @@
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); getUrl('control?cmd=event,' + sliderId); }
-            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
+            if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId); }
+            else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
             window.isittime = 1;
-            setTimeout(fetchJson, 400);
+            setTimeout(fetchJson, 300);
         }
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
@@ -979,7 +976,7 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                if (node.nr === unitNr1) { styleN = "&#9737;"; }
+                if (node.nr === unitNr1) { styleN = "&#8857;"; }
                 else { styleN = ""; }
                 html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
                     if (isLongNode) {
@@ -1000,7 +997,7 @@
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
             nodeNr = nodeInfos.nr;
-           // nodePath = `http://${nodeInfos.ip}/tools`;
+            // nodePath = `http://${nodeInfos.ip}/tools`;
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
             if (window.innerWidth < 1023) { closeNav(); }
@@ -1036,20 +1033,20 @@
                 element.msRequestFullscreen();
             }
         }
-       function splitOn() {
+        function splitOn() {
             if (document.getElementById('framie').offsetWidth === 0) {
-                isOpen=1;
+                isOpen = 1;
                 iFr(isOpen);
                 document.getElementById('framie').style.width = "100%";
             } else {
                 document.getElementById('framie').style.width = "0";
                 document.getElementById('framie').innerHTML = "";
-                isOpen=0;
+                isOpen = 0;
             }
             setTimeout(fetchJson, 100);
         }
-        function iFr() { if(isOpen===1){document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav();}}
-        
+        function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
+
         function longPressB() {
             var executed = false;
             const longButtons = document.querySelectorAll(".sensorset");
@@ -1090,8 +1087,7 @@
             <div class="open">
                 <span style="font-size:30px;cursor:pointer;background:none;"
                     onclick="openNav(event); getNodes()">&#9776;</span>
-                <span style="font-size:30px;cursor:pointer;background:none;"
-                    onclick="splitOn();">&#8962;</span>
+                <span style="font-size:30px;cursor:pointer;background:none;" onclick="splitOn();">&#8962;</span>
             </div>
         </div>
     </div>
