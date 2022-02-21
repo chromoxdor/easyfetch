@@ -3,7 +3,6 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--http-equiv="refresh" content="300"-->
     <meta charset='utf-8' />
     <title id="unitT"></title>
 </head>
@@ -790,7 +789,7 @@
                                         html3 += bigB + item.Name + '</div>' + '<div id="year" class="valueBig">' + dateY + '</div>' + '</div>';
                                     }
                                     else {
-                                        html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">' + kindN + '</span></div>' + '</div>';
+                                        html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div>' + '</div>';
                                     }
                                 }
                                 else {
@@ -816,9 +815,6 @@
                     unitNr1 = myJson.System['Unit Number'];
                     nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices'
                     firstRun = false;
-                    /*  setInterval(function () {
-                          window.location.reload();
-                      }, 300000);*/
                 }
                 if (unitNr === unitNr1) { styleU = "&#8857;"; }
                 else { styleU = ""; }
@@ -835,11 +831,8 @@
         }
         function changeCss() {
             var numSl = document.querySelectorAll('input[type=range]').length;
-            if (!numSl) {/*changes grid-row-gap when sliders are missing*/
-                document.getElementById("allList").classList.add('allExtra');
-            } else {
-                document.getElementById("allList").classList.remove('allExtra');
-            }
+            if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
+            else { document.getElementById("allList").classList.remove('allExtra'); }
             var list3 = document.querySelectorAll(".bigNum");
             var numBigger = document.getElementsByClassName('bigNum').length;
             var numBig = document.getElementsByClassName('valuesBig').length;
@@ -946,10 +939,10 @@
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); getUrl('control?cmd=event,' + sliderId); }
-            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
+            if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId); }
+            else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
             window.isittime = 1;
-            setTimeout(fetchJson, 400);
+            setTimeout(fetchJson, 300);
         }
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
@@ -1004,7 +997,7 @@
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
-            const resizeText = ({ element, elements, minSize = 10, maxSize = 55, step = 1, unit = 'pt' }) => {
+            const resizeText = ({ element, elements, minSize = 10, maxSize = 115, step = 1, unit = 'pt' }) => {
                 (elements || [element]).forEach(el => {
                     let i = minSize
                     let overflow = false
@@ -1015,6 +1008,7 @@
                         if (!overflow) i += step
                     }
                     el.style.fontSize = `${i - step}${unit}`
+                    el.style.lineHeight = "0.75"
                 })
             }
             resizeText({
