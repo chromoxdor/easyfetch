@@ -61,7 +61,7 @@
 
     #allList {
         display: flex;
-        grid-row-gap: 2vh;
+        grid-row-gap: 1vh;
         margin: auto;
         padding: 5px;
         transition: 0.8s ease-out;
@@ -71,21 +71,21 @@
     }
 
     .allExtra {
-        grid-row-gap: 1vh !important;
+        grid-row-gap: .5vh !important;
     }
 
     #bigNumber {
         display: inline-grid;
-        grid-column-gap: 2vh;
-        grid-row-gap: 2vh;
+        grid-column-gap: 1vh;
+        grid-row-gap: 1vh;
         transition: 0.8s ease-out;
     }
 
     .bigNum {
         display: inline-flex;
         grid-template-columns: auto auto auto auto;
-        grid-row-gap: 2vh;
-        grid-column-gap: 2vh;
+        grid-row-gap: 1vh;
+        grid-column-gap: 1vh;
         width: -webkit-fill-available;
         justify-content: start;
         transition: 0.8s ease-out;
@@ -126,8 +126,8 @@
 
     #sensorList {
         display: inline-grid;
-        grid-column-gap: 2vh;
-        grid-row-gap: 2vh;
+        grid-column-gap: 1vh;
+        grid-row-gap: 1vh;
         justify-content: start;
         transition: 0.8s ease-out;
     }
@@ -151,8 +151,8 @@
 
     #sliderList {
         display: inline-grid;
-        grid-column-gap: 2vh;
-        grid-row-gap: 2vh;
+        grid-column-gap: 1vh;
+        grid-row-gap: 1vh;
         width: 99.5%;
         min-width: 284px;
         transition: 0.8s ease-out;
@@ -1044,7 +1044,10 @@
             setTimeout(fetchJson, 100);
         }
         function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
-
+        function topF() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
         function longPressB() {
             var executed = false;
             const longButtons = document.querySelectorAll(".sensorset");
@@ -1085,7 +1088,7 @@
             <div class="open">
                 <span style="font-size:30px;cursor:pointer;background:none;"
                     onclick="openNav(event); getNodes()">&#9776;</span>
-                <span style="font-size:30px;cursor:pointer;background:none;" onclick="splitOn();">&#8962;</span>
+                <span style="font-size:30px;cursor:pointer;background:none;" onclick="splitOn(); topF()">&#8962;</span>
             </div>
         </div>
     </div>

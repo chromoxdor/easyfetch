@@ -3,6 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--http-equiv="refresh" content="300"-->
     <meta charset='utf-8' />
     <title id="unitT"></title>
 </head>
@@ -22,32 +23,15 @@
     #container {
         display: flex;
         position: absolute;
-        height: 101vh;
-        width: 100vw;
-        justify-content: center;
-    }
-
-    div#framie {
         height: 100%;
-        transition: 0.8s;
-        position: relative;
-        z-index: 2;
-        padding-bottom: 60px;
-        left: 0;
-    }
-
-    iframe {
         width: 100%;
-        height: 100%;
-        border: 0px;
-        background-color: white;
-        box-shadow: 4px 0px 13px -7px #000000;
+        justify-content: center;
     }
 
     #unitId {
         padding: 2vh;
         background: #ffffffba;
-        z-index: 1;
+        z-index: 2;
         left: 50%;
         top: 0;
         height: 40px;
@@ -61,7 +45,7 @@
 
     #allList {
         display: flex;
-        grid-row-gap: 1vh;
+        grid-row-gap: 2vh;
         margin: auto;
         padding: 5px;
         transition: 0.8s ease-out;
@@ -71,21 +55,21 @@
     }
 
     .allExtra {
-        grid-row-gap: .5vh !important;
+        grid-row-gap: 1vh !important;
     }
 
     #bigNumber {
         display: inline-grid;
-        grid-column-gap: 1vh;
-        grid-row-gap: 1vh;
+        grid-column-gap: 2vh;
+        grid-row-gap: 2vh;
         transition: 0.8s ease-out;
     }
 
     .bigNum {
         display: inline-flex;
         grid-template-columns: auto auto auto auto;
-        grid-row-gap: 1vh;
-        grid-column-gap: 1vh;
+        grid-row-gap: 2vh;
+        grid-column-gap: 2vh;
         width: -webkit-fill-available;
         justify-content: start;
         transition: 0.8s ease-out;
@@ -126,8 +110,8 @@
 
     #sensorList {
         display: inline-grid;
-        grid-column-gap: 1vh;
-        grid-row-gap: 1vh;
+        grid-column-gap: 2vh;
+        grid-row-gap: 2vh;
         justify-content: start;
         transition: 0.8s ease-out;
     }
@@ -151,8 +135,8 @@
 
     #sliderList {
         display: inline-grid;
-        grid-column-gap: 1vh;
-        grid-row-gap: 1vh;
+        grid-column-gap: 2vh;
+        grid-row-gap: 2vh;
         width: 99.5%;
         min-width: 284px;
         transition: 0.8s ease-out;
@@ -178,9 +162,9 @@
         -webkit-appearance: none;
         position: absolute;
         border-radius: 5px;
-        width: 108.5%;
+        width: 110%;
         border-color: transparent;
-        margin-top: -4px;
+        margin-top: -9px;
         margin-left: -25px;
         mix-blend-mode: darken;
         border: 0px;
@@ -204,7 +188,7 @@
 
     .slider::-moz-range-thumb {
         width: 0px;
-        height: 70px;
+        height: 50px;
         cursor: pointer;
         box-shadow: -100vw 0 0 100vw #badcfb;
         border-left: 20px solid #badcfb;
@@ -451,18 +435,8 @@
             font-size: 18px;
         }
 
-        div#framie {
-            padding-bottom: 40px;
-        }
-
         #opener {
             height: 40px;
-        }
-    }
-
-    @media screen and (max-width: 799px) {
-        div#framie {
-            position: absolute;
         }
     }
 
@@ -474,10 +448,6 @@
 
         #opener {
             height: 40px;
-        }
-
-        div#framie {
-            padding-bottom: 40px;
         }
 
         .allExtra {
@@ -530,10 +500,6 @@
         * {
             background-color: rgb(0, 0, 0);
             color: #b3b3b3;
-        }
-
-        iframe {
-            background-color: black;
         }
 
         #opener {
@@ -635,6 +601,7 @@
 
 <body onload="fetchJson()">
     <script>
+        const blackList = []; /*Blacklist Devices e.g. ["Display", "Sensor"]*/
         var firstRun = true;
         var whichSl;
         var sliderAmount;
@@ -649,12 +616,11 @@
         var unitNr;
         var unitNr1;
         var nodeInterV;
-        var isOpen;
         window.isittime = 1;
         async function fetchJson() {
             someoneEn = 0;
             onceNoTask = 0;
-            if (!jsonPath) { jsonPath = `json`; }
+            if (!jsonPath) { jsonPath = `json`; nodePath = `/tools`; }
             if (isittime) {
                 response = await fetch(jsonPath);
                 myJson = await response.json();
@@ -672,7 +638,6 @@
                 dateY = dateBig.split('-')[0];
                 unit = myJson.WiFi.Hostname;
                 unitNr = myJson.System['Unit Number'];
-                nodeInfos = myJson.nodes;
                 if (!myJson.Sensors.length) {
                     html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;">' + '<div  class="sensors nodes" style="font-weight:bold;">no tasks configured. click here...</div>';
                     html2 += '<div></div>';
@@ -683,11 +648,10 @@
                         utton = sensor.TaskName;
                         /* Has the entry TaskValues
                         and is is not in Blacklist? */
-                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !sensor.TaskName.includes("XX")) {
+                        if (sensor.TaskEnabled === "true" && sensor.TaskValues && !blackList.includes(sensor.TaskName) && !sensor.TaskName.includes("XX")) {
                             someoneEn = 1;
                             firstItem = true;
                             sensor.TaskValues.forEach(item => {
-                                if (item.Value == "nan") { item.Value = 0; item.NrDecimals = 0; }
                                 itemSl = item.Name;
                                 itemA = item.Name;
                                 itemN = itemA.split("?")[0];
@@ -793,17 +757,17 @@
                                         html3 += bigB + item.Name + '</div>' + '<div id="year" class="valueBig">' + dateY + '</div>' + '</div>';
                                     }
                                     else {
-                                        html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div>' + '</div>';
+                                        html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;">' + kindN + '</span></div>' + '</div>';
                                     }
                                 }
-                                else {
+                                else {//if (!((sensor.TaskName).includes("vSlider") || (sensor.TaskName).includes("tSlider"))) {
                                     html += '<div class="values therest">' + '<div>' + itemN + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div>' + '</div>';
                                 }
                             });
                             html += '</div>';
                             html3 += '</div>';
                         }
-                        else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                        else if (!blackList.includes(sensor.TaskName) && sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                     });
                     if (!someoneEn) {
                         html += '<div class="sensorset clickables" onclick="window.location.href=nodePath2;"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled. click here...</div>';
@@ -817,10 +781,12 @@
                 if (firstRun) {
                     setInterval(fetchJson, 10000);
                     unitNr1 = myJson.System['Unit Number'];
-                    nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices'
                     firstRun = false;
+                    /*  setInterval(function () {
+                          window.location.reload();
+                      }, 300000);*/
                 }
-                if (unitNr === unitNr1) { styleU = "&#8857;"; }
+                if (unitNr === unitNr1) { styleU = "&#9737;"; }
                 else { styleU = ""; }
                 document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
                 document.getElementById('unitT').innerHTML = styleU + unit;
@@ -835,8 +801,11 @@
         }
         function changeCss() {
             var numSl = document.querySelectorAll('input[type=range]').length;
-            if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
-            else { document.getElementById("allList").classList.remove('allExtra'); }
+            if (!numSl) {/*changes grid-row-gap when sliders are missing*/
+                document.getElementById("allList").classList.add('allExtra');
+            } else {
+                document.getElementById("allList").classList.remove('allExtra');
+            }
             var list3 = document.querySelectorAll(".bigNum");
             var numBigger = document.getElementsByClassName('bigNum').length;
             var numBig = document.getElementsByClassName('valuesBig').length;
@@ -851,11 +820,11 @@
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL2');
             }
-            else if (bigLength === 3 || (!numBigger && numSet < 10 && numSet > 4)) {
+            else if (bigLength === 3 || (numSet < 10 && numSet > 4)) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL3');
             }
-            else if (bigLength === 4 || (!numBigger && numSet > 9)) {
+            else if (bigLength === 4 || numSet > 9) {
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
                 document.getElementById("sensorList").classList.add('sensorL4');
             }
@@ -943,14 +912,15 @@
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-            if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId); }
-            else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + sliderId); getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); }
+            else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); }
             window.isittime = 1;
-            setTimeout(fetchJson, 300);
+            setTimeout(fetchJson, 400);
         }
         function buttonClick(utton) {
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
+            window.isittime = 1;
             setTimeout(fetchJson, 300);
         }
         function openNav() {
@@ -973,9 +943,9 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                if (node.nr === unitNr1) { styleN = "&#8857;"; }
+                if (node.nr === unitNr1) { styleN = "&#9737;"; }
                 else { styleN = ""; }
-                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
+                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ')">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';                if (utton || isLongNode) {
                     if (isLongNode) {
                         if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
                         else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
@@ -988,20 +958,23 @@
             })
             i = 0
             document.getElementById('menueList').innerHTML = html4;
+            longPressN();
             isLongNode = 0;
+            window.isittime = 1;
             setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
             nodeNr = nodeInfos.nr;
-            // nodePath = `http://${nodeInfos.ip}/tools`;
+            nodePath = `http://${nodeInfos.ip}/tools`;
             nodePath2 = `http://${nodeInfos.ip}/devices`;
             jsonPath = `http://${nodeInfos.ip}/json`;
-            if (window.innerWidth < 1023) { closeNav(); }
+            if (window.innerWidth < 1024) { closeNav(); }
+            window.isittime = 1;
         }
         function resizeText() {
             const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
-            const resizeText = ({ element, elements, minSize = 10, maxSize = 115, step = 1, unit = 'pt' }) => {
+            const resizeText = ({ element, elements, minSize = 10, maxSize = 55, step = 1, unit = 'pt' }) => {
                 (elements || [element]).forEach(el => {
                     let i = minSize
                     let overflow = false
@@ -1012,7 +985,6 @@
                         if (!overflow) i += step
                     }
                     el.style.fontSize = `${i - step}${unit}`
-                    el.style.lineHeight = "0.75"
                 })
             }
             resizeText({
@@ -1031,22 +1003,16 @@
                 element.msRequestFullscreen();
             }
         }
-        function splitOn() {
-            if (document.getElementById('framie').offsetWidth === 0) {
-                isOpen = 1;
-                iFr(isOpen);
-                document.getElementById('framie').style.width = "100%";
-            } else {
-                document.getElementById('framie').style.width = "0";
-                document.getElementById('framie').innerHTML = "";
-                isOpen = 0;
-            }
-            setTimeout(fetchJson, 100);
-        }
-        function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
-        function topF() {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        function longPressN() {
+            const longButtons2 = document.querySelectorAll(".nc");
+            longButtons2.forEach(longButton => {
+                longButton.addEventListener('long-press', function (e) {
+                    const lBNode1 = longButton.querySelector(".numberUnit");
+                    nodeInfos2 = nodeInfos.filter(a => a.nr == lBNode1.textContent);
+                    window.open(`http://${nodeInfos2[0].ip}/devices`, '_blank');
+                    window.isittime = 1;
+                });
+            });
         }
         function longPressB() {
             var executed = false;
@@ -1069,11 +1035,44 @@
                 });
             });
         }
-        !function (e, t) { "use strict"; var n = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = a ? "pointerdown" : i ? "touchstart" : "mousedown", r = a ? "pointerup" : i ? "touchend" : "mouseup", m = a ? "pointermove" : i ? "touchmove" : "mousemove", u = 0, s = 0, c = 10, l = 10; function v(e) { f(), e = function (e) { if (void 0 !== e.changedTouches) return e.changedTouches[0]; return e }(e), this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || t.addEventListener("click", function e(n) { t.removeEventListener("click", e, !0), function (e) { e.stopImmediatePropagation(), e.preventDefault(), e.stopPropagation() }(n) }, !0) } function d(a) { f(a); var i = a.target, o = parseInt(function (e, n, a) { for (; e && e !== t.documentElement;) { var i = e.getAttribute(n); if (i) return i; e = e.parentNode } return a }(i, "data-long-press-delay", "800"), 10); n = function (t, n) { if (!(e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame)) return e.setTimeout(t, n); var a = (new Date).getTime(), i = {}, o = function () { (new Date).getTime() - a >= n ? t.call() : i.value = requestAnimFrame(o) }; return i.value = requestAnimFrame(o), i }(v.bind(i, a), o) } function f(t) { var a; (a = n) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), n = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, n) { n = n || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = t.createEvent("CustomEvent"); return a.initCustomEvent(e, n.bubbles, n.cancelable, n.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (t) { e.setTimeout(t, 1e3 / 60) }, t.addEventListener(r, f, !0), t.addEventListener(m, function (e) { var t = Math.abs(u - e.clientX), n = Math.abs(s - e.clientY); (t >= c || n >= l) && f() }, !0), t.addEventListener("wheel", f, !0), t.addEventListener("scroll", f, !0), t.addEventListener(o, function (e) { u = e.clientX, s = e.clientY, d(e) }, !0) }(window, document);
+        ! function (t, e) {
+            "use strict";
+            function n() {
+                this.dispatchEvent(new CustomEvent("long-press", {
+
+                    bubbles: !0,
+                    cancelable: !0
+                })), clearTimeout(o)
+            }
+            var o = null,
+                u = "ontouchstart" in t || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+                s = u ? "touchstart" : "mousedown",
+                i = u ? "touchcancel" : "mouseout",
+                a = u ? "touchend" : "mouseup",
+                c = u ? "touchmove" : "mousemove";
+            "initCustomEvent" in e.createEvent("CustomEvent") && (t.CustomEvent = function (t, n) {
+                n = n || {
+                    bubbles: !1,
+                    cancelable: !1,
+                    detail: void 0
+                };
+                var o = e.createEvent("CustomEvent");
+                return o.initCustomEvent(t, n.bubbles, n.cancelable, n.detail), o
+            }, t.CustomEvent.prototype = t.Event.prototype), e.addEventListener(s, function (t) {
+                var e = t.target,
+                    u = parseInt(e.getAttribute("data-long-press-delay") || "800", 10);
+                o = setTimeout(n.bind(e), u)
+            }), e.addEventListener(a, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(i, function (t) {
+                clearTimeout(o)
+            }), e.addEventListener(c, function (t) {
+                clearTimeout(o)
+            })
+        }(this, document);
     </script>
 
     <div id="container">
-        <div id="framie"></div>
         <div id="mySidenav" class="sidenav">
             <div href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</div>
             <div id="menueList">no nodes found...</div>
@@ -1088,7 +1087,8 @@
             <div class="open">
                 <span style="font-size:30px;cursor:pointer;background:none;"
                     onclick="openNav(event); getNodes()">&#9776;</span>
-                <span style="font-size:30px;cursor:pointer;background:none;" onclick="splitOn(); topF()">&#8962;</span>
+                <span style="font-size:30px;cursor:pointer;background:none;"
+                    onclick="window.location.href = nodePath;">&#8962;</span>
             </div>
         </div>
     </div>
