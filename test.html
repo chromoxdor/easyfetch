@@ -1031,8 +1031,7 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
-                console.log(node.nr, myParam);
-                if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; console.log("fired",node.nr, myParam); }}
+                if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
                 if (node.nr === unitNr1) { styleN = "&#8857;"; }
                 else { styleN = ""; }
                 html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
@@ -1049,7 +1048,13 @@
             i = 0
             document.getElementById('menueList').innerHTML = html4;
             isLongNode = 0;
-            setTimeout(fetchJson, 100);
+            if (hasParams) {
+                let html = '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">can not find node nr' + myParam + '...</div>';
+                document.getElementById('sensorList').innerHTML = html;
+                hasParams = false;
+                setTimeout(fetchJson, 2000);
+            }
+            else { setTimeout(fetchJson, 100); }
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
