@@ -655,6 +655,7 @@
         var hasParams = true;
         var dataT = [];
         var dataT2 = [];
+        var isF = true;
         window.isittime = 1;
         async function fetchJson() {
             urlParams = new URLSearchParams(window.location.search);
@@ -666,6 +667,7 @@
             if (isittime && !hasParams) {
                 response = await fetch(jsonPath);
                 myJson = await response.json();
+                dataT = [];
                 let i = -1;
                 let html = '';
                 let html2 = '';
@@ -869,23 +871,23 @@
                 resizeText();
                 longPressB();
                 longPressN();
-                getTS()
+                if (isF) { getTS() };
+                console.log(dataT);
             }
             else { getNodes() }
         }
-        function getTS() {
+        async function getTS() {
+            isF = false;
             dataT2 = [];
             if (!(dataT === undefined)) {
-                dataT.forEach((Array) => {
-                        fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last').then(function (response) {
-                            return response.json();
-                        }).then(function (data) {
-                            dataT2.unshift(data.toFixed(Array[3]));
-                            dataT = [];
-                        });
-                });
-                
+                for (Array of dataT) {
+                    responseTS = await fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last')
+                    myTS = await responseTS.json();
+                    if (responseTS.ok) { dataT2.push(myTS.toFixed(Array[3])); }
+                    else { dataT2.push('error'); }
+                }
             }
+            isF = true;
         }
         function getUrl(url) {
             fetch(url)
