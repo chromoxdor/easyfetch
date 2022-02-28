@@ -746,14 +746,13 @@
                                 if ((itemA.match(/\&/g) || []).length >= 2) {
                                     i++;
                                     if (dataT2.length === 0) { itemTSName = 0; }
-                                    else {itemTSName = dataT2[i];}
+                                    else { itemTSName = dataT2[i]; }
                                     isTspeak = true;
                                     itemN = itemA.split("&")[0];
                                     chanN = itemA.split("&")[1];
                                     fieldN = itemA.split("&")[2];
                                     if (fieldN.includes("?")) { fieldN = fieldN.split("?")[0]; }
                                     dataT.push([itemN, chanN, fieldN, item.NrDecimals, kindN, sensor.TaskName]);
-                                    console.log(dataT);
                                 }
                                 else { isTspeak = false; }
 
@@ -776,15 +775,15 @@
                                     html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + utton + '" style="font-weight:bold;">' + item.Name + '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div><div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="' + slT2 + '" id="' + item.Name + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
                                 }
                                 else if ((sensor.TaskName).includes("dButtons")) {
-                                        if ((kindN === "C" && item.Value < 2) || item.Value === 1) {
-                                            html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
-                                        }
-                                        else if (item.Value === 2) {
-                                            html += '<div class="alert sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
-                                        }
-                                        else {
-                                            html += '<div class="sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
-                                        }
+                                    if ((kindN === "C" && item.Value < 2) || item.Value === 1) {
+                                        html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                    }
+                                    else if (item.Value === 2) {
+                                        html += '<div class="alert sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                    }
+                                    else {
+                                        html += '<div class="sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                    }
                                 }
                                 else if ((sensor.TaskName).includes("vSlider")) {
                                     slName = item.Name;
@@ -870,23 +869,24 @@
                 resizeText();
                 longPressB();
                 longPressN();
-                dataT2 = [];
-                if (!(dataT === undefined)) {
-                    dataT.forEach((Array) => {
-                        if (!(Array === undefined)) {
-                            fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last').then(function (response) {
-                                return response.json();
-                            }).then(function (data) {
-                                dataT2.unshift(data.toFixed(Array[3]));
-                                dataT = [];
-                                console.log(dataT2)
-                            });
-                        }
-                    });
-                }
-
+                getTS()
             }
             else { getNodes() }
+        }
+        async function getTS() {
+            dataT2 = [];
+            if (!(dataT === undefined)) {
+                dataT.forEach((Array) => {
+                    if (!(Array === undefined)) {
+                        fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last').then(function (response) {
+                            return response.json();
+                        }).then(function (data) {
+                            dataT2.unshift(data.toFixed(Array[3]));
+                            dataT = [];
+                        });
+                    }
+                });
+            }
         }
         function getUrl(url) {
             fetch(url)
@@ -1031,6 +1031,8 @@
             let i = -1;
             myJson.nodes.forEach(node => {
                 i++
+                console.log(node.nr, myParam);
+                if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; console.log("fired",node.nr, myParam); }}
                 if (node.nr === unitNr1) { styleN = "&#8857;"; }
                 else { styleN = ""; }
                 html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
@@ -1047,7 +1049,6 @@
             i = 0
             document.getElementById('menueList').innerHTML = html4;
             isLongNode = 0;
-            if (hasParams) { nodeChange(myParam); hasParams = false; }
             setTimeout(fetchJson, 100);
         }
         function nodeChange(event) {
