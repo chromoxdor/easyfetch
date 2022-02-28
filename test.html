@@ -873,19 +873,18 @@
             }
             else { getNodes() }
         }
-        async function getTS() {
+        function getTS() {
             dataT2 = [];
             if (!(dataT === undefined)) {
                 dataT.forEach((Array) => {
-                    if (!(Array === undefined)) {
                         fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last').then(function (response) {
                             return response.json();
                         }).then(function (data) {
                             dataT2.unshift(data.toFixed(Array[3]));
                             dataT = [];
                         });
-                    }
                 });
+                
             }
         }
         function getUrl(url) {
