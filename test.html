@@ -978,7 +978,6 @@
                 setTimeout(fetchJson, 300);
             }
             else {
-                console.log("local");
                 if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
                 else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
                 setTimeout(fetchJson, 300);
@@ -1091,16 +1090,13 @@
                         getNodes();
                     }
                     else {
-                        console.log(lBName)
                         if ((lBName.id).split("&")[1]) {
-                            console.log("dbutton");
                             utton2 = (lBName.id).split("&")[0];
                             nodeNr2 = (lBName.id).split("&")[1];
                             fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Long"');
                             window.isittime = 1;
                             setTimeout(fetchJson, 300);
                         } else {
-                            console.log("other");
                             if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
                             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                             window.isittime = 1;
