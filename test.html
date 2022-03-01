@@ -685,7 +685,7 @@
                 unitNr = myJson.System['Unit Number'];
                 nodeInfos = myJson.nodes;
                 if (!myJson.Sensors.length) {
-                    html += '<div class="sensorset clickables">' + '<div  class="sensors nodes" style="font-weight:bold;">no tasks configured...</div>';
+                    html += '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">no tasks configured...</div>';
                     html2 += '<div></div>';
                     html3 += '<div></div>';
                 }
@@ -715,17 +715,18 @@
                                     firstItem = false;
                                     if ((item.Name).includes("btnState")) {
                                         if ((item.Name === "btnStateC" && item.Value < 2) || item.Value === 1) {
-                                            html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                            html += '<div class="on';
                                         }
                                         else if (item.Value === 2) {
-                                            html += '<div class="alert sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                            html += '<div class="alert';
                                         }
                                         else {
-                                            html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                            html += '<div class="';
                                         }
+                                        html += 'sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>'
                                     }
                                     else if (item.Name === "allNodes") {
-                                        html += '<div class="on sensorset clickables" onclick="getNodes(\'' + utton + '\')">' + '<div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        html += '<div class="on sensorset clickables" onclick="getNodes(\'' + utton + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>';
                                     }
                                     else if ((sensor.TaskName).includes("dButtons")) { }
                                     /*slider*/
@@ -741,7 +742,7 @@
                                     }
                                     /*everything else*/
                                     else {
-                                        html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
+                                        html += '<div class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>';
                                     }
                                 }
                                 /*add container with name and value to HTML:*/
@@ -778,14 +779,15 @@
                                 }
                                 else if ((sensor.TaskName).includes("dButtons")) {
                                     if ((kindN === "C" && item.Value < 2) || item.Value === 1) {
-                                        html += '<div class="on sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                        html += '<div class="on';
                                     }
                                     else if (item.Value === 2) {
-                                        html += '<div class="alert sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                        html += '<div class="alert';
                                     }
                                     else {
-                                        html += '<div class="sensorset clickables" onclick="buttonClick(\'' + itemN + '\')">' + '<div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>';
+                                        html += '<div class="';
                                     }
+                                    html += 'sensorset clickables" onclick="buttonClick(\'' + itemN + '\')"><div  class="sensors" style="font-weight:bold;">' + itemN + '</div></div>'
                                 }
                                 else if ((sensor.TaskName).includes("vSlider")) {
                                     slName = item.Name;
@@ -798,53 +800,50 @@
                                         slKind = itemSl.split("?")[4];
                                     }
                                     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
+                                    html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton;
                                     if ((sensor.TaskName).includes("nvSlider")) {
-                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + ' noVal">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div></div></div>';
+                                        html2 += 'noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div></div></div>';
                                     }
                                     else {
-                                        html2 += '<div class="sensorset">' + '<input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton + '">' + '<div  class="sensors" style="align-items: flex-end;">' + '<div style="font-weight:bold;">' + slName + '</div>' + '<div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>';
+                                        html2 += '"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div><div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>';
                                     }
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
-                                    /* if (oldValue) {
-                                         var numbs = oldValue.split(/\D+$/)[0];
-                                         var chars = oldValue.split(/[.0-9]/).pop();
-                                     }*/
                                     if ((sensor.TaskName).includes("bigValC")) {
-                                        if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigC bigSpan">'; }
+                                        if (sensor.TaskValues.length === 3 && !(sensor.TaskValues).some(item => item.Name === 'XX')) { html3 += '<div class="bigNumWrap bigC bigSpan">'; }
                                         else { html3 += '<div class="bigNumWrap bigC">'; }
                                     }
                                     else {
-                                        if (sensor.TaskValues.length === 3) { html3 += '<div class="bigNumWrap bigSpan">'; }
+                                        if (sensor.TaskValues.length === 3 && !(sensor.TaskValues).some(item => item.Name === 'XX')) { html3 += '<div class="bigNumWrap bigSpan">'; }
                                         else { html3 += '<div class="bigNumWrap">'; }
                                     }
                                     let bigB = `<div class="valuesBig" style="font-weight:bold;text-align:left;">`;
                                     if (["clock", "uhr", "time"].some(v => (item.Name).toLowerCase().includes(v))) {
-                                        html3 += bigB + item.Name + '</div>' + '<div id="clock" class="valueBig">' + clockBig + '</div>' + '</div>';
+                                        html3 += bigB + item.Name + '</div><div id="clock" class="valueBig">' + clockBig + '</div></div>';
                                     }
                                     else if ((item.Name).toLowerCase().includes("datum")) {
-                                        html3 += bigB + item.Name + '</div>' + '<div id="date" class="valueBig">' + dateD + '.' + dateM.toString() + '</div>' + '</div>';
+                                        html3 += bigB + item.Name + '</div><div id="date" class="valueBig">' + dateD + '.' + dateM.toString() + '</div></div>';
                                     }
                                     else if ((item.Name).toLowerCase().includes("date")) {
-                                        html3 += bigB + item.Name + '</div>' + '<div id="date" class="valueBig">' + dateM + '-' + dateD.toString() + '</div>' + '</div>';
+                                        html3 += bigB + item.Name + '</div><div id="date" class="valueBig">' + dateM + '-' + dateD.toString() + '</div></div>';
                                     }
                                     else if (["year", "jahr"].some(v => (item.Name).toLowerCase().includes(v))) {
-                                        html3 += bigB + item.Name + '</div>' + '<div id="year" class="valueBig">' + dateY + '</div>' + '</div>';
+                                        html3 += bigB + item.Name + '</div><div id="year" class="valueBig">' + dateY + '</div></div>';
                                     }
                                     else {
-                                        if (isTspeak) { html3 += bigB + itemN + '</div>' + '<div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div>' + '</div>'; }
-                                        else { html3 += bigB + itemN + '</div>' + '<div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div>' + '</div>'; }
+                                        if (isTspeak) { html3 += bigB + itemN + '</div><div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
+                                        else { html3 += bigB + itemN + '</div><div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
                                     }
                                 }
                                 else {
-                                    if (isTspeak) { html += '<div class="values thingspeak">' + '<div>' + itemN + '</div>' + '<div id="' + itemN + 'TS">' + itemTSName + kindN + '</div>' + '</div>'; }
-                                    else { html += '<div class="values therest">' + '<div>' + itemN + '</div>' + '<div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div>' + '</div>'; }
+                                    if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
+                                    else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div></div>'; }
                                 }
                             });
                             html += '</div>';
                             html3 += '</div>';
                         }
-                        else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables">' + '<div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>' + '<div></div>' + '<div></div>' + '</div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                        else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX")) { html += '<div  class="sensorset clickables"><div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                     });
                     if (!someoneEn) {
                         html += '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled or visible...</div>';
@@ -872,7 +871,6 @@
                 longPressB();
                 longPressN();
                 if (isF) { getTS() };
-                console.log(dataT);
             }
             else { getNodes() }
         }
@@ -1035,7 +1033,8 @@
                 if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
                 if (node.nr === unitNr1) { styleN = "&#8857;"; }
                 else { styleN = ""; }
-                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; if (utton || isLongNode) {
+                html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>'; 
+                if (utton || isLongNode) {
                     if (isLongNode) {
                         if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
                         else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
