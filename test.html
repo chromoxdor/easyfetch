@@ -715,7 +715,6 @@
                                         else { html += '<div class="'; }
                                         html += ' sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>'
                                     }
-                                    else if (item.Name === "allNodes") { html += '<div class="on sensorset clickables" onclick="getNodes(\'' + utton + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + sensor.TaskName + '</div>'; }
                                     else if ((sensor.TaskName).includes("dButtons")) { }
                                     else if (sensor.TaskName === "tSlider") { }
                                     else if ((sensor.TaskName).includes("vSlider")) { }
@@ -758,7 +757,8 @@
                                     if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="on'; }
                                     else if (item.Value === 2) { html += '<div class="alert'; }
                                     else { html += '<div class="'; }
-                                    html += ' sensorset clickables" onclick="buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'
+                                    if (itemN.split("&")[1] == "A") { html += ' sensorset clickables" onclick="getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                    else { html += ' sensorset clickables" onclick="buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'; }
                                 }
                                 else if ((sensor.TaskName).includes("vSlider")) {
                                     slName = item.Name;
@@ -852,9 +852,7 @@
             }
             isF = true;
         }
-        function getUrl(url) {
-            fetch(url)
-        }
+        function getUrl(url) { fetch(url) }
         function changeCss() {
             var numSl = document.querySelectorAll('input[type=range]').length;
             if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
@@ -1056,7 +1054,7 @@
                     el.style.lineHeight = "0.75"
                 })
             }
-            resizeText({elements: document.querySelectorAll('.valueBig'),step: 1})
+            resizeText({ elements: document.querySelectorAll('.valueBig'), step: 1 })
         }
         function launchFs(element) {
             if (element.requestFullscreen) {
@@ -1070,13 +1068,13 @@
             }
         }
         function splitOn() {
-            if (document.getElementById('framie').offsetWidth === 0) {isOpen = 1;iFr(isOpen);document.getElementById('framie').style.width = "100%";} 
-            else {document.getElementById('framie').style.width = "0";document.getElementById('framie').innerHTML = "";isOpen = 0;}
+            if (document.getElementById('framie').offsetWidth === 0) { isOpen = 1; iFr(isOpen); document.getElementById('framie').style.width = "100%"; }
+            else { document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; isOpen = 0; }
             setTimeout(fetchJson, 100);
         }
         function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
-        function topF() {document.body.scrollTop = 0;document.documentElement.scrollTop = 0;}
-        function longPressN() {document.getElementById('mOpen').addEventListener('long-press', function (e) {window.location.href = nodePath;});}
+        function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
+        function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nodePath; }); }
         function longPressB() {
             var executed = false;
             const longButtons = document.querySelectorAll(".sensorset");
