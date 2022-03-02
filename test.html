@@ -772,7 +772,7 @@
                                     }
                                     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                     html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + utton;
-                                    if ((sensor.TaskName).includes("nvSlider")) { html2 += 'noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div></div></div>'; }
+                                    if ((sensor.TaskName).includes("nvSlider")) { html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div></div></div>'; }
                                     else { html2 += '"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div><div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>'; }
                                 }
                                 else if ((sensor.TaskName).includes("bigVal")) {
