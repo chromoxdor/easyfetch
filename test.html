@@ -797,6 +797,7 @@
                                     else if (["year", "jahr"].some(v => (item.Name).toLowerCase().includes(v))) {
                                         html3 += bigB + item.Name + '</div><div id="year" class="valueBig">' + dateY + '</div></div>';
                                     }
+                                    else if (item.Name === "noVal") { html3 += bigB+'</div><div class="valueBig"></span></div></div>'; }
                                     else {
                                         if (isTspeak) { html3 += bigB + itemN + '</div><div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
                                         else { html3 += bigB + itemN + '</div><div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
@@ -804,6 +805,7 @@
                                 }
                                 else {
                                     if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
+                                    else if (item.Name === "noVal") {html += '<div class="values therest"><div>&nbsp;</div><div></div></div>';}
                                     else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div></div>'; }
                                 }
                             });
@@ -1113,7 +1115,7 @@
             <div href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</div>
             <div id="menueList">no nodes found...</div>
         </div>
-        <div id="unitId" onclick="launchFs(document.documentElement)">&nbsp;</div>
+        <div id="unitId" style="cursor: pointer;" onclick="launchFs(document.documentElement)">&nbsp;</div>
         <div id="allList">
             <div id="bigNumber">&nbsp;</div>
             <div id="sliderList">&nbsp;</div>
