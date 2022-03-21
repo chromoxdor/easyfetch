@@ -90,8 +90,8 @@ You should now see all the ESPEasy device tasks and states.
 
 **2. Buttons:**
   - Buttons are basically ordinary tiles where the valuenames/values are not rendered
-  - the have the ability to change their color depending on their state
-  - there are two options to generate a button tile:
+  - They have the ability to change their color depending on their state
+  - There are two options to generate a button tile:
      1. Name the first value of a Task "btnState" (a button whose color is dependent of the btnState 0=no color 1=blue) or “btnStateC” (this button is independent from its state always blue)
      ![button simple](https://user-images.githubusercontent.com/33860956/159255555-d7caea8e-4913-4a4b-98b7-f9a83e5c4f3c.png)
      (the device here is a sonoff s20 and since we do not need the first button, since its the hardwarebutton, on our dahboard we can hide it with the "XX" option. the second button is the actual relay so the state changes depending on the gpio state)
@@ -113,7 +113,7 @@ You should now see all the ESPEasy device tasks and states.
 
  - Slider: there are two types of slider. The “normal” slider and the “time" slider
  - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
- - to create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
+ - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
     - The normal slider: There are two versions too.
 
@@ -176,13 +176,13 @@ You should now see all the ESPEasy device tasks and states.
 
 <img width="546" alt="ts2" src="https://user-images.githubusercontent.com/33860956/159266771-29123c9b-0d32-4109-b681-566101caa433.png"><img width="143" alt="ts2f" src="https://user-images.githubusercontent.com/33860956/159266774-5fdb5ff3-9f60-49d4-a4dd-f4d5170afa5c.png">
 
- - grid layout (desktop view): 
+ - Grid layout (desktop view): 
     - the amount of colums (1,2,3 or maximum 4) is determined by the ammount of tiles. 
       - 1 tile = one colum
       - 2 - 4 tiles = 2 colums 
       - 5 - 9 tiles = 3 colums
       - \> 9 tiles = 4 colums
-    - the ammount of "big values" however is prioritsed for rendering the grid layout and constrains it.
+    - The ammount of "big values" however is prioritsed for rendering the grid layout and constrains it.
       - e.g. if a 4 colum grid is preferred just create a dummy-device with 4 values and call it "bigVal"
         but if you only have 3 values to display you can add an empty "big value" tile by calling an valuename "noval" or hide it with "XX"
 ![gridnorm](https://user-images.githubusercontent.com/33860956/159264739-6e322a4a-6f8e-46b3-be83-8b2ee6d7c4e7.png)   
