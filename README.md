@@ -68,9 +68,9 @@ You should now see all the ESPEasy device tasks and states.
 ***
 
 **1. ordinary Tile:**
-  - Each task is without further ado rendered as a tile. these tiles are ordered by there tasknumbers
+  - Each task is without further ado rendered as a tile. These tiles are arranged by their tasknumbers.
   - On the upper left is the taskname and aligned right if present are the valuenames and their values
-  - these tiles can be clicked and longclicked and trigger an event which can be accessed in rules
+  - These tiles (and the buttons too) can be clicked and longclicked and trigger an event which can be accessed in rules
     - if clicked short \<taskname>event and if longclicked \<taskname>long
      - rulesexample: 
        `on sensorevent do
