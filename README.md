@@ -95,6 +95,12 @@ You should now see all the ESPEasy device tasks and states.
      1. Name the first value of a Task "btnState" (a button whose color is dependent of the btnState 0=no color 1=blue) or “btnStateC” (this button is independent from its state always blue)
      ![button simple](https://user-images.githubusercontent.com/33860956/159255555-d7caea8e-4913-4a4b-98b7-f9a83e5c4f3c.png)
      (the device here is a sonoff s20 and since we do not need the first button, since its the hardwarebutton, on our dahboard we can hide it with the "XX" option. the second button is the actual relay so the state changes depending on the gpio state)
+     The rule for it:
+     <pre><code>
+     On buttonevent do
+      gpiotoggle,12
+     endon
+     </code></pre>
 
      2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
         - You can add an option for colorbuttons with "?C"(see picture below)
