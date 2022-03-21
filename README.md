@@ -106,7 +106,7 @@ You should now see all the ESPEasy device tasks and states.
 
 **3. Slider**
 
- - Slider: there are two types of slider. The “normal” slider and the “time set slider”
+ - Slider: there are two types of slider. The “normal” slider and the “time" slider
  - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
  - to create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
@@ -122,8 +122,8 @@ You should now see all the ESPEasy device tasks and states.
 
       <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
 
-   - The time set slider: Name a task something consisting of “tSlider” and every item will become a time set slider.
-    - The time set slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
+   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider.
+    - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
       control plugin since only one plugin for both values is needed
     - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
       example shows how to make use of it:
