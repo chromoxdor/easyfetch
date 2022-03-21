@@ -217,14 +217,14 @@ The valuename needs to contain one of these phrases.
 
 These options needs to be at the and of the valuename:
 
-* Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>"
+* Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>" --- (any valuename)
 
 * vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the amount of digits of the value to correspond with the stepsize)
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
-* unit of measurement: "?\<UM>"  
-* dButtons: "&\<unit_number>" or "&\A"
+* "?\<UM>"  --- unit of measurement (any valuename)
+* "&\<unit_number>" or "&\A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
 
 
 
