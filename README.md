@@ -107,7 +107,7 @@ You should now see all the ESPEasy device tasks and states.
      2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
         - You can add an option for colorbuttons with "?C"(see picture below)
         - put "&\<unit_number>" to the send of the valuename to send this buttonevent to a specific device. (e.g. valuename "button?2" will result in this           command: `SendTo,2,"event,ButtonEvent"`)
-        - put "&\A" to the send of the valuename and the event will be send to all connected nodes
+        - put "&A" to the send of the valuename and the event will be send to all connected nodes
 
          <img width="600" alt="b1" src="https://user-images.githubusercontent.com/33860956/159254570-8156aadb-2216-4cc3-88fe-a43a4747743b.png">
          <img width="200" alt="b1f" src="https://user-images.githubusercontent.com/33860956/159254576-76b425bc-58c5-4e3e-9142-5b04a39bde3a.png">
@@ -237,7 +237,7 @@ These options needs to be at the and of the valuename:
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
 * "?\<UM>"  --- unit of measurement (any valuename)
-* "&\<unit_number>" or "&\A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
+* "&\<unit_number>" or "&A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
 
 
 
