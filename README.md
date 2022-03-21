@@ -73,9 +73,11 @@ You should now see all the ESPEasy device tasks and states.
   - These tiles (and the buttons too) can be clicked and longclicked and trigger an event which can be accessed in rules
     - if clicked short \<taskname>event and if longclicked \<taskname>long
      - rulesexample: 
-       `on sensorevent do
+       <pre><code>
+       on sensorevent do
        dosomething
-       endon`
+       endon
+       </code></pre>
   - Every value of a task can have its own unit. Therefore add “?\<unit>“ to the valuename (e.g. Temperature?°C or Humidity?H)
     (Notice: ?% is not an option because you´ll get an error message in espeasy so H is translated to % when displayed.)
   - You can hide valuenames and their values: add “XX” to the itemname (e.g. HumidityXX for name and value or for hiding only the name leave 
