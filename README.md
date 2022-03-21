@@ -61,6 +61,7 @@ Here you can see the corresponding devices page of the unit: "testesp":
 
 Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html
 You should now see all the ESPEasy device tasks and states.
+(Note: For multiple espeasy devices in a network you´ll need only one device with the fetch.html as a primary device when all communicate via the p2p controller)
 
 ### Display options:
 
