@@ -49,11 +49,11 @@ Here you can see the corresponding devices page of the unit: "testesp":
 
 4. Select the "Filesystem->File browser" button.
 
-5. Press the "Upload" button.
+5. Click the "Upload" button.
 
-6. Press the "Browse..." button and select the fetch.html file.
+6. Click the "Browse..." button and select the fetch.html file.
 
-7. Press the "Upload" button.
+7. Click the "Upload" button.
 
 8. Repeat steps 4-7 for the custom esp.css file if you want a custom css (e.g. darkmode). 
 - the file can be downloaded from here: https://github.com/chromoxdor/espeasy_custom-css
