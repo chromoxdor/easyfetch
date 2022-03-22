@@ -79,10 +79,10 @@ You should now see all the ESPEasy device tasks and states.
        dosomething
        endon
        </code></pre>
-  - Every value of a task can have its own unit. Therefore add “?\<unit>“ to the valuename (e.g. Temperature?°C or Humidity?H)
+  - Every value of a task can have its own unit of measurement . Therefore add “?\<unit>“ to the valuename (e.g. Temperature?°C or Humidity?H)
     (Notice: ?% is not an option because you´ll get an error message in espeasy so H is translated to % when displayed.)
   - You can hide valuenames and their values: add “XX” to the itemname (e.g. HumidityXX for name and value or for hiding only the name leave 
-    it empty or just name it “?°C” to keep the unit)
+    it empty or just name it “?°C” to keep the unit of measurement)
 
     <img width="500" alt="s1" src="https://user-images.githubusercontent.com/33860956/159250534-96dcd024-1d28-44d0-9174-a84390819379.png">
 
