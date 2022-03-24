@@ -106,7 +106,7 @@ You should now see all the ESPEasy device tasks and states.
 
      2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
         - You can add an option for colorbuttons with "?C"(see picture below)
-        - put "&\<unit_number>" to the end of the valuename to send this buttonevent to a specific device. (e.g. valuename "button&2" will result in this           command: `SendTo,2,"event,ButtonEvent"`)
+        - put "&\<unit_number>" to the end of the valuename to send this buttonevent to a specific device. (e.g. valuename "button&2" will result in this           command: `SendTo,2,"event,ButtonEvent"` or if longclicked `SendTo,2,"event,ButtonLong"`)
         - put "&A" to the end of the valuename and the event will be send to all connected nodes
 
          <img width="600" alt="b1" src="https://user-images.githubusercontent.com/33860956/159254570-8156aadb-2216-4cc3-88fe-a43a4747743b.png">
