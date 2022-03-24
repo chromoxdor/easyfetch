@@ -17,7 +17,7 @@ The Dashboard consists of different elements with different purposes:
 There are 3 possible categories: 
      1. big-values
      2. slider
-     3. the rest: buttons and "normal" tiles
+     3. the rest: buttons and "ordinary" tiles
 
   2. **unit-menu:** Here are all the units listed, that are connected via the controller called ESPEasy P2P Networking (https://espeasy.readthedocs.io/en/latest/Controller/C013.html)
      * next to the unitname is the unitnumber.
@@ -59,7 +59,7 @@ Here you can see the corresponding devices page of the unit: "testesp":
 - the file can be downloaded from here: https://github.com/chromoxdor/espeasy_custom-css
 - choose between dark only, light only and system dependent (auto)mode and and rename the file esp.css!
 
-Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html
+Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html ( or http://<ESP_DEVICE_IP>/fetch.html.gz ).
 You should now see all the ESPEasy device tasks and states.
 (Note: For multiple espeasy devices in a network you´ll need only one device with the fetch.html as a primary device when all communicate via the p2p controller)
 
@@ -79,10 +79,10 @@ You should now see all the ESPEasy device tasks and states.
        dosomething
        endon
        </code></pre>
-  - Every value of a task can have its own unit. Therefore add “?\<unit>“ to the valuename (e.g. Temperature?°C or Humidity?H)
+  - Every value of a task can have its own unit of measurement . Therefore add “?\<unit>“ to the valuename (e.g. Temperature?°C or Humidity?H)
     (Notice: ?% is not an option because you´ll get an error message in espeasy so H is translated to % when displayed.)
   - You can hide valuenames and their values: add “XX” to the itemname (e.g. HumidityXX for name and value or for hiding only the name leave 
-    it empty or just name it “?°C” to keep the unit)
+    it empty or just name it “?°C” to keep the unit of measurement)
 
     <img width="500" alt="s1" src="https://user-images.githubusercontent.com/33860956/159250534-96dcd024-1d28-44d0-9174-a84390819379.png">
 
@@ -106,7 +106,7 @@ You should now see all the ESPEasy device tasks and states.
 
      2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
         - You can add an option for colorbuttons with "?C"(see picture below)
-        - put "&\<unit_number>" to the end of the valuename to send this buttonevent to a specific device. (e.g. valuename "button?2" will result in this           command: `SendTo,2,"event,ButtonEvent"`)
+        - put "&\<unit_number>" to the end of the valuename to send this buttonevent to a specific device. (e.g. valuename "button&2" will result in this           command: `SendTo,2,"event,ButtonEvent"` or if longclicked `SendTo,2,"event,ButtonLong"`)
         - put "&A" to the end of the valuename and the event will be send to all connected nodes
 
          <img width="600" alt="b1" src="https://user-images.githubusercontent.com/33860956/159254570-8156aadb-2216-4cc3-88fe-a43a4747743b.png">
@@ -119,11 +119,11 @@ You should now see all the ESPEasy device tasks and states.
 
 **3. Slider**
 
- - Slider: there are two types of slider. The “normal” slider and the “time" slider
+ - Slider: there are two types of slider. The “ordinary” slider and the “time" slider
  - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
  - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
-    - The normal slider: There are two versions too.
+    - The ordinary slider: There are two versions too.
 
          1. The slider with values displayed: name a task something consisting of “vSlider” and every item will become a Slider with values shown while sliding
 
@@ -214,7 +214,7 @@ The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVa
 
 * dButtons  --- creates an array of buttons (dummy device)
 * bigVal / bigValC --- creates "big values" (any device)
-* vSlider / nvSlider --- creates an array of "normal" slider (dummy device)
+* vSlider / nvSlider --- creates an array of "ordinary" slider (dummy device)
 * tSlider  --- creates an array of "time" slider (dummy device)
 * XX --- hides the task (any device)
 
