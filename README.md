@@ -17,7 +17,7 @@ The Dashboard consists of different elements with different purposes:
 There are 3 possible categories: 
      1. big-values
      2. slider
-     3. the rest: buttons and "normal" tiles
+     3. the rest: buttons and "ordinary" tiles
 
   2. **unit-menu:** Here are all the units listed, that are connected via the controller called ESPEasy P2P Networking (https://espeasy.readthedocs.io/en/latest/Controller/C013.html)
      * next to the unitname is the unitnumber.
@@ -119,11 +119,11 @@ You should now see all the ESPEasy device tasks and states.
 
 **3. Slider**
 
- - Slider: there are two types of slider. The “normal” slider and the “time" slider
+ - Slider: there are two types of slider. The “ordinary” slider and the “time" slider
  - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
  - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
-    - The normal slider: There are two versions too.
+    - The ordinary slider: There are two versions too.
 
          1. The slider with values displayed: name a task something consisting of “vSlider” and every item will become a Slider with values shown while sliding
 
@@ -214,7 +214,7 @@ The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVa
 
 * dButtons  --- creates an array of buttons (dummy device)
 * bigVal / bigValC --- creates "big values" (any device)
-* vSlider / nvSlider --- creates an array of "normal" slider (dummy device)
+* vSlider / nvSlider --- creates an array of "ordinary" slider (dummy device)
 * tSlider  --- creates an array of "time" slider (dummy device)
 * XX --- hides the task (any device)
 
