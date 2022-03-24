@@ -788,7 +788,7 @@
                                     else if (["year", "jahr"].some(v => (item.Name).toLowerCase().includes(v))) {
                                         html3 += bigB + item.Name + '</div><div id="year" class="valueBig">' + dateY + '</div></div>';
                                     }
-                                    else if (item.Name === "noVal") { html3 += bigB+'</div><div class="valueBig"></span></div></div>'; }
+                                    else if (item.Name === "noVal") { html3 += bigB + '</div><div class="valueBig"></span></div></div>'; }
                                     else {
                                         if (isTspeak) { html3 += bigB + itemN + '</div><div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
                                         else { html3 += bigB + itemN + '</div><div class="valueBig">' + item.Value.toFixed(item.NrDecimals) + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
@@ -796,7 +796,7 @@
                                 }
                                 else {
                                     if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
-                                    else if (item.Name === "noVal") {html += '<div class="values therest"><div>&nbsp;</div><div></div></div>';}
+                                    else if (item.Name === "noVal") { html += '<div class="values therest"><div>&nbsp;</div><div></div></div>'; }
                                     else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + item.Value.toFixed(item.NrDecimals) + kindN + '</div></div>'; }
                                 }
                             });
@@ -829,7 +829,7 @@
                 resizeText();
                 longPressB();
                 longPressN();
-                if (isF) { getTS();};
+                if (isF) { getTS(); };
             }
         }
         async function getTS() {
@@ -855,7 +855,7 @@
             var numBig = document.getElementsByClassName('valuesBig').length;
             var element = document.getElementById("sensorList");
             var numSet = element.getElementsByClassName('clickables').length;
-            if ((bigLength < 2 && numBigger === 1) || (numBigger === 0 && numSet < 2)) {
+            if (bigLength === 1 || (!numBigger && numSet < 2)) {
                 document.getElementById("sensorList").classList.add('sensorL1');
                 document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
                 if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
@@ -876,12 +876,8 @@
                 document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
                 document.getElementById("sensorList").classList.add('sensorL2');
             }
-            if (bigLength > 1 || numSet > 1) {
-                if (list3.length) {
-                    for (var i = 0; i < list3.length; ++i) {
-                        list3[i].classList.remove('bigNumOne');
-                    }
-                }
+            if (bigLength > 1) {
+                if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
             }
             var list;
             var list2;
