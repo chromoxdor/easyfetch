@@ -236,8 +236,8 @@ These options needs to be at the and of the valuename:
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
-* ?\<UM>  --- unit of measurement (any valuename)
-* &\<unit_number> or &A --- sends the event to the specific unit or if "A" to all units (only dButtons)
+* "?\<UM>"  --- unit of measurement (any valuename)
+* "&\<unit_number>" or "&A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
 
 
 
