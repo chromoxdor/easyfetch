@@ -59,7 +59,7 @@ Here you can see the corresponding devices page of the unit: "testesp":
 - the file can be downloaded from here: https://github.com/chromoxdor/espeasy_custom-css
 - choose between dark only, light only and system dependent (auto)mode and and rename the file esp.css!
 
-Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html
+Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html ( or http://<ESP_DEVICE_IP>/fetch.html.gz ).
 You should now see all the ESPEasy device tasks and states.
 (Note: For multiple espeasy devices in a network you´ll need only one device with the fetch.html as a primary device when all communicate via the p2p controller)
 
@@ -236,8 +236,8 @@ These options needs to be at the and of the valuename:
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
-* "?\<UM>"  --- unit of measurement (any valuename)
-* "&\<unit_number>" or "&A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
+* ?\<UM>  --- unit of measurement (any valuename)
+* &\<unit_number> or &A --- sends the event to the specific unit or if "A" to all units (only dButtons)
 
 
 
