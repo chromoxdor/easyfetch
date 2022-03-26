@@ -1,3 +1,5 @@
+If you like my work consider da donation: [![donate](https://img.shields.io/badge/donate-ko--fi-orange)](https://ko-fi.com/chromoxdor)
+
 I am not involved in the ESPeasy project but if you like my work please support the ESPeasy project and consider a donation: 
 https://github.com/letscontrolit/ESPEasy
 
