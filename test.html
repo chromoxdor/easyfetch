@@ -1023,6 +1023,8 @@
                 nodePath = `http://${nodeInfos.ip}/tools`;
                 nodePath2 = `http://${nodeInfos.ip}/devices`;
                 jsonPath = `http://${nodeInfos.ip}/json`;
+                window.history.replaceState(null, null, '?unit='+nodeNr);
+
             }
             if (window.innerWidth < 1023) { closeNav(); }
         }
