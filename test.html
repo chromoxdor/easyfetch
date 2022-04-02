@@ -648,8 +648,8 @@
         var dataT = [];
         var dataT2 = [];
         var isF = true;
-        window.isittime = 1;
-        async function fetchJson() {
+        var isittime = 1;
+        async function fetchJson(event) {
             urlParams = new URLSearchParams(window.location.search);
             myParam = urlParams.get('unit');
             if (myParam == null) { hasParams = false; }
@@ -677,7 +677,7 @@
                 unitNr = myJson.System['Unit Number'];
                 nodeInfos = myJson.nodes;
                 if (!myJson.Sensors.length) {
-                    html += '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">no tasks configured...</div>';
+                    html += '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">no tasks configured...</div>';
                 }
                 else {
                     myJson.Sensors.forEach(sensor => {
@@ -727,7 +727,7 @@
                                     chanN = itemA.split("&")[1];
                                     fieldN = itemA.split("&")[2];
                                     if (fieldN.includes("?")) { fieldN = fieldN.split("?")[0]; }
-                                    dataT.push([itemN, chanN, fieldN, item.NrDecimals, kindN, sensor.TaskName]);
+                                    dataT.push([chanN, fieldN, item.NrDecimals, i]);
                                 }
                                 else { isTspeak = false; }
                                 if ((item.Name).includes("btnState") || (item.Name).includes("XX")) { }
@@ -806,15 +806,17 @@
                         else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX") && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                     });
                     if (!someoneEn && !hasParams) {
-                        html += '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">no tasks enabled or visible...</div>';
+                        html += '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
                     }
-                }
                 document.getElementById('sensorList').innerHTML = html;
                 document.getElementById('sliderList').innerHTML = html2;
                 document.getElementById('bigNumber').innerHTML = html3;
+                }
                 if (firstRun) {
-                    setInterval(fetchJson, 10000);
-                    getNodes()
+                    setInterval(fetchJson, 2000);
+                    setInterval(getTS, 10000);
+                    getTS();
+                    getNodes();
                     unitNr1 = myJson.System['Unit Number'];
                     nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
                     nodePath = 'http://' + myJson.WiFi['IP Address'] + '/tools';
@@ -829,21 +831,19 @@
                 resizeText();
                 longPressB();
                 longPressN();
-                if (isF) { getTS(); };
+                if (event){dataT2 = [];getTS();}
             }
         }
         async function getTS() {
             isF = false;
-            dataT2 = [];
-            if (!(dataT === undefined)) {
+            if (dataT) {
                 for (Array of dataT) {
-                    responseTS = await fetch('https://api.thingspeak.com/channels/' + Array[1] + '/fields/' + Array[2] + '/last')
+                    responseTS = await fetch('https://api.thingspeak.com/channels/' + Array[0] + '/fields/' + Array[1] + '/last')
                     myTS = await responseTS.json();
-                    if (responseTS.ok) { dataT2.push(myTS.toFixed(Array[3])); }
+                    if (responseTS.ok) { dataT2[Array[3]] = myTS.toFixed(Array[2]); }
                     else { dataT2.push('error'); }
                 }
             }
-            isF = true;
         }
         function getUrl(url) { fetch(url) }
         function changeCss() {
@@ -916,7 +916,7 @@
             });
         }
         function updateSlTS(event) {
-            window.isittime = 0;
+            isittime = 0;
             slider = event.target;
             const amount = slider.closest(".slTimeSet").querySelector(".hAmount");
             const amount2 = slider.closest(".slTimeSet").querySelector(".mAmount");
@@ -927,7 +927,7 @@
             amount2.textContent = padded;
         }
         function updateSlider(event) {
-            window.isittime = 0;
+            isittime = 0;
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
             slKind = slider.id.split("?")[4];
@@ -944,7 +944,7 @@
             else { var secVal = document.getElementById(slTName.id + "L"); }
             if (unitNr === unitNr1) { getUrl('control?cmd=event,' + slTName.classList[1]); if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); } }
             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slTName.classList[1] + '"'); if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[1] + ',' + slTName.id + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); } }
-            window.isittime = 1;
+            isittime = 1;
             setTimeout(fetchJson, 400);
         }
         function sliderChange(event) {
@@ -954,7 +954,7 @@
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
             if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + slider.id + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '"'); }
-            window.isittime = 1;
+            isittime = 1;
             setTimeout(fetchJson, 400);
         }
         function buttonClick(utton) {
@@ -970,6 +970,7 @@
             setTimeout(fetchJson, 400);
         }
         function openNav() {
+            if (nodeInterV) { clearInterval(nodeInterV); }
             nodeInterV = setInterval(getNodes, 10000);
             if (document.getElementById('mySidenav').offsetWidth === 0) {
                 document.getElementById("mySidenav").style.width = "280px";
@@ -1008,13 +1009,13 @@
             document.getElementById('menueList').innerHTML = html4;
             isLongNode = 0;
             if (hasParams) {
-                let html = '<div class="sensorset clickables"><div  class="sensors nodes" style="font-weight:bold;">can not find node # ' + myParam + '...</div>';
+                let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div>';
                 document.getElementById('sensorList').innerHTML = html;
                 changeCss()
                 hasParams = false;
                 setTimeout(fetchJson, 3000);
             }
-            else { setTimeout(fetchJson, 100); }
+            else { if (!nodeInterV) { setTimeout(fetchJson, 100);} }
         }
         function nodeChange(event) {
             nodeInfos = nodeInfos[event];
@@ -1023,8 +1024,8 @@
                 nodePath = `http://${nodeInfos.ip}/tools`;
                 nodePath2 = `http://${nodeInfos.ip}/devices`;
                 jsonPath = `http://${nodeInfos.ip}/json`;
-                window.history.replaceState(null, null, '?unit='+nodeNr);
-
+                window.history.replaceState(null, null, '?unit=' + nodeNr);
+                fetchJson(1);
             }
             if (window.innerWidth < 1023) { closeNav(); }
         }
@@ -1082,12 +1083,12 @@
                             utton2 = (lBName.id).split("&")[0];
                             nodeNr2 = (lBName.id).split("&")[1];
                             fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Long"');
-                            window.isittime = 1;
+                            isittime = 1;
                             setTimeout(fetchJson, 400);
                         } else {
                             if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
                             else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
-                            window.isittime = 1;
+                            isittime = 1;
                             setTimeout(fetchJson, 400);
                         }
                     }
