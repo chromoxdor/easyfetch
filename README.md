@@ -134,7 +134,7 @@ You should now see all the ESPEasy device tasks and states.
 
       <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
 
-   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider.
+   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider. (Important! To make this work you need to set the number of decimals to 4)
     - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
       control plugin since only one plugin for both values is needed
     - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
