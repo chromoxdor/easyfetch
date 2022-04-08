@@ -143,7 +143,7 @@ You should now see all the ESPEasy device tasks and states.
  On tSlider do
   Let,1,[tSlider#Mo_Fr#D0.0]/60
   Let,2,[tSlider#Mo_Fr#F]%60
-  Let,3,[tSlider#Mo_Fr]*10000-[tSlider#Mo_Fr#F]*10000)/60
+  Let,3,[tSlider#Mo_Fr]*10000-([tSlider#Mo_Fr#F]*10000)/60
   Let,4,[var#3]%60
   Let,3,[var#3]/60
  endon
