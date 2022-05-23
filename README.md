@@ -231,7 +231,7 @@ These options needs to be at the and of the valuename:
 
 * Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>" --- (any valuename)
 
-* vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the amount of digits of the value to correspond with the stepsize)
+* vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the number of decimals of the value to correspond with the stepsize)
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
