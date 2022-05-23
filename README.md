@@ -191,7 +191,7 @@ You should now see all the ESPEasy device tasks and states.
       - \> 9 tiles = 4 colums
     - The amount of "big values" however is prioritized for rendering the grid layout and constraints it.
       - e.g. if a 4 colum grid is preferred just create a dummy-device with 4 values and call it "bigVal"
-        but if you only have 3 values to display you can add an empty "big value" tile by calling an valuename "noval" or hide it with "XX"
+        but if you only have 3 values to display you can add an empty "big value" tile by calling an valuename "noVal" or hide it with "XX"
 ![gridnorm](https://user-images.githubusercontent.com/33860956/159264739-6e322a4a-6f8e-46b3-be83-8b2ee6d7c4e7.png)   
 ![grid_noval](https://user-images.githubusercontent.com/33860956/159264715-8d959949-29cb-42e3-b78b-e73d1c439bd4.png)
 ![grid_XX](https://user-images.githubusercontent.com/33860956/159264731-da04fd8d-4006-409d-b324-659d877b5fcd.png)
