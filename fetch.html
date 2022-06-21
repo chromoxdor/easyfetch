@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset='utf-8' />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Crect x='0' y='0' rx='6' ry='6' width='44' height='44' style='fill:%233c3c3b' transform='rotate(0 14 20)'/%3E%3Cg transform='rotate(45 26 23)'%3E%3Crect x='4' y='15' rx='2' ry='2' width='4' height='20' style='fill:%2325a843' /%3E%3Crect x='12' y='7.5' rx='2' ry='2' width='4' height='35' style='fill:%23ffd103'/%3E%3Crect x='20' y='0' rx='2' ry='2' width='4' height='50' style='fill:%23f28d22' /%3E%3Crect x='28' y='7.5' rx='2' ry='2' width='4' height='35' style='fill:%23e9493e'/%3E%3Ccircle cx='41' cy='25' r='5' fill='white' /%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
     <title id="unitT"></title>
 </head>
 <STYLE>
@@ -12,7 +13,7 @@
         font-family: sans-serif;
         font-size: 12pt;
         margin: 0;
-        padding: 0
+        padding: 0;
     }
 
     body {
@@ -647,7 +648,6 @@
         var hasParams = true;
         var dataT = [];
         var dataT2 = [];
-        var isF = true;
         var isittime = 1;
         async function fetchJson(event) {
             urlParams = new URLSearchParams(window.location.search);
@@ -808,10 +808,11 @@
                     if (!someoneEn && !hasParams) {
                         html += '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
                     }
+                }
                 document.getElementById('sensorList').innerHTML = html;
                 document.getElementById('sliderList').innerHTML = html2;
                 document.getElementById('bigNumber').innerHTML = html3;
-                }
+                
                 if (firstRun) {
                     setInterval(fetchJson, 2000);
                     setInterval(getTS, 10000);
@@ -835,7 +836,6 @@
             }
         }
         async function getTS() {
-            isF = false;
             if (dataT) {
                 for (Array of dataT) {
                     responseTS = await fetch('https://api.thingspeak.com/channels/' + Array[0] + '/fields/' + Array[1] + '/last')
