@@ -134,7 +134,7 @@ You should now see all the ESPEasy device tasks and states.
 
       <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
 
-   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider.
+   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider. (Important! To make this work you need to set the number of decimals to 4)
     - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
       control plugin since only one plugin for both values is needed
     - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
@@ -143,7 +143,7 @@ You should now see all the ESPEasy device tasks and states.
  On tSlider do
   Let,1,[tSlider#Mo_Fr#D0.0]/60
   Let,2,[tSlider#Mo_Fr#F]%60
-  Let,3,[tSlider#Mo_Fr]*10000-[tSlider#Mo_Fr#F]*10000)/60
+  Let,3,[tSlider#Mo_Fr]*10000-[tSlider#Mo_Fr#F]*10000
   Let,4,[var#3]%60
   Let,3,[var#3]/60
  endon
@@ -191,7 +191,7 @@ You should now see all the ESPEasy device tasks and states.
       - \> 9 tiles = 4 colums
     - The amount of "big values" however is prioritized for rendering the grid layout and constraints it.
       - e.g. if a 4 colum grid is preferred just create a dummy-device with 4 values and call it "bigVal"
-        but if you only have 3 values to display you can add an empty "big value" tile by calling an valuename "noval" or hide it with "XX"
+        but if you only have 3 values to display you can add an empty "big value" tile by calling an valuename "noVal" or hide it with "XX"
 ![gridnorm](https://user-images.githubusercontent.com/33860956/159264739-6e322a4a-6f8e-46b3-be83-8b2ee6d7c4e7.png)   
 ![grid_noval](https://user-images.githubusercontent.com/33860956/159264715-8d959949-29cb-42e3-b78b-e73d1c439bd4.png)
 ![grid_XX](https://user-images.githubusercontent.com/33860956/159264731-da04fd8d-4006-409d-b324-659d877b5fcd.png)
@@ -231,7 +231,7 @@ These options needs to be at the and of the valuename:
 
 * Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>" --- (any valuename)
 
-* vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the amount of digits of the value to correspond with the stepsize)
+* vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the number of decimals of the value to correspond with the stepsize)
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
