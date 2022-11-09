@@ -1,6 +1,5 @@
 If you like my work consider a donation: [![donate](https://img.shields.io/badge/donate-ko--fi-orange)](https://ko-fi.com/chromoxdor)
 
-If you are looking for nice styling of the ESPeasy ui try my css: https://github.com/chromoxdor/espeasy_custom-css
 
 # easyfetch - dashboard for ESPeasy
 
