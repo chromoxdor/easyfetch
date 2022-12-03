@@ -130,7 +130,7 @@ You should now see all the ESPEasy device tasks and states.
     - For both kinds of slider you can set a minimum, a maximum and the steps.
     - To achieve this add ?<minimum>?<maximum>?<steps> to the itemname (e.g. slider?0?100?0.1)
     - For the slider that shows values (vSlider) you can also add a unit of measurement if you set you personal range (e.g. slider?0?100?0.1?°C)
-    - This slider has a "switch" function. If you click on the left half of the slider, the value becomes the set minimum (default=0) and if you click on the right half, it becomes the maximum (default=1023)
+    - This slider has a "switch" function. If you click on the left 1/6th of the slider, the value becomes the set minimum (default=0) and if you click on the right 1/6th, it becomes the maximum (default=1023)
 
       Notice: if you use this you must use it altogether. Standard values if unset are min=0 max=1023 step=1.
 
