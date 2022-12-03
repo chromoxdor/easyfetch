@@ -70,7 +70,7 @@ You should now see all the ESPEasy device tasks and states.
   - Each task is without further ado rendered as a tile. These tiles are arranged by their tasknumbers.
   - On the upper left is the taskname and aligned right if present are the valuenames and their values
   - These tiles (and the buttons too) can be clicked and longclicked and trigger an event which can be accessed in rules
-    - if clicked short \<taskname>event and if longclicked \<taskname>long
+    - if clicked short  `<taskname>event` and if longclicked `<taskname>long`
      - rulesexample: 
        <pre><code>
        on sensorevent do
