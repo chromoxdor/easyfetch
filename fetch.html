@@ -630,6 +630,7 @@
         var dataT2 = [];
         var isittime = 1;
         var nrofSlides = 0;
+        var currVal;
         async function fetchJson(event) {
             urlParams = new URLSearchParams(window.location.search);
             myParam = urlParams.get('unit');
@@ -912,6 +913,7 @@
             nrofSlides++;
             isittime = 0;
             slider = event.target;
+            currVal = slider.attributes.value.nodeValue;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
             slKind = slider.id.split("?")[4];
             if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
@@ -937,8 +939,8 @@
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
             if (nrofSlides == 1) {
-                if (sliderAmount > maxVal/2) {sliderAmount=maxVal}
-                else {sliderAmount=minVal} 
+                if (sliderAmount > maxVal * 5/6 && currVal !== maxVal) { sliderAmount = maxVal }
+                if (sliderAmount < maxVal / 6 && currVal !== minVal) { sliderAmount = minVal }
             }
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
             if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId + '=' + sliderAmount); }
