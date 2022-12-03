@@ -629,6 +629,7 @@
         var dataT = [];
         var dataT2 = [];
         var isittime = 1;
+        var nrofSlides = 0;
         async function fetchJson(event) {
             urlParams = new URLSearchParams(window.location.search);
             myParam = urlParams.get('unit');
@@ -908,6 +909,7 @@
             amount2.textContent = padded;
         }
         function updateSlider(event) {
+            nrofSlides++;
             isittime = 0;
             slider = event.target;
             const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
@@ -930,12 +932,19 @@
         }
         function sliderChange(event) {
             slider = event.target;
+            maxVal = slider.attributes.max.nodeValue;
+            minVal = slider.attributes.min.nodeValue;
             parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
             sliderAmount = event.target.value;
+            if (nrofSlides == 1) {
+                if (sliderAmount > maxVal/2) {sliderAmount=maxVal}
+                else {sliderAmount=minVal} 
+            }
             if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
             if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId + '=' + sliderAmount); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + '=' + sliderAmount + '"'); }
             isittime = 1;
+            nrofSlides = 0;
             setTimeout(fetchJson, 400);
         }
         function buttonClick(utton) {
