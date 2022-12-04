@@ -143,19 +143,17 @@ You should now see all the ESPEasy device tasks and states.
       example shows how to make use of it:
 <pre><code>
  On tSlider do
-  Let,1,[tSlider#Mo_Fr#D0.0]/60
-  Let,2,[tSlider#Mo_Fr#F]%60
-  Let,3,[tSlider#Mo_Fr]*10000-[tSlider#Mo_Fr#F]*10000
-  Let,4,[var#3]%60
-  Let,3,[var#3]/60
+  Let,1,[tSlider#Mo_Fr]
+  Let,2,[var#1]*10000-[var#1#F]*10000
  endon
 
- On Clock#Time=All,"[Var#1#F]:[Var#2#D2]" do
-  gpio,2,1
-  endon
- On Clock#Time=All,"[Var#3#F]:[Var#4#D2]" do
-  gpio,2,0
-  endon
+ On Clock#Time=All,**:** Do
+    If %syssec_d%/60>=[var#1#F] And %syssec_d%/60<[var#2]
+      GPIO,2,1
+    Else
+      GPIO,2,0
+    Endif
+ Endon
 </code></pre>
 
 
