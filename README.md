@@ -121,43 +121,54 @@ You should now see all the ESPEasy device tasks and states.
  - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
  - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
-    - The ordinary slider: There are two versions too.
+    1. The ordinary slider: There are two versions too.
 
-         1. The slider with values displayed: name a task something consisting of “vSlider” and every item will become a Slider with values shown while sliding
+        1. The slider with values displayed: name a task something consisting of “vSlider” and every item will become a Slider with values shown while sliding
 
-         2. The slider with values hidden: name a task something consisting of “nvSlider”
+        2. The slider with values hidden: name a task something consisting of “nvSlider”
 
-    - For both kinds of slider you can set a minimum, a maximum and the steps.
-    - To achieve this add ?<minimum>?<maximum>?<steps> to the itemname (e.g. slider?0?100?0.1)
-    - For the slider that shows values (vSlider) you can also add a unit of measurement if you set you personal range (e.g. slider?0?100?0.1?°C)
-    - This slider has a "switch" function. If you click on the left 1/6th of the slider, the value becomes the set minimum (default=0) and if you click on the right 1/6th, it becomes the maximum (default=1023)
+        - For both kinds of slider you can set a minimum, a maximum and the steps.
+        - To achieve this add ?<minimum>?<maximum>?<steps> to the itemname (e.g. slider?0?100?0.1)
+        - For the slider that shows values (vSlider) you can also add a unit of measurement if you set you personal range (e.g. slider?0?100?0.1?°C)
+        - This slider has a "switch" function. If you click on the left 1/6th of the slider, the value becomes the set minimum (default=0) and if you click on the right 1/6th, it becomes the maximum (default=1023)
 
-      Notice: if you use this you must use it altogether. Standard values if unset are min=0 max=1023 step=1.
+          Notice: if you use this you must use it altogether. Standard values if unset are min=0 max=1023 step=1.
 
-      <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
+          <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
 
-   - The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider. (Important! To make this work you need to set the number of decimals to 4)
-    - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
-      control plugin since only one plugin for both values is needed
-    - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
-      example shows how to make use of it:
-<pre><code>
- On tSlider do
-  Let,1,[tSlider#Mo_Fr]
-  Let,2,[var#1]*10000-[var#1#F]*10000
- endon
+   2. The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider. (Important! To make this work you need to set the number of decimals to 4)
+      - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
+        control plugin since only one plugin for both values is needed
+      - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
+        example shows how to make use of it (for persistant storage of the values add the "level control" plugin):
+  <pre><code>
+   On System#Boot Do //retrieve the values after a power loss back from the "level control" plugin
+      TaskValueSet,tslider,1,[timekeepXX#getlevel]/10000 
+      Let,1,[tSlider#Time] 
+      Let,2,[var#1]*10000-[var#1#F]*10000
+   Endon
 
- On Clock#Time=All,**:** Do
-    If %syssec_d%/60>=[var#1#F] And %syssec_d%/60<[var#2]
-      GPIO,2,1
-    Else
-      GPIO,2,0
-    Endif
- Endon
-</code></pre>
+   On tSlider do
+      TimerSet,2,10 // after 10secs store the value in the "level control" plugin
+      Let,1,[tSlider#Time]
+      Let,2,[var#1]*10000-[var#1#F]*10000
+   endon
 
+   On Rules#Timer=2 Do
+      config,task,timekeepXX,SetLevel,[tSlider#Time]*10000  //level stores only two digits so we make an integer 
+   Endon
 
-<img width="600" alt="ts" src="https://user-images.githubusercontent.com/33860956/155342234-12436142-1813-47e9-a789-9c803c8763de.png">
+   On Clock#Time=All,**:** Do
+      If %syssec_d%/60>=[var#1#F] And %syssec_d%/60<[var#2]
+        GPIO,2,1
+      Else
+        GPIO,2,0
+      Endif
+   Endon
+  </code></pre>
+
+  <img width="271" alt="Bildschirmfoto 2022-12-04 um 20 02 16" src="https://user-images.githubusercontent.com/33860956/205510139-1d45055f-bd29-4ca7-8e39-e08eb466d809.png">
+  <img width="600" alt="Bildschirmfoto 2022-12-04 um 20 02 29" src="https://user-images.githubusercontent.com/33860956/205510141-8f6e3c84-4bda-40c0-8d95-dea4c8c140d8.png">
 
 
 ***
