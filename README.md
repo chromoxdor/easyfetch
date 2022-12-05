@@ -141,34 +141,34 @@ You should now see all the ESPEasy device tasks and states.
         control plugin since only one plugin for both values is needed
       - This slider has two thumbs for two time values (e.g. on and off time). Both times are stored in the corresponding taskvalue. The code 
         example shows how to make use of it (for persistant storage of the values add the "level control" plugin):
-  <pre><code>
-   On System#Boot Do //retrieve the values after a power loss back from the "level control" plugin
-      TaskValueSet,tslider,1,[timekeepXX#getlevel]/10000 
-      Let,1,[tSlider#Time] 
-      Let,2,[var#1]*10000-[var#1#F]*10000
-   Endon
+      <pre><code>
+       On System#Boot Do //retrieve the values after a power loss back from the "level control" plugin
+          TaskValueSet,tslider,1,[timekeepXX#getlevel]/10000 
+          Let,1,[tSlider#Time] 
+          Let,2,[var#1]*10000-[var#1#F]*10000
+       Endon
 
-   On tSlider do
-      TimerSet,2,10 // after 10secs store the value in the "level control" plugin
-      Let,1,[tSlider#Time]
-      Let,2,[var#1]*10000-[var#1#F]*10000
-   endon
+       On tSlider do
+          TimerSet,2,10 // after 10secs store the value in the "level control" plugin
+          Let,1,[tSlider#Time]
+          Let,2,[var#1]*10000-[var#1#F]*10000
+       endon
 
-   On Rules#Timer=2 Do
-      config,task,timekeepXX,SetLevel,[tSlider#Time]*10000  //level stores only two digits so we make an integer 
-   Endon
+       On Rules#Timer=2 Do
+          config,task,timekeepXX,SetLevel,[tSlider#Time]*10000  //level stores only two digits so we make an integer 
+       Endon
 
-   On Clock#Time=All,**:** Do
-      If %syssec_d%/60>=[var#1#F] And %syssec_d%/60<[var#2]
-        GPIO,2,1
-      Else
-        GPIO,2,0
-      Endif
-   Endon
-  </code></pre>
+       On Clock#Time=All,**:** Do
+          If %syssec_d%/60>=[var#1#F] And %syssec_d%/60<[var#2]
+            GPIO,2,1
+          Else
+            GPIO,2,0
+          Endif
+       Endon
+      </code></pre>
 
-  <img width="271" alt="Bildschirmfoto 2022-12-04 um 20 02 16" src="https://user-images.githubusercontent.com/33860956/205510139-1d45055f-bd29-4ca7-8e39-e08eb466d809.png">
-  <img width="600" alt="Bildschirmfoto 2022-12-04 um 20 02 29" src="https://user-images.githubusercontent.com/33860956/205510141-8f6e3c84-4bda-40c0-8d95-dea4c8c140d8.png">
+      <img width="271" alt="Bildschirmfoto 2022-12-04 um 20 02 16" src="https://user-images.githubusercontent.com/33860956/205510139-1d45055f-bd29-4ca7-8e39-e08eb466d809.png">
+      <img width="600" alt="Bildschirmfoto 2022-12-04 um 20 02 29" src="https://user-images.githubusercontent.com/33860956/205510141-8f6e3c84-4bda-40c0-8d95-dea4c8c140d8.png">
 
 
 ***
