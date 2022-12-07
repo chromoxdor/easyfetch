@@ -53,13 +53,9 @@ Here you can see the corresponding devices page of the unit: "testesp":
 
 7. Click the "Upload" button.
 
-8. Repeat steps 4-7 for the custom esp.css file if you want a custom css (e.g. darkmode). 
-- the file can be downloaded from here: https://github.com/chromoxdor/espeasy_custom-css
-- choose between dark only, light only and system dependent (auto)mode and and rename the file esp.css!
-
 Use your browser to view the new dashboard: http://<ESP_DEVICE_IP>/fetch.html ( or http://<ESP_DEVICE_IP>/fetch.html.gz ).
 You should now see all the ESPEasy device tasks and states.
-(Note: For multiple espeasy devices in a network you´ll need only one device with the fetch.html as a primary device when all communicate via the p2p controller)
+(Note: For multiple espeasy devices in a network you´ll need only one device with the fetch.html as a primary device when all communicate via the p2p controller. ESPEasy P2P Networking msut be added in /Controllers. See: https://espeasy.readthedocs.io/en/latest/Controller/C013.html?highlight=p2p)
 
 ### Display options:
 
