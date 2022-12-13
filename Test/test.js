@@ -182,7 +182,7 @@ async function fetchJson(event) {
                                 if (window.innerWidth >= 450) {
                                     html += '<div class="sensorset"><div></div><div</div></div>';
                                 }
-                            }
+                            } 
                             else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'; }
                             wasUsed = true;
                         }
@@ -257,7 +257,7 @@ async function fetchJson(event) {
             nodePath = 'http://' + myJson.WiFi['IP Address'] + '/tools';
             firstRun = false;
         }
-        if (unitNr === unitNr1) { styleU = "&#8857;"; }
+        if (unitNr === unitNr1) { styleU = "&#8858;"; }
         else { styleU = ""; }
         document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
         document.getElementById('unitT').innerHTML = styleU + unit;
@@ -496,9 +496,9 @@ async function getNodes(utton) {
     myJson.nodes.forEach(node => {
         i++
         if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
-        if (node.nr === unitNr1) { styleN = "&#8857;&#xFE0E;"; } else { styleN = ""; }
-        if (node.nr === unitNr) { styleSel = 'style="color:gray";' } else { styleSel = ""; }
-        html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc"' + styleSel + 'onclick="getNodes(); sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
+        if (node.nr === unitNr1) {if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; }  else {styleN = "&#8858;&#xFE0E;";}}// else { styleN = ""; }
+        else if (node.nr === unitNr) {styleN = "&#183;&#xFE0E;";} else { styleN = ""; }
+        html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
         if (utton || isLongNode) {
             if (isLongNode) {
                 if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
