@@ -1,0 +1,8 @@
+## OS Specific Hidden Files ####
+
+# MacOSX Finder *****
+.DS_Store
+
+fetch_timechange.html
+/gifs
+test/test_bkup.css

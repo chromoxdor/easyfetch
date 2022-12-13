@@ -325,7 +325,6 @@ function changeCss() {
         for (let i = 1; i <= calcTile; i++) {
             html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'
         }
-
     }
     document.getElementById('sensorList').innerHTML = html;
     var list;
