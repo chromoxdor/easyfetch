@@ -169,9 +169,11 @@ iframe {
     height: inherit;
     background: black;
 }
+
 slider::-webkit-slider-runnable-track {
     background: black;
 }
+
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 0;
@@ -328,17 +330,17 @@ span.kindInput {
 }
 
 input:focus::placeholder {
-    color: transparent;
+    opacity:0.2;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 .on {
@@ -350,7 +352,7 @@ input[type=number] {
 }
 
 .btnTile {
-   background: #635d5d;
+    background: #635d5d;
 }
 
 .sensors {
@@ -371,9 +373,11 @@ input[type=number] {
     padding-bottom: 1pt;
     text-align: end;
 }
-input::placeholder{
+
+input::placeholder {
     opacity: 1;
 }
+
 .sensors,
 .vInputs,
 input::placeholder,
@@ -444,29 +448,35 @@ a {
 .sideNbtn {
     position: absolute;
     bottom: 2%;
-    width: 75%;
-    display: flex;
-    color: #b3b3b3;
-    justify-content: space-between;
-    align-items: baseline;
-}
-.sideNbtn div {
     font-size: 35px;
     font-family: sans-serif;
-}
-#menueList {
-    overflow: scroll;
+    color: #b3b3b3;
 }
 
-#menueList div{
+.openSys {
+    left: 20px;
+}
+
+.closeBtn {
+    right: 20px;
+}
+
+#menueList {
+    overflow: scroll;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+}
+
+#menueList::-webkit-scrollbar {
+    display: none;
+}
+
+#menueList div {
     padding: 3px;
     font-size: 25px;
     transition: 0.1s;
 }
 
-.sysInfo {
-    
-}
 #sysInfo {
     background: #ffffff17;
     color: white;
@@ -484,17 +494,19 @@ a {
     justify-content: flex-start;
     padding-top: 6px;
 }
- 
-.syspair > div {
+
+.syspair>div {
     font-size: 8pt !important;
 }
+
 .syspair div:nth-child(1) {
-   text-align: end;
-   width: 35%;
-   padding-right: 5px;
-  }
+    text-align: end;
+    width: 35%;
+    padding-right: 5px;
+}
 
 .menueWrap {
+    transition: .5s;
     height: 166px;
     width: 100%;
     flex-shrink: 999;
@@ -512,7 +524,7 @@ a {
 }
 
 @media screen and (max-width: 799px) {
-    framie {
+    #framie {
         position: absolute;
     }
 }
@@ -605,7 +617,7 @@ a {
         background-color: #333333 !important;
     }
 
-    .slTimeSetWrap{
+    .slTimeSetWrap {
         background: black;
         color: #b3b3b3;
     }
@@ -665,8 +677,8 @@ a {
         background: none;
     }
 
-    .btnTile{
-        background: #333; 
+    .btnTile {
+        background: #333;
     }
 
     span.kindInput {

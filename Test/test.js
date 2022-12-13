@@ -31,7 +31,7 @@ async function fetchJson(event) {
     if (myParam == null) { hasParams = false; }
     someoneEn = 0;
     onceNoTask = 0;
-    if (!jsonPath) { jsonPath = `json`; }
+    if (!jsonPath) { jsonPath = `http://esp-easy.us/json`; }
     if (isittime) {
         response = await fetch(jsonPath);
         myJson = await response.json();
@@ -106,15 +106,16 @@ async function fetchJson(event) {
                         }
                         else { isTspeak = false; }
                         //normal tiles = html; slider = html2; big values = html3
-                        //switch
+                        //switch---------------------------------------------------------
                         if (sensor.TaskDeviceNumber == 1) {
                             wasUsed = true;
                             if ((item.Name === "btnStateC" && item.Value < 2) || item.Value === 1) { StateClass = "on"; }
                             else if (item.Value === 2) { StateClass = "alert"; }
                             else { StateClass = "off"; }
-                            if (sensor.TaskDeviceGPIO1 && item.Name === "State") {
+                            if (sensor.TaskDeviceGPIO1 && item.Name.includes("State")) {
+                                if (item.Name === "iState") (item.Value = item.Value == 1 ? 0 : 1)
                                 utton = sensor.TaskName + "?" + sensor.TaskDeviceGPIO1;
-                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + Number(!item.Value) + '\')">' + htmlStatic2;
+                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
                             }
                             else if (sensor.TaskDeviceGPIO1 && item.Name === "ledState") {
                                 html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + sensor.TaskName + '"class="slider ' + sensor.TaskNumber + ',' + item.ValueNumber;
@@ -122,11 +123,11 @@ async function fetchJson(event) {
                             }
                             else if (itemN === "btnState") {
                                 if (kindN) { utton = sensor.TaskName + "?" + kindN }
-                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + Number(!item.Value) + '\')">' + htmlStatic2;
+                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
                             }
                             else { wasUsed = false; }
                         }
-                        //dummy
+                        //dummy---------------------------------------------------------
                         if (sensor.TaskDeviceNumber == 33 && !["noVal", "XX"].some(v => (item.Name).includes(v))) {
                             wasUsed = true;
                             //virtual buttons
@@ -141,7 +142,7 @@ async function fetchJson(event) {
                             //number input
                             else if ((sensor.TaskName).includes("vInput")) {
                                 if (!itemN) { itemN = "&nbsp;" }
-                                html += '<div class="btnTile sensorset clickables"><div class="sensors" style="font-weight:bold;")">' + itemN + '</div><div class="valWrap"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="waitforInput()"> <span class="kindInput">' + kindN + '</span></div></div>';
+                                html += '<div class="btnTile sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="waitforInput(this)" max="999999"> <span class="kindInput">' + kindN + '</span></div></div>';
                             }
                             //normal slider
                             else if ((sensor.TaskName).includes("vSlider")) {
@@ -184,7 +185,7 @@ async function fetchJson(event) {
                             }
                             wasUsed = true;
                         }
-                        //big values
+                        //big values---------------------------------------------------------
                         if ((sensor.TaskName).includes("bigVal")) {
                             let htmlBig1 = `<div class="valuesBig" style="font-weight:bold;text-align:left;">`;
                             if (firstItem == true) {
@@ -221,7 +222,7 @@ async function fetchJson(event) {
                             }
                             wasUsed = true;
                         }
-                        // if all items with a specific delaration processed do the rest
+                        // if all items with a specific delaration processed do the rest---------------------------------------------------------
                         if (!wasUsed) {
                             if (firstItem == true) { html += '<div class="' + htmlStatic1 + 'buttonClick(\'' + utton + '\')">' + htmlStatic2; }
                             if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
@@ -237,7 +238,7 @@ async function fetchJson(event) {
                 else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX") && !sensor.Type.includes("Display") && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
             });
             if (!someoneEn && !hasParams) {
-                html += '<div class="' + htmlStatic1 + '> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
+                html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
             }
         }
         document.getElementById('sysInfo').innerHTML = syshtml;
@@ -317,8 +318,8 @@ function changeCss() {
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
     }
     //calculate and add extra tiles
-    if (window.innerWidth < 450) { coloumnSet = 2 };
-    console.log(numSet, coloumnSet, coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet)));
+    if (window.innerWidth < 450) {if (bigLength===1 && !numBigger || numSet === 1){coloumnSet = 1} else {coloumnSet = 2} };
+    console.log(coloumnSet);
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
@@ -361,19 +362,6 @@ function paramS() {
     sliders.forEach(slider => {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
-    });
-    var inpFields = document.querySelectorAll('.vInputs')
-    inpFields.forEach(inpField => {
-        inpField.addEventListener('focus',(event) => {
-            console.log("hä?");
-            isittime = 0;
-            InputInterV = setTimeout(blurInput, 5000);
-        });
-        inpField.addEventListener('blur', (event) => {
-            isittime = 1;
-            console.log("blur");
-            clearTimeout(InputInterV);
-        });
     });
 }
 function updateSlTS(event) {
@@ -428,7 +416,7 @@ function sliderChange(event) {
     NrofSlides = 0;
     setTimeout(fetchJson, 400);
 }
-function buttonClick(utton, gpioState) {
+function buttonClick(utton, gState) {
     if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
         nodeNr2 = utton.split("&")[1];
@@ -436,8 +424,9 @@ function buttonClick(utton, gpioState) {
     }
     if (utton.split("?")[1]) {
         gpioNr = utton.split("?")[1];
-        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gpioState); }
-        else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' + gpioState + '"'); }
+        gS = gState == 1 ? 0 : 1
+        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
+        else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' +  gS + '"'); }
     }
     else {
         if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
@@ -445,23 +434,33 @@ function buttonClick(utton, gpioState) {
     }
     setTimeout(fetchJson, 400);
 }
-function waitforInput(){
+function waitforInput(inputNum){
+    console.log("fuck")
     isittime = 0;
-    InputInterV = setTimeout(blurInput, 5000);
+    InputInterV = setTimeout(blurInput, 8000); 
+    clearTimeout(InputInterV);
+    inputNum.addEventListener('blur', (event) => {
+        clearTimeout(InputInterV)
+        isittime = 1;
+        setTimeout(fetchJson, 400);
+    });
 }
 
-function getInput(ele) {
-    console.log(event);
-    if (event.key === 'Enter') {
+function getInput(ele,blur) {
+    console.log(ele, event)
+    if (ele.value.length > 4) {
+        ele.value = ele.value.slice(0,4); 
+    }
+    if (event.key === 'Enter' || event.type === 'click') {
         if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
         else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
+        console.log(event,"yeah")
         buttonClick(ele.id);
         clearTimeout(InputInterV);
         isittime = 1;
-        //setTimeout(fetchJson, 400);
     }
-    else if (event.key === 'Escape') {console.log(ele.id); document.getElementById(ele.id).value = ""; }
-    else {console.log("typeing"); clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
+    else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
+    else {clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
 }
 function blurInput() {
     isittime = 1;
@@ -483,13 +482,12 @@ function closeNav() {
 }
 
 function openSys() {
-    console.log("clicked");
     if (document.getElementById('sysInfo').offsetHeight === 0) {
         document.getElementById('menueWrap1').style.flexShrink = "0";
         document.getElementById('sysInfo').style.height = "160px";
     } else {
         document.getElementById('sysInfo').style.height = "0";
-        document.getElementById('menueWrap1').style.flexShrink = "10";
+        document.getElementById('menueWrap1').style.flexShrink = "999";
     }
 }
 async function getNodes(utton) {
@@ -530,8 +528,6 @@ async function getNodes(utton) {
 }
 function sendUpdate() {
     setTimeout(getNodes, 400);
-    console.log("gotit")
-
 }
 function nodeChange(event) {
     nodeInfos = nodeInfos[event];
@@ -543,7 +539,7 @@ function nodeChange(event) {
         window.history.replaceState(null, null, '?unit=' + nodeNr);
         fetchJson(1);
     }
-    if (window.innerWidth < 1023) { closeNav(); }
+    if (window.innerWidth < 1023 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
 function resizeText() {
     const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
