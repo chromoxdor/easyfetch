@@ -436,7 +436,6 @@ function buttonClick(utton, gState) {
     setTimeout(fetchJson, 400);
 }
 function waitforInput(inputNum){
-    console.log("fuck")
     isittime = 0;
     InputInterV = setTimeout(blurInput, 8000); 
     clearTimeout(InputInterV);
@@ -447,19 +446,20 @@ function waitforInput(inputNum){
     });
 }
 
-function getInput(ele,blur) {
-    console.log(ele, event)
-    if (ele.value.length > 4) {
-        ele.value = ele.value.slice(0,4); 
+function getInput(ele) {
+    console.log(event, ele.value)
+    if (ele.value.length > 12) {
+        ele.value = ele.value.slice(0,12); 
     }
-    if (event.key === 'Enter' || event.type === 'click') {
+    if ((event.key === 'Enter' || event.type === 'click')) {
+    if (ele.value){
         if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
         else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
-        console.log(event,"yeah")
         buttonClick(ele.id);
         clearTimeout(InputInterV);
         isittime = 1;
     }
+}
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
     else {clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
 }
