@@ -206,10 +206,10 @@ slider::-webkit-slider-runnable-track {
     z-index: 1;
     width: calc(100% + 1px);
     left: 1px;
-    mix-blend-mode: lighten;
+    mix-blend-mode: overlay;
     pointer-events: none;
     flex-wrap: wrap;
-    background-color: #635d5d;
+    background-color: #8a8787;
 }
 
 .slTS:hover {
@@ -277,13 +277,13 @@ slider::-webkit-slider-runnable-track {
     position: relative;
     align-items: stretch;
     color: white;
-    background: #635d5d;
+    background: #736f6f;
     box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
 
 
 .sensorset:not(.btnTile) {
-    background-color: #837c7c;
+    background-color: #847d7d;
 }
 
 .sensorset {
@@ -315,6 +315,10 @@ slider::-webkit-slider-runnable-track {
     background: #ffffff28;
     border-radius: 5px;
     text-align: end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .vInputs {
@@ -324,8 +328,11 @@ slider::-webkit-slider-runnable-track {
     background: none;
     text-align: end;
 }
+.vInputs:focus-visible {
+    width: inherit;
+}
 
-span.kindInput {
+.kindInput {
     color: white;
 }
 
@@ -614,7 +621,7 @@ a {
 
     .slTS {
         mix-blend-mode: lighten;
-        background-color: #333333 !important;
+        background-color: #444444 !important;
     }
 
     .slTimeSetWrap {

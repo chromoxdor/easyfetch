@@ -142,7 +142,7 @@ async function fetchJson(event) {
                             //number input
                             else if ((sensor.TaskName).includes("vInput")) {
                                 if (!itemN) { itemN = "&nbsp;" }
-                                html += '<div class="btnTile sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="waitforInput(this)" max="999999"> <span class="kindInput">' + kindN + '</span></div></div>';
+                                html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="waitforInput(this)" max="999999"> <div class="kindInput">' + kindN + '</div></div></div>';
                             }
                             //normal slider
                             else if ((sensor.TaskName).includes("vSlider")) {
@@ -178,11 +178,12 @@ async function fetchJson(event) {
                         }
                         //handle tile hiding of dummy tiles
                         if (["dButtons", "vInput", "tSlider", "vSlider"].some(v => (sensor.TaskName).includes(v))) {
-                            if (item.Name.includes("noVal")) {
+                            if (item.Name.includes("noValAuto")) {
                                 if (window.innerWidth >= 450) {
                                     html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>';
                                 }
                             }
+                            else if (item.Name.includes("noVal")) {html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>';}
                             wasUsed = true;
                         }
                         //big values---------------------------------------------------------
@@ -247,7 +248,7 @@ async function fetchJson(event) {
         document.getElementById('bigNumber').innerHTML = html3;
 
         if (firstRun) {
-            setInterval(fetchJson, 2000);
+            //setInterval(fetchJson, 2000);
             setInterval(getTS, 10000);
             getTS();
             getNodes();
@@ -318,7 +319,7 @@ function changeCss() {
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
     }
     //calculate and add extra tiles
-    if (window.innerWidth < 450) {if (bigLength===1 && !numBigger || numSet === 1){coloumnSet = 1} else {coloumnSet = 2} };
+    if (window.innerWidth < 450) {if (bigLength===1 && !numBigger || bigLength===0 && numSet === 1){coloumnSet = 1} else {coloumnSet = 2} };
     console.log(coloumnSet);
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
