@@ -1,4 +1,4 @@
-
+var userAgent = window.navigator.userAgent;
 var firstRun = true;
 var wasUsed;
 var whichSl;
@@ -47,7 +47,8 @@ async function fetchJson(event) {
             '<div class="syspair"><div>Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
             '<div class="syspair"><div>Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
             '<div class="syspair"><div>IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
-            '<div class="syspair"><div>RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>')
+            '<div class="syspair"><div>RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
+            '<div class="syspair"><div>Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
         html = '';
         let html2 = '';
         let html3 = '';
@@ -182,7 +183,7 @@ async function fetchJson(event) {
                                 if (window.innerWidth >= 450) {
                                     html += '<div class="sensorset"><div></div><div</div></div>';
                                 }
-                            } 
+                            }
                             else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'; }
                             wasUsed = true;
                         }
@@ -248,6 +249,9 @@ async function fetchJson(event) {
         document.getElementById('bigNumber').innerHTML = html3;
 
         if (firstRun) {
+            if (userAgent.match(/iPhone/i)) {
+                document.body.style.height = "101vh";
+            }
             setInterval(fetchJson, 2000);
             setInterval(getTS, 10000);
             getTS();
@@ -481,7 +485,7 @@ function closeNav() {
 function openSys() {
     if (document.getElementById('sysInfo').offsetHeight === 0) {
         document.getElementById('menueWrap1').style.flexShrink = "0";
-        document.getElementById('sysInfo').style.height = "160px";
+        document.getElementById('sysInfo').style.height = "180px";
     } else {
         document.getElementById('sysInfo').style.height = "0";
         document.getElementById('menueWrap1').style.flexShrink = "999";
@@ -496,8 +500,8 @@ async function getNodes(utton) {
     myJson.nodes.forEach(node => {
         i++
         if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
-        if (node.nr === unitNr1) {if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; }  else {styleN = "&#8858;&#xFE0E;";}}// else { styleN = ""; }
-        else if (node.nr === unitNr) {styleN = "&#183;&#xFE0E;";} else { styleN = ""; }
+        if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }// else { styleN = ""; }
+        else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
         html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
         if (utton || isLongNode) {
             if (isLongNode) {
