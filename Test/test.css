@@ -217,23 +217,23 @@ slider::-webkit-slider-runnable-track {
 }
 
 .slTimeSetWrap div:nth-child(1) .slTS::-webkit-slider-thumb {
-    border-left: 10px solid #d14522;
+    border-left: 10px solid #d25e42;
     border-right: 10px solid #458fd1;
 }
 
 .slTimeSetWrap div:nth-child(2) .slTS::-webkit-slider-thumb {
     border-left: 10px solid #458fd1;
-    border-right: 10px solid #d14522;
+    border-right: 10px solid #d25e42;
 }
 
 .slTimeSetWrap div:nth-child(1) .slTS::-moz-range-thumb {
-    border-left: 10px solid #d14522;
+    border-left: 10px solid #d25e42;
     border-right: 10px solid #458fd1;
 }
 
 .slTimeSetWrap div:nth-child(2) .slTS::-moz-range-thumb {
     border-left: 10px solid #458fd1;
-    border-right: 10px solid #d14522;
+    border-right: 10px solid #d25e42;
 }
 
 .slTS::-webkit-slider-thumb {

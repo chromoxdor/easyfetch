@@ -320,7 +320,6 @@ function changeCss() {
     }
     //calculate and add extra tiles
     if (window.innerWidth < 450) { if (bigLength === 1 && !numBigger || bigLength === 0 && numSet === 1) { coloumnSet = 1 } else { coloumnSet = 2 } };
-    console.log(coloumnSet);
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
@@ -435,34 +434,19 @@ function buttonClick(utton, gState) {
     }
     setTimeout(fetchJson, 400);
 }
-/*function waitforInput(inputNum) {
-    isittime = 0;
-    InputInterV = setTimeout(blurInput, 8000);
-    clearTimeout(InputInterV);
-    inputNum.addEventListener('blur', (event) => {
-        clearTimeout(InputInterV)
-        isittime = 1;
-        setTimeout(fetchJson, 400);
-    });
-}*/
 
-function getInput(ele,initalCLick) {
+function getInput(ele, initalCLick) {
     if (event.type === 'click') {
-        console.log("sdsd")
         isittime = 0;
         InputInterV = setTimeout(blurInput, 8000);
         ele.addEventListener('blur', (event) => {
-            console.log("blur")
             clearTimeout(InputInterV)
             isittime = 1;
             setTimeout(fetchJson, 400);
         });
     }
-    if (ele.value.length > 12) {
-        ele.value = ele.value.slice(0, 12);
-    }
+    if (ele.value.length > 12) { ele.value = ele.value.slice(0, 12); }
     if (event.key === 'Enter' || event.type === 'click' && !initalCLick) {
-        console.log("nooo")
         if (ele.value) {
             if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
@@ -474,7 +458,7 @@ function getInput(ele,initalCLick) {
 
     }
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
-    else {clearTimeout(InputInterV);InputInterV = setTimeout(blurInput, 5000);}
+    else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
 }
 function blurInput() {
     isittime = 1;
