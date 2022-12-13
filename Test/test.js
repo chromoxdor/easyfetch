@@ -142,7 +142,7 @@ async function fetchJson(event) {
                             //number input
                             else if ((sensor.TaskName).includes("vInput")) {
                                 if (!itemN) { itemN = "&nbsp;" }
-                                html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="waitforInput(this)" max="999999"> <div class="kindInput">' + kindN + '</div></div></div>';
+                                html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)"> <div class="kindInput">' + kindN + '</div></div></div>';
                             }
                             //normal slider
                             else if ((sensor.TaskName).includes("vSlider")) {
@@ -447,22 +447,32 @@ function waitforInput(inputNum) {
 }
 
 function getInput(ele) {
-    console.log(event, ele.value)
     if (ele.value.length > 12) {
         ele.value = ele.value.slice(0, 12);
     }
     if (event.key === 'Enter' || event.type === 'click') {
+        if (event.type === 'click') {
+            isittime = 0;
+            clearTimeout(InputInterV);
+            InputInterV = setTimeout(blurInput, 8000);
+            ele.addEventListener('blur', (event) => {
+                clearTimeout(InputInterV)
+                isittime = 1;
+                setTimeout(fetchJson, 400);
+            });
+        }
         if (ele.value) {
             if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
             buttonClick(ele.id);
         }
-            clearTimeout(InputInterV);
-            isittime = 1;
-        
+        else { setTimeout(fetchJson, 400); }
+        clearTimeout(InputInterV);
+        isittime = 1;
+
     }
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
-    else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
+    else {clearTimeout(InputInterV);InputInterV = setTimeout(blurInput, 5000);}
 }
 function blurInput() {
     isittime = 1;
