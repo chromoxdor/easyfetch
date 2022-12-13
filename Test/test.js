@@ -451,7 +451,7 @@ function getInput(ele) {
     if (ele.value.length > 12) {
         ele.value = ele.value.slice(0, 12);
     }
-    if ((event.key === 'Enter' || event.type === 'click')) {
+    if (event.key === 'Enter' || event.type === 'click') {
         if (ele.value) {
             if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
