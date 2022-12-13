@@ -183,7 +183,7 @@ async function fetchJson(event) {
                                     html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>';
                                 }
                             }
-                            else if (item.Name.includes("noVal")) {html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>';}
+                            else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'; }
                             wasUsed = true;
                         }
                         //big values---------------------------------------------------------
@@ -319,7 +319,7 @@ function changeCss() {
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
     }
     //calculate and add extra tiles
-    if (window.innerWidth < 450) {if (bigLength===1 && !numBigger || bigLength===0 && numSet === 1){coloumnSet = 1} else {coloumnSet = 2} };
+    if (window.innerWidth < 450) { if (bigLength === 1 && !numBigger || bigLength === 0 && numSet === 1) { coloumnSet = 1 } else { coloumnSet = 2 } };
     console.log(coloumnSet);
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
@@ -427,7 +427,7 @@ function buttonClick(utton, gState) {
         gpioNr = utton.split("?")[1];
         gS = gState == 1 ? 0 : 1
         if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-        else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' +  gS + '"'); }
+        else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
     }
     else {
         if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
@@ -435,9 +435,9 @@ function buttonClick(utton, gState) {
     }
     setTimeout(fetchJson, 400);
 }
-function waitforInput(inputNum){
+function waitforInput(inputNum) {
     isittime = 0;
-    InputInterV = setTimeout(blurInput, 8000); 
+    InputInterV = setTimeout(blurInput, 8000);
     clearTimeout(InputInterV);
     inputNum.addEventListener('blur', (event) => {
         clearTimeout(InputInterV)
@@ -449,19 +449,20 @@ function waitforInput(inputNum){
 function getInput(ele) {
     console.log(event, ele.value)
     if (ele.value.length > 12) {
-        ele.value = ele.value.slice(0,12); 
+        ele.value = ele.value.slice(0, 12);
     }
     if ((event.key === 'Enter' || event.type === 'click')) {
-    if (ele.value){
-        if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
-        else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
-        buttonClick(ele.id);
-        clearTimeout(InputInterV);
-        isittime = 1;
+        if (ele.value) {
+            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
+            else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
+            buttonClick(ele.id);
+        }
+            clearTimeout(InputInterV);
+            isittime = 1;
+        
     }
-}
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
-    else {clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
+    else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
 }
 function blurInput() {
     isittime = 1;
