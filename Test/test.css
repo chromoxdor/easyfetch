@@ -401,7 +401,7 @@ a {
 }
 
 #opener {
-    bottom: 2%;
+    bottom: 0;
     z-index: 2;
     width: 100%;
     position: fixed;
@@ -413,6 +413,7 @@ a {
     max-width: 200px;
     align-items: center;
     margin: auto;
+    padding-bottom: 2%;
     justify-content: space-between;
 }
 
@@ -606,7 +607,6 @@ a {
     }
 
     #unitId {
-        background: #000000a8;
     }
 
     .bigNumWrap {
