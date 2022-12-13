@@ -180,7 +180,7 @@ async function fetchJson(event) {
                         if (["dButtons", "vInput", "tSlider", "vSlider"].some(v => (sensor.TaskName).includes(v))) {
                             if (item.Name.includes("noValAuto")) {
                                 if (window.innerWidth >= 450) {
-                                    html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>';
+                                    html += '<div class="sensorset"><div></div><div</div></div>';
                                 }
                             }
                             else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'; }
@@ -496,7 +496,7 @@ async function getNodes(utton) {
     myJson.nodes.forEach(node => {
         i++
         if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
-        if (node.nr === unitNr1) { styleN = "&#8857;"; } else { styleN = ""; }
+        if (node.nr === unitNr1) { styleN = "&#8857;&#xFE0E;"; } else { styleN = ""; }
         if (node.nr === unitNr) { styleSel = 'style="color:gray";' } else { styleSel = ""; }
         html4 += '<div class="menueItem"><div class="serverUnit">' + styleN + '</div><div id="' + node.name + '" class="nc"' + styleSel + 'onclick="getNodes(); sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
         if (utton || isLongNode) {
