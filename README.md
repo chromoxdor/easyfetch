@@ -114,7 +114,7 @@ You should now see all the ESPEasy device tasks and states.
 **3. Slider**
 
  - Slider: there are two types of slider. The “ordinary” slider and the “time" slider
- - Every slider calls an event when finished sliding. (e.g. “sliderevent”)
+ - Every slider calls an event when finished sliding. (e.g. “sliderEvent”)
  - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
     1. The ordinary slider: There are two versions too.
@@ -144,7 +144,7 @@ You should now see all the ESPEasy device tasks and states.
           Let,2,[var#1]*10000-[var#1#F]*10000
        Endon
 
-       On tSlider do
+       On tSliderEvent do
           TimerSet,2,10 // after 10secs store the value in the "level control" plugin
           Let,1,[tSlider#Time]
           Let,2,[var#1]*10000-[var#1#F]*10000
