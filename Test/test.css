@@ -53,6 +53,7 @@ iframe {
     flex-direction: column;
     padding-bottom: 40px;
     padding-top: 40px;
+    color: white;
 }
 
 .allExtra {
@@ -93,7 +94,6 @@ iframe {
     height: 75px;
     flex-direction: column;
     background: #837c7c;
-    color: white;
     flex-wrap: nowrap;
     justify-content: space-between;
     box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
@@ -168,6 +168,10 @@ iframe {
     mix-blend-mode: color;
     height: inherit;
     background: black;
+}
+
+.sliderAmount {
+    margin-top: -4px;
 }
 
 slider::-webkit-slider-runnable-track {
@@ -276,7 +280,6 @@ slider::-webkit-slider-runnable-track {
     overflow: hidden;
     position: relative;
     align-items: stretch;
-    color: white;
     background: #736f6f;
     box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
@@ -332,10 +335,6 @@ slider::-webkit-slider-runnable-track {
     width: inherit;
 }
 
-.kindInput {
-    color: white;
-}
-
 input:focus::placeholder {
     opacity:0.2;
 }
@@ -383,16 +382,6 @@ input[type=number] {
 
 input::placeholder {
     opacity: 1;
-}
-
-.sensors,
-.vInputs,
-input::placeholder,
-.cron,
-.cron div,
-.values,
-.values div {
-    background: none;
     color: white;
 }
 
@@ -598,20 +587,21 @@ a {
         color: #b3b3b3;
     }
 
-    iframe {
-        background-color: black;
+    input::placeholder, #allList{
+        color: #b3b3b3;
+    }
+    
+
+    iframe, .slTimeSetWrap {
+        background: black;
     }
 
     #opener {
         background: #000000a8;
     }
 
-    #unitId {
-    }
-
     .bigNumWrap {
         background: #444444;
-        color: #b3b3b3;
     }
 
     .bigC {
@@ -621,11 +611,6 @@ a {
     .slTS {
         mix-blend-mode: lighten;
         background-color: #444444 !important;
-    }
-
-    .slTimeSetWrap {
-        background: black;
-        color: #b3b3b3;
     }
 
     .slTimeSetWrap div:nth-child(1) .slTS::-webkit-slider-thumb {
@@ -687,23 +672,9 @@ a {
         background: #333;
     }
 
-    span.kindInput {
-        color: #b3b3b3;
-    }
-
     .sensorset:not(.btnTile),
     #sliderList .sensorset {
         background-color: #444;
-    }
-
-    .sensors,
-    .vInputs,
-    input::placeholder,
-    .cron,
-    .cron div,
-    .values,
-    .values div {
-        color: #b3b3b3
     }
 
     .sidenav div {
