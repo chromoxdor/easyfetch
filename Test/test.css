@@ -402,7 +402,7 @@ a {
     max-width: 200px;
     align-items: center;
     margin: auto;
-    padding-bottom: 2%;
+    padding-bottom: 2vh;
     justify-content: space-between;
 }
 
