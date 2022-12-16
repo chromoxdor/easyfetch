@@ -330,6 +330,7 @@ slider::-webkit-slider-runnable-track {
     border: 0;
     background: none;
     text-align: end;
+    color: inherit;
 }
 .vInputs:focus-visible {
     width: inherit;
