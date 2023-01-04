@@ -350,12 +350,16 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.kindInput {
+    padding-left: 1px;
+}
+
 .on {
     background-color: #3e88cb !important;
 }
 
 .alert {
-    background-color: #ffc1c1 !important
+    background-color: #d8524f !important
 }
 
 .btnTile {
