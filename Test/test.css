@@ -426,6 +426,7 @@ a {
     align-items: center;
     cursor: pointer;
     justify-content: center;
+    color: white;
 }
 
 .menueItem {
@@ -445,7 +446,6 @@ a {
 
 .nc {
     word-break: break-all;
-    color:white;
 }
 
 .sideNbtn {
@@ -686,9 +686,5 @@ a {
     .sensorset:not(.btnTile),
     #sliderList .sensorset {
         background-color: #444;
-    }
-
-    .sidenav div {
-        color: inherit;
     }
 }

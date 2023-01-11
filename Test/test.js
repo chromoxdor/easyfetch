@@ -194,7 +194,7 @@ async function fetchJson(event) {
                                     html += '<div class="sensorset"><div></div><div</div></div>';
                                 }
                             }
-                            else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'; }
+                            else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div></div><div</div></div>'; }
                             wasUsed = true;
                         }
                         //big values---------------------------------------------------------
@@ -234,7 +234,7 @@ async function fetchJson(event) {
                             }
                             wasUsed = true;
                         }
-                        // if all items with a specific delaration processed do the rest---------------------------------------------------------
+                        // if all items with a specific delaration are processed do the rest---------------------------------------------------------
                         if (!wasUsed) {
                             if (firstItem == true) { html += '<div class="' + htmlStatic1 + 'buttonClick(\'' + utton + '\')">' + htmlStatic2; }
                             if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
@@ -337,7 +337,7 @@ function changeCss() {
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
-            html += '<div class="sensorset"><div>&nbsp;</div><div</div></div>'
+            html += '<div class="sensorset"><div></div><div</div></div>'
         }
     }
     document.getElementById('sensorList').innerHTML = html;
