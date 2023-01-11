@@ -181,8 +181,8 @@ async function fetchJson(event) {
                                 var hour2 = Math.floor(slT2 / 60);
                                 var minute2 = slT2 % 60;
                                 const padded2 = minute2.toString().padStart(2, "0");
-                                let htmlSlider1 = '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="';
-                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + htmlSlider1 + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></span></div>' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"></div></div>';
+                                let htmlSlider1 = '<input class="slTS" type="range" min="0" max="1440" step="5" value="';
+                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + '<div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></span>' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"></div></div>';
 
                             }
                             else { wasUsed = false; }
