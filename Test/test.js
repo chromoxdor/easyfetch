@@ -40,15 +40,16 @@ async function fetchJson(event) {
         unit = myJson.WiFi.Hostname;
         unitNr = myJson.System['Unit Number'];
         sysInfo = myJson.System
-        let syshtml = ('<div class="syspair"><div>Sysinfo</div><div>' + unit + '</div></div>' +
-            '<div class="syspair"><div>Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
-            '<div class="syspair"><div>Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
-            '<div class="syspair"><div>Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
-            '<div class="syspair"><div>Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
-            '<div class="syspair"><div>Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
-            '<div class="syspair"><div>IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
-            '<div class="syspair"><div>RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
-            '<div class="syspair"><div>Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
+        let htmlStaticSys = '<div class="syspair"><div>';
+        let syshtml = (htmlStaticSys + 'Sysinfo</div><div>' + unit + '</div></div>' +
+            htmlStaticSys + 'Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
+            htmlStaticSys + 'Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
+            htmlStaticSys + 'Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
+            htmlStaticSys + 'Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
+            htmlStaticSys + 'Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
+            htmlStaticSys + 'IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
+            htmlStaticSys + 'RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
+            htmlStaticSys + 'Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
 
         /*if (sysInfo['Build'].toString().length == 8){
             syshtml += '<div class="syspair"><div>Sysinfo</div><div>' + sysInfo['Build'].toString().slice(4, 6) + '</div></div>';
@@ -119,7 +120,7 @@ async function fetchJson(event) {
                             else if (item.Value === 2) { StateClass = "alert"; }
                             else { StateClass = "off"; }
                             if (sensor.TaskDeviceGPIO1 && item.Name.includes("State")) {
-                                if (item.Name === "iState") (item.Value = item.Value == 1 ? 0 : 1)
+                                if (item.Name === "iState") { item.Value = item.Value == 1 ? 0 : 1 };
                                 utton = sensor.TaskName + "?" + sensor.TaskDeviceGPIO1;
                                 html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
                             }
@@ -127,9 +128,10 @@ async function fetchJson(event) {
                                 html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + sensor.TaskName + '"class="slider ' + sensor.TaskNumber + ',' + item.ValueNumber;
                                 html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + sensor.TaskName + '</div></div></div>';
                             }
-                            else if (itemN === "btnState") {
-                                if (kindN) { utton = sensor.TaskName + "?" + kindN }
-                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
+                            else if (itemN.includes("btnState")) {
+                                if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
+                                if (kindN) { utton = sensor.TaskName + "?" + kindN };
+                                html += '<div class="btnTile ' + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
                             }
                             else { wasUsed = false; }
                         }
@@ -138,12 +140,14 @@ async function fetchJson(event) {
                             wasUsed = true;
                             //virtual buttons
                             if ((sensor.TaskName).includes("dButtons")) {
-                                itemNB = itemN.split("&")[0];
-                                if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="on'; }
-                                else if (item.Value === 2) { html += '<div class="btnTile alert'; }
-                                else { html += '<div class="btnTile off '; }
-                                if (itemN.split("&")[1] == "A") { html += buttonClick + 'getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
-                                else { html += htmlStatic1 + 'buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                if (item.Value > -1) {
+                                    itemNB = itemN.split("&")[0];
+                                    if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="on'; }
+                                    else if (item.Value === 2) { html += '<div class="btnTile alert'; }
+                                    else { html += '<div class="btnTile off '; }
+                                    if (itemN.split("&")[1] == "A") { html += buttonClick + 'getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                    else { html += htmlStatic1 + 'buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                }
                             }
                             //number input
                             else if ((sensor.TaskName).includes("vInput")) {
@@ -178,7 +182,8 @@ async function fetchJson(event) {
                                 var minute2 = slT2 % 60;
                                 const padded2 = minute2.toString().padStart(2, "0");
                                 let htmlSlider1 = '<div class="slTimeSet"><input class="slTS" type="range" min="0" max="1440" step="5" value="';
-                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + htmlSlider1 + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount">' + hour1 + '</span><span>:</span><span class="mAmount">' + padded1 + '</span><span>-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> </span></div>' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"><span class="slTimeText"> <span class="hAmount">' + hour2 + '</span><span>:</span><span class="mAmount">' + padded2 + '</span></span></div></div>';
+                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + htmlSlider1 + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></span></div>' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"></div></div>';
+
                             }
                             else { wasUsed = false; }
                         }
@@ -375,8 +380,9 @@ function paramS() {
 function updateSlTS(event) {
     isittime = 0;
     slider = event.target;
-    const amount = slider.closest(".slTimeSet").querySelector(".hAmount");
-    const amount2 = slider.closest(".slTimeSet").querySelector(".mAmount");
+    if (slider.id.slice(-1) == "L") {nuM=1} else {nuM=2}
+    const amount = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".hAmount"+ nuM);
+    const amount2 = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".mAmount"+ nuM);
     var hours = Math.floor(slider.value / 60);
     var minutes = slider.value % 60;
     const padded = minutes.toString().padStart(2, "0");

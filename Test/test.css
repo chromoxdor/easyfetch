@@ -456,6 +456,7 @@ a {
 
 .openSys {
     left: 20px;
+    width: 40px;
 }
 
 .closeBtn {
@@ -488,12 +489,14 @@ a {
     overflow: hidden;
     position: absolute;
     top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .syspair {
     display: flex;
     justify-content: flex-start;
-    padding-top: 6px;
 }
 
 .syspair>div {
