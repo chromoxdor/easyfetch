@@ -131,7 +131,7 @@ async function fetchJson(event) {
                             else if (itemN.includes("btnState")) {
                                 if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
                                 if (kindN) { utton = sensor.TaskName + "?" + kindN };
-                                html += '<div class="btnTile ' + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
+                                html += '<div class="btnTile ' + StateClass + htmlStatic1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htmlStatic2;
                             }
                             else { wasUsed = false; }
                         }
@@ -380,9 +380,9 @@ function paramS() {
 function updateSlTS(event) {
     isittime = 0;
     slider = event.target;
-    if (slider.id.slice(-1) == "L") {nuM=1} else {nuM=2}
-    const amount = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".hAmount"+ nuM);
-    const amount2 = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".mAmount"+ nuM);
+    if (slider.id.slice(-1) == "L") { nuM = 1 } else { nuM = 2 }
+    const amount = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".hAmount" + nuM);
+    const amount2 = slider.parentElement.closest(".slTimeSetWrap").firstElementChild.querySelector(".mAmount" + nuM);
     var hours = Math.floor(slider.value / 60);
     var minutes = slider.value % 60;
     const padded = minutes.toString().padStart(2, "0");
@@ -480,17 +480,14 @@ function blurInput() {
 function openNav() {
     if (nodeInterV) { clearInterval(nodeInterV); }
     nodeInterV = setInterval(getNodes, 10000);
-    if (document.getElementById('mySidenav').offsetWidth === 0) {
-        document.getElementById("mySidenav").style.width = "280px";
-        document.getElementById("menueList").style.color = "white";
+    if (document.getElementById('mySidenav').offsetLeft === -280) {
+        document.getElementById("mySidenav").style.left = "0";
         document.getElementById("sysInfo").style.opacity = "1";
     } else { closeNav(); }
 }
 function closeNav() {
     clearInterval(nodeInterV);
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("menueList").style.color = "transparent";
-    document.getElementById("sysInfo").style.opacity = "0";
+    document.getElementById("mySidenav").style.left = "-280px";
 }
 
 function openSys() {

@@ -413,11 +413,11 @@ a {
 
 .sidenav {
     height: 100%;
-    width: 0;
+    width: 280px;
     position: fixed;
     z-index: 20;
     top: 0;
-    left: 0;
+    left: -280px;
     background-color: #111111d9;
     transition: 0.8s;
     overflow-y: hidden;
@@ -432,19 +432,20 @@ a {
     display: grid;
     justify-content: start;
     grid-template-columns: 25px auto;
-    align-items: center;
-    word-break: break-all;
-    align-items: baseline;
 }
 
 .numberUnit {
     font-size: 10px;
     color: #818181;
-    background: transparent;
 }
 
 #menueList div:hover {
     color: #444444
+}
+
+.nc {
+    word-break: break-all;
+    color:white;
 }
 
 .sideNbtn {
@@ -467,6 +468,9 @@ a {
     overflow: scroll;
     -ms-overflow-style: none; 
     scrollbar-width: none;
+    transition: .2s;
+    width: max-content;
+    max-width: 280px;
 }
 
 #menueList::-webkit-scrollbar {
@@ -476,7 +480,6 @@ a {
 #menueList div {
     padding: 3px;
     font-size: 25px;
-    transition: 0.1s;
 }
 
 #sysInfo {
