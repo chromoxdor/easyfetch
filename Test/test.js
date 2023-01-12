@@ -262,7 +262,7 @@ async function fetchJson(event) {
             if (userAgent.match(/iPhone/i)) {
                 document.body.style.height = "101vh";
             }
-            //setInterval(fetchJson, 2000);
+            setInterval(fetchJson, 2000);
             setInterval(getTS, 10000);
             getTS();
             getNodes();
