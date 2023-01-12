@@ -182,7 +182,7 @@ async function fetchJson(event) {
                                 var minute2 = slT2 % 60;
                                 const padded2 = minute2.toString().padStart(2, "0");
                                 let htmlSlider1 = '<input class="slTS" type="range" min="0" max="1440" step="5" value="';
-                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + '<div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + item.Name + 'L"><span class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></span>' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"></div></div>';
+                                html2 += '<div id="' + item.Name + '" class="slTimeSetWrap ' + sensor.TaskName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + item.Name + '<div class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></div><div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + item.Name + 'L">' + htmlSlider1 + slT2 + '" id="' + item.Name + 'R"></div></div>';
 
                             }
                             else { wasUsed = false; }
@@ -262,7 +262,7 @@ async function fetchJson(event) {
             if (userAgent.match(/iPhone/i)) {
                 document.body.style.height = "101vh";
             }
-            setInterval(fetchJson, 2000);
+            //setInterval(fetchJson, 2000);
             setInterval(getTS, 10000);
             getTS();
             getNodes();

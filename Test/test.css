@@ -137,7 +137,7 @@ iframe {
 }
 
 #sliderList {
-    display: inline-grid;
+    display: grid;
     grid-column-gap: 1vh;
     grid-row-gap: 1vh;
     min-width: 284px;
@@ -209,8 +209,8 @@ slider::-webkit-slider-runnable-track {
     position: absolute;
     height: 40px;
     z-index: 1;
+    border-radius: 5px;
     width: 100%;
-    left: 0px;
     top: 0px;
     mix-blend-mode: overlay;
     pointer-events: none;
@@ -221,22 +221,22 @@ slider::-webkit-slider-runnable-track {
     background-color: transparent;
 }
 
-.slTimeSet input:nth-child(1)::-webkit-slider-thumb {
+.slTS:nth-child(1)::-webkit-slider-thumb {
     border-left: 10px solid #d25e42;
     border-right: 10px solid #458fd1;
 }
 
-.slTimeSet input:nth-child(3)::-webkit-slider-thumb {
+.slTS:nth-child(2)::-webkit-slider-thumb {
     border-left: 10px solid #458fd1;
     border-right: 10px solid #d25e42;
 }
 
-.slTimeSet input:nth-child(1)::-moz-range-thumb {
+.slTS:nth-child(1)::-moz-range-thumb {
     border-left: 10px solid #d25e42;
     border-right: 10px solid #458fd1;
 }
 
-.slTimeSet input:nth-child(3)::-moz-range-thumb {
+.slTS:nth-child(2)::-moz-range-thumb {
     border-left: 10px solid #458fd1;
     border-right: 10px solid #d25e42;
 }
@@ -244,7 +244,7 @@ slider::-webkit-slider-runnable-track {
 .slTS::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 0;
-    height: 100vh;
+    height: 40px;
     cursor: pointer;
     appearance: none;
     pointer-events: all;
@@ -260,15 +260,14 @@ slider::-webkit-slider-runnable-track {
 
 .slTimeSet {
     display: flex;
-    font-weight: normal;
     align-items: center;
+    justify-content: center;
 }
 
 .slTimeSetWrap {
     height: 40px;
     padding: 4.2px;
     border-radius: 5px;
-    overflow: hidden;
     position: relative;
     background: #736f6f;
     box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
@@ -276,8 +275,9 @@ slider::-webkit-slider-runnable-track {
 
 .slTimeText {
     position: absolute;
-    right: 3.3px;
-    bottom: 3.3px;
+    right: 4.2px;
+    bottom: 2.2px;
+    font-weight: normal;
 }
 
 .sensorset:not(.btnTile) {
@@ -581,10 +581,6 @@ a {
     .sensors {
         padding-bottom: 2%
     }
-
-    .slTS {
-        left: 2px;
-    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -619,22 +615,22 @@ a {
         background-color: #444444 !important;
     }
 
-    .slTimeSetWrap div:nth-child(1) .slTS::-webkit-slider-thumb {
+    .slTS:nth-child(1)::-webkit-slider-thumb {
         border-left: 10px solid #6d1343;
         border-right: 10px solid #44607a;
     }
 
-    .slTimeSetWrap div:nth-child(2) .slTS::-webkit-slider-thumb {
+    .slTS:nth-child(2)::-webkit-slider-thumb {
         border-left: 10px solid #44607a;
         border-right: 10px solid #6d1343;
     }
 
-    .slTimeSetWrap div:nth-child(1) .slTS::-moz-range-thumb {
+    .slTS:nth-child(1)::-moz-range-thumb {
         border-left: 10px solid #6d1343;
         border-right: 10px solid #44607a;
     }
 
-    .slTimeSetWrap div:nth-child(2) .slTS::-moz-range-thumb {
+    .slTS:nth-child(2)::-moz-range-thumb {
         border-left: 10px solid #44607a;
         border-right: 10px solid #6d1343;
     }
