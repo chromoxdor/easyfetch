@@ -25,6 +25,14 @@ var isittime = 1;
 var NrofSlides = 0;
 var currVal;
 var html;
+var touchstartX = 0;
+var touchendX = 0;
+var touchstartY = 0;
+var touchendY = 0;
+var msTouchstart = 0;
+var msTouchend = 0;
+var manNav=false;
+
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
@@ -82,7 +90,7 @@ async function fetchJson(event) {
                     firstItem = true;
                     sensor.TaskValues.forEach(item => {
                         wasUsed = false;
-                        if (item.Name.includes("XX")) { wasUsed = true; }
+                        if (item.Name.toString().includes("XX")) { wasUsed = true; }
                         if (item.Value == "nan") { item.Value = 0; item.NrDecimals = 0; }
                         if (typeof item.Value == 'number') {
                             num2Value = item.Value.toFixed(item.NrDecimals);
@@ -376,7 +384,38 @@ function paramS() {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
     });
+    document.addEventListener('touchstart', e => {
+        msTouchstart = Date.now();
+        touchstartX = e.changedTouches[0].screenX
+        touchstartY = e.changedTouches[0].screenY
+    })
+    document.addEventListener('touchend', e => {
+        msTouchend = Date.now();
+        touchendX = e.changedTouches[0].screenX
+        touchendY = e.changedTouches[0].screenY
+        checkDirection()
+    })
+    document.addEventListener('mousemove', e => {
+       if (!manNav){
+        if (e.clientX <10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
+        if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
+       }
+    })
 }
+
+function checkDirection() {
+    touchtime = msTouchend - msTouchstart
+    touchDistX = touchendX - touchstartX
+    touchDistY = touchendY - touchstartY
+    console.log(touchDistX, touchDistY, touchtime)
+    if (touchendX < touchstartX) {
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) closeNav();
+    }
+    if (touchendX > touchstartX) {
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) openNav()
+    }
+}
+
 function updateSlTS(event) {
     isittime = 0;
     slider = event.target;
@@ -477,15 +516,16 @@ function getInput(ele, initalCLick) {
 function blurInput() {
     isittime = 1;
 }
-function openNav() {
+function openNav(whatisit) {
+   if(whatisit) manNav=true;
     if (nodeInterV) { clearInterval(nodeInterV); }
     nodeInterV = setInterval(getNodes, 10000);
     if (document.getElementById('mySidenav').offsetLeft === -280) {
         document.getElementById("mySidenav").style.left = "0";
-        document.getElementById("sysInfo").style.opacity = "1";
     } else { closeNav(); }
 }
 function closeNav() {
+    manNav=false;
     clearInterval(nodeInterV);
     document.getElementById("mySidenav").style.left = "-280px";
 }
