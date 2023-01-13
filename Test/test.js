@@ -31,7 +31,8 @@ var touchstartY = 0;
 var touchendY = 0;
 var msTouchstart = 0;
 var msTouchend = 0;
-var manNav=false;
+var manNav = false;
+var cooK = document.cookie;
 
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
@@ -83,7 +84,7 @@ async function fetchJson(event) {
         else {
             myJson.Sensors.forEach(sensor => {
                 utton = sensor.TaskName;
-                let htmlStatic1 = ' sensorset clickables" onclick="';
+                let htmlStatic1 = ' sensorset clickables" onclick="playSound(3000), ';
                 let htmlStatic2 = '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>'
                 if (sensor.TaskEnabled === "true" && sensor.TaskValues && !sensor.TaskName.includes("XX") && !sensor.Type.includes("Display") && !hasParams) {
                     someoneEn = 1;
@@ -274,6 +275,8 @@ async function fetchJson(event) {
             setInterval(getTS, 10000);
             getTS();
             getNodes();
+            longPressS();
+            longPressN();
             unitNr1 = myJson.System['Unit Number'];
             nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
             nodePath = 'http://' + myJson.WiFi['IP Address'] + '/tools';
@@ -287,7 +290,6 @@ async function fetchJson(event) {
         changeCss();
         resizeText();
         longPressB();
-        longPressN();
         if (event) { dataT2 = []; getTS(); }
     }
 }
@@ -381,7 +383,7 @@ function paramS() {
     });
     var sliders = document.querySelectorAll(".slider");
     sliders.forEach(slider => {
-        slider.addEventListener('input', updateSlider);
+        slider.addEventListener('input', updateSlider );
         slider.addEventListener('change', sliderChange);
     });
     document.addEventListener('touchstart', e => {
@@ -396,10 +398,15 @@ function paramS() {
         checkDirection()
     })
     document.addEventListener('mousemove', e => {
-       if (!manNav){
-        if (e.clientX <10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
-        if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
-       }
+        if (!manNav) {
+            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
+            //if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
+        }
+    })
+    document.getElementById('mySidenav').addEventListener('mouseleave', e => {
+        if (!manNav) {
+            if (document.getElementById('sysInfo').offsetHeight === 0) closeNav()
+        }
     })
 }
 
@@ -407,7 +414,6 @@ function checkDirection() {
     touchtime = msTouchend - msTouchstart
     touchDistX = touchendX - touchstartX
     touchDistY = touchendY - touchstartY
-    console.log(touchDistX, touchDistY, touchtime)
     if (touchendX < touchstartX) {
         if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) closeNav();
     }
@@ -441,17 +447,21 @@ function updateSlider(event) {
         amount.textContent = sliderAmount;
     }
 }
+
 function sliderChTS(event) {
+    playSound(4000);
     slider = event.target;
     const slTName = slider.parentNode.parentNode;
     if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R"); }
     else { var secVal = document.getElementById(slTName.id + "L"); }
     if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
     else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
-    isittime = 1;
-    setTimeout(fetchJson, 400);
+    clearTimeout(InputInterV); 
+    InputInterV = setTimeout(blurInput, 1000);
 }
+
 function sliderChange(event) {
+    playSound(4000);
     slider = event.target;
     maxVal = slider.attributes.max.nodeValue;
     minVal = slider.attributes.min.nodeValue;
@@ -459,15 +469,15 @@ function sliderChange(event) {
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     sliderAmount = event.target.value;
     if (NrofSlides == 1) {
-        if (sliderAmount > maxVal * 5 / 6 && currVal !== maxVal) { sliderAmount = maxVal; OnOff = ",1"; }
-        if (sliderAmount < maxVal / 6 && currVal !== minVal) { sliderAmount = minVal; OnOff = ",0"; }
+        if (sliderAmount > maxVal * 5 / 6 && currVal !== maxVal) { sliderAmount = maxVal; OnOff = ",1";isittime = 1;; setTimeout(fetchJson, 500);}
+        if (sliderAmount < maxVal / 6 && currVal !== minVal) { sliderAmount = minVal; OnOff = ",0";isittime = 1;; setTimeout(fetchJson, 500);}
     }
     if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
     if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId + 'Event=' + sliderAmount + OnOff); }
     else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + 'Event=' + sliderAmount + OnOff + '"'); }
-    isittime = 1;
+    clearTimeout(InputInterV); 
+    InputInterV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
-    setTimeout(fetchJson, 400);
 }
 function buttonClick(utton, gState) {
     if (utton.split("&")[1]) {
@@ -517,7 +527,7 @@ function blurInput() {
     isittime = 1;
 }
 function openNav(whatisit) {
-   if(whatisit) manNav=true;
+    if (whatisit) manNav = true;
     if (nodeInterV) { clearInterval(nodeInterV); }
     nodeInterV = setInterval(getNodes, 10000);
     if (document.getElementById('mySidenav').offsetLeft === -280) {
@@ -525,7 +535,7 @@ function openNav(whatisit) {
     } else { closeNav(); }
 }
 function closeNav() {
-    manNav=false;
+    manNav = false;
     clearInterval(nodeInterV);
     document.getElementById("mySidenav").style.left = "-280px";
 }
@@ -626,10 +636,17 @@ function splitOn() {
 }
 function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
-function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nodePath; }); }
+function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) {window.location.href = nodePath; }); }
+function longPressS() {
+    document.getElementById('closeBtn').addEventListener('long-press', function (e) {
+        if (cooK === "s=1") { playSound(400); document.cookie = "s=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        else { playSound(900); document.cookie = "s=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        cooK = document.cookie;
+    });
+}
 function longPressB() {
     var executed = false;
-    const longButtons = document.querySelectorAll(".sensorset");
+    const longButtons = document.querySelectorAll(".clickables");
     longButtons.forEach(longButton => {
         longButton.addEventListener('long-press', function (e) {
             const lBName = longButton.querySelector(".sensors");
@@ -652,6 +669,7 @@ function longPressB() {
                     isittime = 1;
                     setTimeout(fetchJson, 400);
                 }
+                setTimeout(() => {playSound(1000)}, 300);
             }
         });
     });
@@ -666,4 +684,22 @@ function minutesToDhm(minutes) {
     var mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
     return dDisplay + hDisplay + mDisplay;
 }
-!function (e, t) { "use strict"; var n = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = a ? "pointerdown" : i ? "touchstart" : "mousedown", r = a ? "pointerup" : i ? "touchend" : "mouseup", m = a ? "pointermove" : i ? "touchmove" : "mousemove", u = 0, s = 0, c = 10, l = 10; function v(e) { f(), e = function (e) { if (void 0 !== e.changedTouches) return e.changedTouches[0]; return e }(e), this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || t.addEventListener("click", function e(n) { t.removeEventListener("click", e, !0), function (e) { e.stopImmediatePropagation(), e.preventDefault(), e.stopPropagation() }(n) }, !0) } function d(a) { f(a); var i = a.target, o = parseInt(function (e, n, a) { for (; e && e !== t.documentElement;) { var i = e.getAttribute(n); if (i) return i; e = e.parentNode } return a }(i, "data-long-press-delay", "600"), 10); n = function (t, n) { if (!(e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame)) return e.setTimeout(t, n); var a = (new Date).getTime(), i = {}, o = function () { (new Date).getTime() - a >= n ? t.call() : i.value = requestAnimFrame(o) }; return i.value = requestAnimFrame(o), i }(v.bind(i, a), o) } function f(t) { var a; (a = n) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), n = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, n) { n = n || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = t.createEvent("CustomEvent"); return a.initCustomEvent(e, n.bubbles, n.cancelable, n.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (t) { e.setTimeout(t, 1e3 / 60) }, t.addEventListener(r, f, !0), t.addEventListener(m, function (e) { var t = Math.abs(u - e.clientX), n = Math.abs(s - e.clientY); (t >= c || n >= l) && f() }, !0), t.addEventListener("wheel", f, !0), t.addEventListener("scroll", f, !0), t.addEventListener(o, function (e) { u = e.clientX, s = e.clientY, d(e) }, !0) }(window, document);
+
+function playSound(freQ) {
+    if (cooK === "s=1" || freQ < 1000){
+    var context = new AudioContext()
+    var o = context.createOscillator()
+    var g = context.createGain()
+    frequency = freQ
+    o.frequency.value = frequency
+    o.type = "sawtooth"
+    o.connect(g)
+    g.connect(context.destination)
+    o.start(0)
+    g.gain.setValueAtTime(0.05, context.currentTime)
+    g.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.01)
+    o.stop(context.currentTime + 0.01)
+    }
+}
+
+!function(e,n){"use strict";var t=null,a="PointerEvent"in e||e.navigator&&"msPointerEnabled"in e.navigator,i="ontouchstart"in e||navigator.MaxTouchPoints>0||navigator.msMaxTouchPoints>0,o=0,r=0;function m(e){var t;u(),e=(t=e,void 0!==t.changedTouches?t.changedTouches[0]:t),this.dispatchEvent(new CustomEvent("long-press",{bubbles:!0,cancelable:!0,detail:{clientX:e.clientX,clientY:e.clientY},clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY,screenX:e.screenX,screenY:e.screenY}))||n.addEventListener("click",function e(t){var a;n.removeEventListener("click",e,!0),(a=t).stopImmediatePropagation(),a.preventDefault(),a.stopPropagation()},!0)}function u(n){var a;(a=t)&&(e.cancelAnimationFrame?e.cancelAnimationFrame(a.value):e.webkitCancelAnimationFrame?e.webkitCancelAnimationFrame(a.value):e.webkitCancelRequestAnimationFrame?e.webkitCancelRequestAnimationFrame(a.value):e.mozCancelRequestAnimationFrame?e.mozCancelRequestAnimationFrame(a.value):e.oCancelRequestAnimationFrame?e.oCancelRequestAnimationFrame(a.value):e.msCancelRequestAnimationFrame?e.msCancelRequestAnimationFrame(a.value):clearTimeout(a)),t=null}"function"!=typeof e.CustomEvent&&(e.CustomEvent=function(e,t){t=t||{bubbles:!1,cancelable:!1,detail:void 0};var a=n.createEvent("CustomEvent");return a.initCustomEvent(e,t.bubbles,t.cancelable,t.detail),a},e.CustomEvent.prototype=e.Event.prototype),e.requestAnimFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(n){e.setTimeout(n,1e3/60)},n.addEventListener(a?"pointerup":i?"touchend":"mouseup",u,!0),n.addEventListener(a?"pointermove":i?"touchmove":"mousemove",function e(n){var t=Math.abs(o-n.clientX),a=Math.abs(r-n.clientY);(t>=10||a>=10)&&u(n)},!0),n.addEventListener("wheel",u,!0),n.addEventListener("scroll",u,!0),n.addEventListener(a?"pointerdown":i?"touchstart":"mousedown",function a(i){var s,c,l;o=i.clientX,r=i.clientY,u(s=i),l=parseInt(function e(t,a,i){for(;t&&t!==n.documentElement;){var o=t.getAttribute(a);if(o)return o;t=t.parentNode}return i}(c=s.target,"data-long-press-delay","600"),10),t=function n(t,a){if(!e.requestAnimationFrame&&!e.webkitRequestAnimationFrame&&!(e.mozRequestAnimationFrame&&e.mozCancelRequestAnimationFrame)&&!e.oRequestAnimationFrame&&!e.msRequestAnimationFrame)return e.setTimeout(t,a);var i=new Date().getTime(),o={},r=function(){var e;new Date().getTime()-i>=a?t.call():o.value=requestAnimFrame(r)};return o.value=requestAnimFrame(r),o}(m.bind(c,s),l)},!0)}(window,document);
