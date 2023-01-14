@@ -103,19 +103,11 @@ iframe {
     background: #009c63;
 }
 
-.bigL2 {
-    grid-template-columns: auto auto !important;
-}
-
-.bigL3 {
-    grid-template-columns: auto auto auto !important;
-}
-
 #sensorList {
     display: inline-grid;
     grid-column-gap: 1vh;
     grid-row-gap: 1vh;
-    justify-content: start;
+    justify-content: center;
     transition: 0.8s ease-out;
 }
 
@@ -133,7 +125,6 @@ iframe {
 
 .sensorL1 {
     grid-template-columns: auto !important;
-    justify-content: center !important;
 }
 
 #sliderList {
