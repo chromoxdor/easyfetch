@@ -638,7 +638,7 @@ function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nodePath; }); }
 function longPressS() {
-    document.getElementById('nOpen').addEventListener('long-press', function (e) {
+    document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         if (cooK === "s=1") { playSound(400); document.cookie = "s=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
         else { playSound(900); document.cookie = "s=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
         cooK = document.cookie;
