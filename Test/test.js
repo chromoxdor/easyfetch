@@ -4,8 +4,6 @@ var wasUsed;
 var whichSl;
 var sliderAmount;
 var bigLength = 0;
-var isLongNode;
-var lutton;
 var jsonPath;
 var nodeNr;
 var nodeIp;
@@ -154,14 +152,14 @@ async function fetchJson(event) {
                                     if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="on'; }
                                     else if (item.Value === 2) { html += '<div class="btnTile alert'; }
                                     else { html += '<div class="btnTile off '; }
-                                    if (itemN.split("&")[1] == "A") { html += buttonClick + 'getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                    if (itemN.split("&")[1] == "A") { html += htmlStatic1 + 'getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
                                     else { html += htmlStatic1 + 'buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'; }
                                 }
                             }
                             //number input
                             else if ((sensor.TaskName).includes("vInput")) {
                                 if (!itemN) { itemN = "&nbsp;" }
-                                html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)" >' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="getInput(this,1)"> <div class="kindInput">' + kindN + '</div></div></div>';
+                                html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)">' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="getInput(this,1)"> <div class="kindInput">' + kindN + '</div></div></div>';
                             }
                             //normal slider
                             else if ((sensor.TaskName).includes("vSlider")) {
@@ -480,22 +478,26 @@ function sliderChange(event) {
     NrofSlides = 0;
 }
 function buttonClick(utton, gState) {
-    if (utton.split("&")[1]) {
-        utton2 = utton.split("&")[0];
-        nodeNr2 = utton.split("&")[1];
-        fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Event"');
+    if (isittime) {
+        if (utton.split("&")[1]) {
+            console.log(utton);
+            utton2 = utton.split("&")[0];
+            nodeNr2 = utton.split("&")[1];
+            fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Event"');
+        }
+        else if (utton.split("?")[1]) {
+            console
+            gpioNr = utton.split("?")[1];
+            gS = gState == 1 ? 0 : 1
+            if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
+            else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+        }
+        else {
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+            else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
+        }
+        setTimeout(fetchJson, 400);
     }
-    if (utton.split("?")[1]) {
-        gpioNr = utton.split("?")[1];
-        gS = gState == 1 ? 0 : 1
-        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-        else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
-    }
-    else {
-        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
-        else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
-    }
-    setTimeout(fetchJson, 400);
 }
 
 function getInput(ele, initalCLick) {
@@ -510,15 +512,15 @@ function getInput(ele, initalCLick) {
     }
     if (ele.value.length > 12) { ele.value = ele.value.slice(0, 12); }
     if (event.key === 'Enter' || event.type === 'click' && !initalCLick) {
+        isittime = 1;
         if (ele.value) {
+            playSound(4000);
             if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
             else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
             buttonClick(ele.id);
         }
         else { setTimeout(fetchJson, 400); }
         clearTimeout(InputInterV);
-        isittime = 1;
-
     }
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
     else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
@@ -549,7 +551,7 @@ function openSys() {
         document.getElementById('menueWrap1').style.flexShrink = "999";
     }
 }
-async function getNodes(utton) {
+async function getNodes(utton, allNodes) {
     response = await fetch("json");
     myJson = await response.json();
     let html4 = '';
@@ -561,12 +563,12 @@ async function getNodes(utton) {
         if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }// else { styleN = ""; }
         else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
         html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="getNodes(); sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
-        if (utton || isLongNode) {
-            if (isLongNode) {
-                if (node.nr === unitNr1) { getUrl('control?cmd=event,' + lutton + 'Long'); }
-                else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + lutton + 'Long"'); }
+        if (utton || allNodes) {
+            if (allNodes) {
+                if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Long'); }
+                else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
             }
-            else {
+            else if (isittime) {
                 if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
                 else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
             }
@@ -574,7 +576,6 @@ async function getNodes(utton) {
     })
     i = 0
     document.getElementById('menueList').innerHTML = html4;
-    isLongNode = 0;
     if (hasParams) {
         let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
         document.getElementById('sensorList').innerHTML = html;
@@ -652,28 +653,27 @@ function longPressB() {
             const lBName = longButton.querySelector(".sensors");
             const lBNode = longButton.querySelector(".nodes");
             if (lBNode) {
-                lutton = lBNode.textContent;
-                isLongNode = 1;
-                getNodes();
+                getNodes(lBNode.textContent, "1");
             }
             else {
                 if ((lBName.id).split("&")[1]) {
                     utton2 = (lBName.id).split("&")[0];
                     nodeNr2 = (lBName.id).split("&")[1];
                     fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Long"');
-                    isittime = 1;
                     setTimeout(fetchJson, 400);
                 } else {
                     if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
                     else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
-                    isittime = 1;
                     setTimeout(fetchJson, 400);
                 }
-                setTimeout(() => { playSound(1000) }, 300);
             }
+            playSound(1000);
+            isittime = 0;
+            InputInterV = setTimeout(blurInput, 500);
         });
     });
 }
+
 function minutesToDhm(minutes) {
     var d = Math.floor(minutes / (60 * 24));
     var h = Math.floor(minutes % (60 * 24) / 60);
@@ -686,7 +686,7 @@ function minutesToDhm(minutes) {
 }
 
 function playSound(freQ) {
-    if (cooK.includes("Snd=1") || freQ < 1000) {
+    if ((cooK.includes("Snd=1") || freQ < 1000) && (isittime || freQ != 3000)) {
         var context = new AudioContext()
         var o = context.createOscillator()
         var g = context.createGain()
@@ -702,4 +702,4 @@ function playSound(freQ) {
     }
 }
 
-!function(e,n){"use strict";var t=null,a="PointerEvent"in e||e.navigator&&"msPointerEnabled"in e.navigator,i="ontouchstart"in e||navigator.MaxTouchPoints>0||navigator.msMaxTouchPoints>0,o=0,r=0;function m(e){var t;u(),e=void 0!==(t=e).changedTouches?t.changedTouches[0]:t,this.dispatchEvent(new CustomEvent("long-press",{bubbles:!0,cancelable:!0,detail:{clientX:e.clientX,clientY:e.clientY},clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY,screenX:e.screenX,screenY:e.screenY}))||n.addEventListener("click",function e(t){var a;n.removeEventListener("click",e,!0),(a=t).stopImmediatePropagation(),a.preventDefault(),a.stopPropagation()},!0)}function u(n){var a;(a=t)&&(e.cancelAnimationFrame?e.cancelAnimationFrame(a.value):e.webkitCancelAnimationFrame?e.webkitCancelAnimationFrame(a.value):e.webkitCancelRequestAnimationFrame?e.webkitCancelRequestAnimationFrame(a.value):e.mozCancelRequestAnimationFrame?e.mozCancelRequestAnimationFrame(a.value):e.oCancelRequestAnimationFrame?e.oCancelRequestAnimationFrame(a.value):e.msCancelRequestAnimationFrame?e.msCancelRequestAnimationFrame(a.value):clearTimeout(a)),t=null}"function"!=typeof e.CustomEvent&&(e.CustomEvent=function(e,t){t=t||{bubbles:!1,cancelable:!1,detail:void 0};var a=n.createEvent("CustomEvent");return a.initCustomEvent(e,t.bubbles,t.cancelable,t.detail),a},e.CustomEvent.prototype=e.Event.prototype),e.requestAnimFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(n){e.setTimeout(n,1e3/60)},n.addEventListener(a?"pointerup":i?"touchend":"mouseup",u,!0),n.addEventListener(a?"pointermove":i?"touchmove":"mousemove",function e(n){var t=Math.abs(o-n.clientX),a=Math.abs(r-n.clientY);(t>=10||a>=10)&&u(n)},!0),n.addEventListener("wheel",u,!0),n.addEventListener("scroll",u,!0),n.addEventListener(a?"pointerdown":i?"touchstart":"mousedown",function a(i){var s,c,l;o=i.clientX,r=i.clientY,u(s=i),l=parseInt(function e(t,a,i){for(;t&&t!==n.documentElement;){var o=t.getAttribute(a);if(o)return o;t=t.parentNode}return"600"}(c=s.target,"data-long-press-delay","600"),10),t=function n(t,a){if(!e.requestAnimationFrame&&!e.webkitRequestAnimationFrame&&!(e.mozRequestAnimationFrame&&e.mozCancelRequestAnimationFrame)&&!e.oRequestAnimationFrame&&!e.msRequestAnimationFrame)return e.setTimeout(t,a);var i=new Date().getTime(),o={},r=function(){new Date().getTime()-i>=a?t.call():o.value=requestAnimFrame(r)};return o.value=requestAnimFrame(r),o}(m.bind(c,s),l)},!0)}(window,document);
+!function (e, n) { "use strict"; var t = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = 0, r = 0; function m(e) { var t; u(), e = void 0 !== (t = e).changedTouches ? t.changedTouches[0] : t, this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || n.addEventListener("click", function e(t) { var a; n.removeEventListener("click", e, !0), (a = t).stopImmediatePropagation(), a.preventDefault(), a.stopPropagation() }, !0) } function u(n) { var a; (a = t) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), t = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, t) { t = t || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = n.createEvent("CustomEvent"); return a.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (n) { e.setTimeout(n, 1e3 / 60) }, n.addEventListener(a ? "pointerup" : i ? "touchend" : "mouseup", u, !0), n.addEventListener(a ? "pointermove" : i ? "touchmove" : "mousemove", function e(n) { var t = Math.abs(o - n.clientX), a = Math.abs(r - n.clientY); (t >= 10 || a >= 10) && u(n) }, !0), n.addEventListener("wheel", u, !0), n.addEventListener("scroll", u, !0), n.addEventListener(a ? "pointerdown" : i ? "touchstart" : "mousedown", function a(i) { var s, c, l; o = i.clientX, r = i.clientY, u(s = i), l = parseInt(function e(t, a, i) { for (; t && t !== n.documentElement;) { var o = t.getAttribute(a); if (o) return o; t = t.parentNode } return "600" }(c = s.target, "data-long-press-delay", "600"), 10), t = function n(t, a) { if (!e.requestAnimationFrame && !e.webkitRequestAnimationFrame && !(e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame) && !e.oRequestAnimationFrame && !e.msRequestAnimationFrame) return e.setTimeout(t, a); var i = new Date().getTime(), o = {}, r = function () { new Date().getTime() - i >= a ? t.call() : o.value = requestAnimFrame(r) }; return o.value = requestAnimFrame(r), o }(m.bind(c, s), l) }, !0) }(window, document);

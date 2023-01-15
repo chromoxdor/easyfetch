@@ -7,6 +7,8 @@
 }
 
 body {
+    user-select: none;
+    -webkit-user-select: none;
     margin: 0;
     background: #e8e8e8;
     color: #4e4a4a;
