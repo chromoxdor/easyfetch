@@ -639,8 +639,8 @@ function topF() { document.body.scrollTop = 0; document.documentElement.scrollTo
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nodePath; }); }
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
-        if (cooK === "s=1") { playSound(400); document.cookie = "s=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        else { playSound(900); document.cookie = "s=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        if (cooK.includes("Snd=1")) { playSound(500); document.cookie = "Snd=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        else { playSound(900); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
         cooK = document.cookie;
     });
 }
@@ -686,7 +686,7 @@ function minutesToDhm(minutes) {
 }
 
 function playSound(freQ) {
-    if (cooK === "s=1" || freQ < 1000) {
+    if (cooK.includes("Snd=1") || freQ < 1000) {
         var context = new AudioContext()
         var o = context.createOscillator()
         var g = context.createGain()

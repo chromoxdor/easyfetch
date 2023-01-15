@@ -406,7 +406,7 @@ a {
     top: 0;
     left: -280px;
     background-color: #111111d9;
-    transition: 0.8s;
+    transition: 0.6s;
     overflow-y: hidden;
     display: flex;
     flex-direction: column;
