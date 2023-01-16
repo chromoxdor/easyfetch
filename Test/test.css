@@ -48,6 +48,7 @@ iframe {
 
 #allList {
     display: flex;
+    transform: translate3d(0, 0, 0); /*safari blur issue fix*/
     grid-row-gap: 1vh;
     margin: auto;
     padding: 5px;
