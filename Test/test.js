@@ -43,7 +43,7 @@ async function fetchJson(event) {
         response = await fetch(jsonPath);
         myJson = await response.json();
         document.getElementById('allList').style.filter = "blur(0)";
-        if ((Date.now() - responseTime) < 1000 || nodeCheck != nNr) {
+        if ((Date.now() - responseTime) < 1000 && nodeCheck == nNr) {
             html = '';
             html2 = '';
             html3 = ''; 
