@@ -172,7 +172,7 @@ async function fetchJson(event) {
                                     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                     html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + item.Name + '"class="slider ' + sensor.TaskNumber + ',' + item.ValueNumber;
                                     if ((sensor.TaskName).includes("nvSlider")) { html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div></div></div>'; }
-                                    else { html2 += '"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div><div class="slA" style="text-align: right;">' + num2Value + slKind + '</div></div></div>'; }
+                                    else { html2 += '"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div><div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>'; }
                                 }
                                 //time slider
                                 else if ((sensor.TaskName).includes("tSlider")) {
@@ -442,7 +442,7 @@ function updateSlider(event) {
     isittime = 0;
     slider = event.target;
     currVal = slider.attributes.value.nodeValue;
-    const amount = slider.closest('div.sensorset').querySelector('.slA');
+    const amount = slider.closest('div.sensorset').querySelector('.sliderAmount');
     slKind = slider.id.split("?")[4];
     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
     if (!slider.className.includes("noVal")) {
