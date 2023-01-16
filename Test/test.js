@@ -7,7 +7,7 @@ var bigLength = 0;
 var jsonPath;
 var nNr; //nodeNr
 var nP; //nodePath
-var nP2; 
+var nP2;
 var nN; //nodeName
 var unitNr;
 var unitNr1;
@@ -42,11 +42,12 @@ async function fetchJson(event) {
         responseTime = Date.now();
         response = await fetch(jsonPath);
         myJson = await response.json();
-        document.getElementById('allList').style.filter = "blur(0)";
-        if ((Date.now() - responseTime) < 3000 && nodeCheck == nNr) {
+        console.log(Date.now() - responseTime);
+        if ((Date.now() - responseTime) < 3000 && nodeCheck === nNr) {
+            document.getElementById('allList').style.filter = "blur(0)";
             html = '';
             html2 = '';
-            html3 = ''; 
+            html3 = '';
             dataT = [];
             let i = -1;
             unit = myJson.WiFi.Hostname;
@@ -418,10 +419,10 @@ function checkDirection() {
     touchDistX = teX - tsX
     touchDistY = teY - tsY
     if (teX < tsX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) closeNav();
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 250) closeNav();
     }
     if (teX > tsX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) openNav()
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 250) openNav()
     }
 }
 
