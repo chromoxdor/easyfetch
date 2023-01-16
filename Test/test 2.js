@@ -21,15 +21,8 @@ var dataT2 = [];
 var isittime = 1;
 var NrofSlides = 0;
 var currVal;
-var html;
-var tsX = 0; //startx
-var teX = 0; //endx
-var tsY = 0;
-var teY = 0;
-var msTs = 0; //start time
-var msTe = 0;
 var manNav = false;
-var cooK = document.cookie;
+
 
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
@@ -52,17 +45,6 @@ async function fetchJson(event) {
             unit = myJson.WiFi.Hostname;
             unitNr = myJson.System['Unit Number'];
             sysInfo = myJson.System
-            htmlStaticSys = '<div class="syspair"><div>';
-            syshtml = (htmlStaticSys + 'Sysinfo</div><div>' + unit + '</div></div>' +
-                htmlStaticSys + 'Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
-                htmlStaticSys + 'Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
-                htmlStaticSys + 'Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
-                htmlStaticSys + 'Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
-                htmlStaticSys + 'Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
-                htmlStaticSys + 'IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
-                htmlStaticSys + 'RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
-                htmlStaticSys + 'Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
-
             var jsonT = myJson.System['Local Time'];
             var clockBig = jsonT.split(" ")[1];
             clockBig = clockBig.split(':');
@@ -389,41 +371,8 @@ function paramS() {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
     });
-    document.addEventListener('touchstart', e => {
-        msTs = Date.now();
-        tsX = e.changedTouches[0].screenX
-        tsY = e.changedTouches[0].screenY
-    })
-    document.addEventListener('touchend', e => {
-        msTe = Date.now();
-        teX = e.changedTouches[0].screenX
-        teY = e.changedTouches[0].screenY
-        checkDirection()
-    })
-    document.addEventListener('mousemove', e => {
-        if (!manNav) {
-            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
-            //if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
-        }
-    })
-    document.getElementById('mySidenav').addEventListener('mouseleave', e => {
-        if (!manNav) {
-            closeNav()
-        }
-    })
 }
 
-function checkDirection() {
-    touchtime = msTe - msTs
-    touchDistX = teX - tsX
-    touchDistY = teY - tsY
-    if (teX < tsX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) closeNav();
-    }
-    if (teX > tsX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) openNav()
-    }
-}
 
 function updateSlTS(event) {
     isittime = 0;
@@ -610,7 +559,7 @@ function nodeChange(event) {
         window.history.replaceState(null, null, '?unit=' + nNr);
         fetchJson(1);
     }
-    if (window.innerWidth < 450) { closeNav(); }
+    if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
 function resizeText() {
     const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
@@ -649,13 +598,6 @@ function splitOn() {
 function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '"></iframe>'; closeNav(); } }
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
-function longPressS() {
-    document.getElementById('closeBtn').addEventListener('long-press', function (e) {
-        if (cooK.includes("Snd=1")) { playSound(500); document.cookie = "Snd=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        else { playSound(900); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        cooK = document.cookie;
-    });
-}
 function longPressB() {
     var executed = false;
     const longButtons = document.querySelectorAll(".clickables");
@@ -674,7 +616,7 @@ function longPressB() {
                     setTimeout(fetchJson, 400);
                 } else {
                     if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
-                    else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"', true); }
+                    else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
                     setTimeout(fetchJson, 400);
                 }
             }
@@ -683,34 +625,6 @@ function longPressB() {
             InputInterV = setTimeout(blurInput, 500);
         });
     });
-}
-
-function minutesToDhm(minutes) {
-    var d = Math.floor(minutes / (60 * 24));
-    var h = Math.floor(minutes % (60 * 24) / 60);
-    var m = Math.floor(minutes % 60);
-
-    var dDisplay = d > 0 ? d + (d == 1 ? " day " : " days ") : "";
-    var hDisplay = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
-    var mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
-    return dDisplay + hDisplay + mDisplay;
-}
-
-function playSound(freQ) {
-    if ((cooK.includes("Snd=1") || freQ < 1000) && (isittime || freQ != 3000)) {
-        var context = new AudioContext()
-        var o = context.createOscillator()
-        var g = context.createGain()
-        frequency = freQ
-        o.frequency.value = frequency
-        o.type = "sawtooth"
-        o.connect(g)
-        g.connect(context.destination)
-        g.gain.setValueAtTime(0.05, 0)
-        o.start(0)
-        g.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.01)
-        o.stop(context.currentTime + 0.01)
-    }
 }
 
 !function (e, n) { "use strict"; var t = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = 0, r = 0; function m(e) { var t; u(), e = void 0 !== (t = e).changedTouches ? t.changedTouches[0] : t, this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || n.addEventListener("click", function e(t) { var a; n.removeEventListener("click", e, !0), (a = t).stopImmediatePropagation(), a.preventDefault(), a.stopPropagation() }, !0) } function u(n) { var a; (a = t) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), t = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, t) { t = t || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = n.createEvent("CustomEvent"); return a.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (n) { e.setTimeout(n, 1e3 / 60) }, n.addEventListener(a ? "pointerup" : i ? "touchend" : "mouseup", u, !0), n.addEventListener(a ? "pointermove" : i ? "touchmove" : "mousemove", function e(n) { var t = Math.abs(o - n.clientX), a = Math.abs(r - n.clientY); (t >= 10 || a >= 10) && u(n) }, !0), n.addEventListener("wheel", u, !0), n.addEventListener("scroll", u, !0), n.addEventListener(a ? "pointerdown" : i ? "touchstart" : "mousedown", function a(i) { var s, c, l; o = i.clientX, r = i.clientY, u(s = i), l = parseInt(function e(t, a, i) { for (; t && t !== n.documentElement;) { var o = t.getAttribute(a); if (o) return o; t = t.parentNode } return "600" }(c = s.target, "data-long-press-delay", "600"), 10), t = function n(t, a) { if (!e.requestAnimationFrame && !e.webkitRequestAnimationFrame && !(e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame) && !e.oRequestAnimationFrame && !e.msRequestAnimationFrame) return e.setTimeout(t, a); var i = new Date().getTime(), o = {}, r = function () { new Date().getTime() - i >= a ? t.call() : o.value = requestAnimFrame(r) }; return o.value = requestAnimFrame(r), o }(m.bind(c, s), l) }, !0) }(window, document);
