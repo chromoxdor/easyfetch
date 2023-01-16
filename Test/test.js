@@ -610,7 +610,7 @@ function nodeChange(event) {
         window.history.replaceState(null, null, '?unit=' + nNr);
         fetchJson(1);
     }
-    if (window.innerWidth < 450) { closeNav(); }
+    if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
 function resizeText() {
     const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
