@@ -12,6 +12,7 @@ var nN; //nodeName
 var unitNr;
 var unitNr1;
 var nIV; //nodeinterval
+var iIV; //InputInterV
 var isOpen;
 var myParam;
 var urlParams;
@@ -318,29 +319,29 @@ function changeCss() {
     var element = document.getElementById("sensorList");
     var numSet = element.getElementsByClassName('sensorset').length;
     if (bigLength === 1 || (!numBigger && numSet < 2)) {
-        document.getElementById("sensorList").classList.add('sensorL1');
-        document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL1');
+        element.classList.remove('sensorL2', 'sensorL3', 'sensorL4');
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
         coloumnSet = 1;
     }
     else if (bigLength === 2 || (!numBigger && numSet < 5 && numSet > 1)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL2');
+        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL2');
         coloumnSet = 2;
     }
     else if (bigLength === 3 || (!numBigger && numSet < 10 && numSet > 4)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL3');
+        element.classList.remove('sensorL1', 'sensorL2', 'sensorL4');
+        element.classList.add('sensorL3');
         coloumnSet = 3;
     }
     else if (bigLength === 4 || (!numBigger && numSet > 9)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
-        document.getElementById("sensorList").classList.add('sensorL4');
+        element.classList.remove('sensorL1', 'sensorL2', 'sensorL3');
+        element.classList.add('sensorL4');
         coloumnSet = 4;
     }
     else {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL2');
+        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL2');
         coloumnSet = 2;
     }
     if (bigLength > 1) {
@@ -460,8 +461,8 @@ function sliderChTS(event) {
     else { var secVal = document.getElementById(slTName.id + "L"); }
     if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; fetch('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
     else { if (slider.id == slTName.id + "L") { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; fetch('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
-    clearTimeout(InputInterV);
-    InputInterV = setTimeout(blurInput, 1000);
+    clearTimeout(iIV);
+    iIV = setTimeout(blurInput, 1000);
 }
 
 function sliderChange(event) {
@@ -479,8 +480,8 @@ function sliderChange(event) {
     if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
     if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slA); fetch('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
     else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slider.classList[1] + ',' + slA + '"'); fetch('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
-    clearTimeout(InputInterV);
-    InputInterV = setTimeout(blurInput, 1000);
+    clearTimeout(iIV);
+    iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
 }
 function buttonClick(utton, gState) {
@@ -507,9 +508,9 @@ function buttonClick(utton, gState) {
 function getInput(ele, initalCLick) {
     if (event.type === 'click') {
         isittime = 0;
-        InputInterV = setTimeout(blurInput, 8000);
+        iIV = setTimeout(blurInput, 8000);
         ele.addEventListener('blur', (event) => {
-            clearTimeout(InputInterV)
+            clearTimeout(iIV)
             isittime = 1;
             setTimeout(fetchJson, 400);
         });
@@ -524,10 +525,10 @@ function getInput(ele, initalCLick) {
             buttonClick(ele.id);
         }
         else { setTimeout(fetchJson, 400); }
-        clearTimeout(InputInterV);
+        clearTimeout(iIV);
     }
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
-    else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
+    else { clearTimeout(iIV); iIV = setTimeout(blurInput, 5000); }
 }
 function blurInput() {
     isittime = 1;
@@ -675,13 +676,13 @@ function longPressB() {
                     setTimeout(fetchJson, 400);
                 } else {
                     if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
-                    else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"', true); }
+                    else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
                     setTimeout(fetchJson, 400);
                 }
             }
             playSound(1000);
             isittime = 0;
-            InputInterV = setTimeout(blurInput, 500);
+            iIV = setTimeout(blurInput, 500);
         });
     });
 }

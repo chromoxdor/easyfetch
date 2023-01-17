@@ -64,14 +64,14 @@ iframe {
 }
 
 #bigNumber {
-    display: inline-grid;
+    display: grid;
     grid-column-gap: 1vh;
     grid-row-gap: 1vh;
     transition: 0.8s ease-out;
 }
 
 .bigNum {
-    display: inline-flex;
+    display: flex;
     grid-template-columns: auto auto auto auto;
     grid-row-gap: 1vh;
     grid-column-gap: 1vh;
@@ -88,7 +88,7 @@ iframe {
 
 .bigNumWrap {
     width: -webkit-fill-available;
-    display: inline-flex;
+    display: flex;
     justify-items: stretch;
     cursor: default;
     padding: 4.2px;
@@ -107,7 +107,7 @@ iframe {
 }
 
 #sensorList {
-    display: inline-grid;
+    display: grid;
     grid-column-gap: 1vh;
     grid-row-gap: 1vh;
     justify-content: center;
@@ -300,7 +300,6 @@ slider::-webkit-slider-runnable-track {
 }
 
 .valuesBig {
-    background: none;
     overflow-wrap: anywhere;
 }
 
@@ -362,7 +361,7 @@ input[type=number] {
 }
 
 .values {
-    display: inline-grid;
+    display: grid;
     grid-template-columns: auto auto;
     justify-content: space-between;
     grid-column-gap: 5px;
@@ -378,10 +377,6 @@ input[type=number] {
 input::placeholder {
     opacity: 1;
     color: white;
-}
-
-a {
-    display: inline-block
 }
 
 #opener {
@@ -505,7 +500,6 @@ a {
 .menueWrap {
     transition: .5s;
     height: 185px;
-    width: 100%;
     flex-shrink: 999;
 }
 
@@ -566,7 +560,7 @@ a {
     }
 
     .bigNum {
-        display: inline-grid;
+        display: grid;
         grid-template-columns: auto auto;
         grid-column-gap: 5px;
         grid-row-gap: 5px;
