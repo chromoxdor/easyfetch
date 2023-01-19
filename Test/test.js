@@ -1,5 +1,5 @@
 var userAgent = window.navigator.userAgent;
-var firstRun = true;
+var firstRun = 1;
 var wasUsed;
 var whichSl;
 var slA; //sliderAmount
@@ -14,9 +14,9 @@ var unitNr1;
 var nIV; //nodeinterval
 var iIV; //InputInterV
 var isOpen;
+var navOpen;
 var myParam;
-var urlParams;
-var hasParams = true;
+var hasParams = 1;
 var dataT = [];
 var dataT2 = [];
 var isittime = 1;
@@ -29,13 +29,13 @@ var tsY = 0;
 var teY = 0;
 var msTs = 0; //start time
 var msTe = 0;
-var manNav = false;
+var manNav;
 var cooK = document.cookie;
 
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
-    if (myParam == null) { hasParams = false; }
+    if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
     if (!jsonPath) { jsonPath = `/json`; }
     if (isittime) {
@@ -43,7 +43,6 @@ async function fetchJson(event) {
         responseTime = Date.now();
         response = await fetch(jsonPath);
         myJson = await response.json();
-        console.log(Date.now() - responseTime);
         if ((Date.now() - responseTime) < 3000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
             html = '';
@@ -278,7 +277,7 @@ async function fetchJson(event) {
                 unitNr1 = myJson.System['Unit Number'];
                 nP2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
                 nP = 'http://' + myJson.WiFi['IP Address'] + '/tools';
-                firstRun = false;
+                firstRun = 0;
             }
             if (unitNr === unitNr1) { styleU = "&#8858;"; }
             else { styleU = ""; }
@@ -403,8 +402,8 @@ function paramS() {
         checkDirection()
     })
     document.addEventListener('mousemove', e => {
-        if (!manNav) {
-            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
+        if (!manNav && !navOpen) {
+            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) { openNav(); navOpen = 1; }
             //if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
         }
     })
@@ -534,15 +533,17 @@ function blurInput() {
     isittime = 1;
 }
 function openNav(whatisit) {
-    if (whatisit) manNav = true;
+    if (whatisit) manNav = 1;
     if (nIV) { clearInterval(nIV); }
     nIV = setInterval(getNodes, 10000);
     if (document.getElementById('mySidenav').offsetLeft === -280) {
+        getNodes();
         document.getElementById("mySidenav").style.left = "0";
     } else { closeNav(); }
 }
 function closeNav() {
-    manNav = false;
+    manNav = 0;
+    navOpen = 0;
     clearInterval(nIV);
     document.getElementById("mySidenav").style.left = "-280px";
 }
@@ -568,7 +569,7 @@ async function getNodes(utton, allNodes, hasIt) {
         let i = -1;
         myJson.nodes.forEach(node => {
             i++
-            if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
+            if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = 0; } }
             if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
             else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
             html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
@@ -589,7 +590,7 @@ async function getNodes(utton, allNodes, hasIt) {
             let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
             document.getElementById('sensorList').innerHTML = html;
             //changeCss()
-            hasParams = false;
+            hasParams = 0;
             setTimeout(fetchJson, 3000);
         }
         else { if (!nIV) { setTimeout(fetchJson, 1000); } }
@@ -682,7 +683,7 @@ function longPressB() {
             }
             playSound(1000);
             isittime = 0;
-            iIV = setTimeout(blurInput, 500);
+            iIV = setTimeout(blurInput, 600);
         });
     });
 }

@@ -340,7 +340,7 @@ input[type=number] {
 }
 
 .kindInput {
-    padding-left: 1px;
+    padding: 0 2px 0 1px;
 }
 
 .on {
