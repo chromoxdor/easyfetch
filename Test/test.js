@@ -1,59 +1,53 @@
 var userAgent = window.navigator.userAgent;
-var firstRun = true;
+var firstRun = 1;
 var wasUsed;
 var whichSl;
-var sliderAmount;
+var slA; //sliderAmount
 var bigLength = 0;
 var jsonPath;
-var nodeNr;
-var nodeIp;
-var nodePath;
-var nodePath2;
+var nNr; //nodeNr
+var nP; //nodePath
+var nP2;
+var nN; //nodeName
 var unitNr;
 var unitNr1;
-var nodeInterV;
-var InputInterV;
+var nIV; //nodeinterval
+var iIV; //InputInterV
 var isOpen;
+var navOpen;
 var myParam;
-var urlParams;
-var hasParams = true;
+var hasParams = 1;
 var dataT = [];
 var dataT2 = [];
 var isittime = 1;
 var NrofSlides = 0;
 var currVal;
 var html;
-var touchstartX = 0;
-var touchendX = 0;
-var touchstartY = 0;
-var touchendY = 0;
-var msTouchstart = 0;
-var msTouchend = 0;
-var manNav = false;
+var tsX = 0; //startx
+var teX = 0; //endx
+var tsY = 0;
+var teY = 0;
+var msTs = 0; //start time
+var msTe = 0;
+var manNav;
 var cooK = document.cookie;
-
-async function fetchWithTimeout(resource, options = {}) {
-    const { timeout = 1900 } = options;
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(resource, {
-        ...options,
-        signal: controller.signal
-    });
-    clearTimeout(id);
-    return response;
-}
 
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
-    if (myParam == null) { hasParams = false; }
+    if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
     if (!jsonPath) { jsonPath = `/json`; }
     if (isittime) {
-        try {
-            const response = await fetchWithTimeout(jsonPath);
-            myJson = await response.json();
+        let nodeCheck = nNr;
+        responseTime = Date.now();
+        response = await fetch(jsonPath);
+        myJson = await response.json();
+        if ((Date.now() - responseTime) < 3000 && nodeCheck === nNr) {
+            document.getElementById('allList').style.filter = "blur(0)";
+            html = '';
+            html2 = '';
+            html3 = '';
             dataT = [];
             let i = -1;
             unit = myJson.WiFi.Hostname;
@@ -68,12 +62,8 @@ async function fetchJson(event) {
                 htmlStaticSys + 'Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
                 htmlStaticSys + 'IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
                 htmlStaticSys + 'RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
-                htmlStaticSys + 'Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
                 htmlStaticSys + 'Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
 
-            html = '';
-            html2 = '';
-            html3 = '';
             var jsonT = myJson.System['Local Time'];
             var clockBig = jsonT.split(" ")[1];
             clockBig = clockBig.split(':');
@@ -84,7 +74,6 @@ async function fetchJson(event) {
             dateM = dateBig.split('-')[1];
             dateY = dateBig.split('-')[0];
 
-            nodeInfos = myJson.nodes;
             if (!myJson.Sensors.length) {
                 html += '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">no tasks configured...</div>';
             }
@@ -269,43 +258,43 @@ async function fetchJson(event) {
                     html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
                 }
             }
-        } catch (error) {
-            syshtml = '';
-            html2 = '';
-            html3 = '';
-            html = '<div class="sensorset"> <div class="sensors">The node takes too long to answer! (choose another node or wait..)</div>';
-        }
 
-        document.getElementById('sysInfo').innerHTML = syshtml;
-        document.getElementById('sensorList').innerHTML = html;
-        document.getElementById('sliderList').innerHTML = html2;
-        document.getElementById('bigNumber').innerHTML = html3;
+            document.getElementById('sysInfo').innerHTML = syshtml;
+            document.getElementById('sensorList').innerHTML = html;
+            document.getElementById('sliderList').innerHTML = html2;
+            document.getElementById('bigNumber').innerHTML = html3;
 
-        if (firstRun) {
-            if (userAgent.match(/iPhone/i)) {
-                document.body.style.height = "101vh";
+            if (firstRun) {
+                if (userAgent.match(/iPhone/i)) {
+                    document.body.style.height = "101vh";
+                }
+                setInterval(fetchJson, 2000);
+                setInterval(getTS, 10000);
+                getTS();
+                getNodes();
+                longPressS();
+                longPressN();
+                unitNr1 = myJson.System['Unit Number'];
+                nP2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
+                nP = 'http://' + myJson.WiFi['IP Address'] + '/tools';
+                firstRun = 0;
             }
-            setInterval(fetchJson, 2000);
-            setInterval(getTS, 10000);
-            getTS();
-            getNodes();
-            longPressS();
-            longPressN();
-            unitNr1 = myJson.System['Unit Number'];
-            nodePath2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
-            nodePath = 'http://' + myJson.WiFi['IP Address'] + '/tools';
-            firstRun = false;
+            if (unitNr === unitNr1) { styleU = "&#8858;"; }
+            else { styleU = ""; }
+            if (!hasParams) {
+                document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
+                document.getElementById('unitT').innerHTML = styleU + unit;
+            }
+            paramS();
+            changeCss();
+            resizeText();
+            longPressB();
+            if (event && dataT.length) { dataT2 = []; getTS(); }
         }
-        if (unitNr === unitNr1) { styleU = "&#8858;"; }
-        else { styleU = ""; }
-        if(!hasParams){
-        document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
-        document.getElementById('unitT').innerHTML = styleU + unit;}
-        paramS();
-        changeCss();
-        resizeText();
-        longPressB();
-        if (event) { dataT2 = []; getTS(); }
+        else if (nodeCheck === nNr) {
+            document.getElementById('unitId').innerHTML = nN + ' takes too long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> choose another node or wait..';
+            document.getElementById('allList').style.filter = "blur(5px)";
+        }
     }
 }
 async function getTS() {
@@ -318,7 +307,7 @@ async function getTS() {
         }
     }
 }
-function getUrl(url) { fetch(url) }
+
 function changeCss() {
     var numSl = document.querySelectorAll('input[type=range]').length;
     if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
@@ -329,29 +318,29 @@ function changeCss() {
     var element = document.getElementById("sensorList");
     var numSet = element.getElementsByClassName('sensorset').length;
     if (bigLength === 1 || (!numBigger && numSet < 2)) {
-        document.getElementById("sensorList").classList.add('sensorL1');
-        document.getElementById("sensorList").classList.remove('sensorL2', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL1');
+        element.classList.remove('sensorL2', 'sensorL3', 'sensorL4');
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
         coloumnSet = 1;
     }
     else if (bigLength === 2 || (!numBigger && numSet < 5 && numSet > 1)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL2');
+        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL2');
         coloumnSet = 2;
     }
     else if (bigLength === 3 || (!numBigger && numSet < 10 && numSet > 4)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL3');
+        element.classList.remove('sensorL1', 'sensorL2', 'sensorL4');
+        element.classList.add('sensorL3');
         coloumnSet = 3;
     }
     else if (bigLength === 4 || (!numBigger && numSet > 9)) {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL2', 'sensorL3');
-        document.getElementById("sensorList").classList.add('sensorL4');
+        element.classList.remove('sensorL1', 'sensorL2', 'sensorL3');
+        element.classList.add('sensorL4');
         coloumnSet = 4;
     }
     else {
-        document.getElementById("sensorList").classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        document.getElementById("sensorList").classList.add('sensorL2');
+        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
+        element.classList.add('sensorL2');
         coloumnSet = 2;
     }
     if (bigLength > 1) {
@@ -402,38 +391,38 @@ function paramS() {
         slider.addEventListener('change', sliderChange);
     });
     document.addEventListener('touchstart', e => {
-        msTouchstart = Date.now();
-        touchstartX = e.changedTouches[0].screenX
-        touchstartY = e.changedTouches[0].screenY
+        msTs = Date.now();
+        tsX = e.changedTouches[0].screenX
+        tsY = e.changedTouches[0].screenY
     })
     document.addEventListener('touchend', e => {
-        msTouchend = Date.now();
-        touchendX = e.changedTouches[0].screenX
-        touchendY = e.changedTouches[0].screenY
+        msTe = Date.now();
+        teX = e.changedTouches[0].screenX
+        teY = e.changedTouches[0].screenY
         checkDirection()
     })
     document.addEventListener('mousemove', e => {
-        if (!manNav) {
-            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) openNav()
+        if (!manNav && !navOpen) {
+            if (e.clientX < 10 && document.getElementById('mySidenav').offsetLeft === -280) { openNav(); navOpen = 1; }
             //if (e.clientX >280 && document.getElementById('sysInfo').offsetHeight === 0) closeNav()
         }
     })
     document.getElementById('mySidenav').addEventListener('mouseleave', e => {
         if (!manNav) {
-             closeNav()
+            closeNav()
         }
     })
 }
 
 function checkDirection() {
-    touchtime = msTouchend - msTouchstart
-    touchDistX = touchendX - touchstartX
-    touchDistY = touchendY - touchstartY
-    if (touchendX < touchstartX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) closeNav();
+    touchtime = msTe - msTs
+    touchDistX = teX - tsX
+    touchDistY = teY - tsY
+    if (teX < tsX) {
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 250) closeNav();
     }
-    if (touchendX > touchstartX) {
-        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 300) openNav()
+    if (teX > tsX) {
+        if (Math.abs(touchDistX) > 40 && Math.abs(touchDistY) < 30 && touchtime < 250) openNav()
     }
 }
 
@@ -458,8 +447,8 @@ function updateSlider(event) {
     slKind = slider.id.split("?")[4];
     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
     if (!slider.className.includes("noVal")) {
-        sliderAmount = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
-        amount.textContent = sliderAmount;
+        slA = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
+        amount.textContent = slA;
     }
 }
 
@@ -469,10 +458,10 @@ function sliderChTS(event) {
     const slTName = slider.parentNode.parentNode;
     if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R"); }
     else { var secVal = document.getElementById(slTName.id + "L"); }
-    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
-    else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
-    clearTimeout(InputInterV);
-    InputInterV = setTimeout(blurInput, 1000);
+    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; fetch('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
+    else { if (slider.id == slTName.id + "L") { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; fetch('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
+    clearTimeout(iIV);
+    iIV = setTimeout(blurInput, 1000);
 }
 
 function sliderChange(event) {
@@ -482,36 +471,34 @@ function sliderChange(event) {
     minVal = slider.attributes.min.nodeValue;
     OnOff = "";
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
-    sliderAmount = event.target.value;
+    slA = event.target.value;
     if (NrofSlides == 1) {
-        if (sliderAmount > maxVal * 5 / 6 && currVal !== maxVal) { sliderAmount = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
-        if (sliderAmount < maxVal / 6 && currVal !== minVal) { sliderAmount = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
+        if (slA > maxVal * 5 / 6 && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
+        if (slA < maxVal / 6 && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
     if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-    if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + sliderAmount); fetch('control?cmd=event,' + sliderId + 'Event=' + sliderAmount + OnOff); }
-    else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + slider.classList[1] + ',' + sliderAmount + '"'); fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + sliderId + 'Event=' + sliderAmount + OnOff + '"'); }
-    clearTimeout(InputInterV);
-    InputInterV = setTimeout(blurInput, 1000);
+    if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slA); fetch('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
+    else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slider.classList[1] + ',' + slA + '"'); fetch('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
+    clearTimeout(iIV);
+    iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
 }
 function buttonClick(utton, gState) {
     if (isittime) {
         if (utton.split("&")[1]) {
-            console.log(utton);
             utton2 = utton.split("&")[0];
-            nodeNr2 = utton.split("&")[1];
-            fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Event"');
+            nNr2 = utton.split("&")[1];
+            fetch('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event"');
         }
         else if (utton.split("?")[1]) {
-            console
             gpioNr = utton.split("?")[1];
             gS = gState == 1 ? 0 : 1
-            if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-            else { fetch('control?cmd=SendTo,' + nodeNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+            if (unitNr === unitNr1) { fetch('control?cmd=gpio,' + gpioNr + ',' + gS); }
+            else { fetch('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
         }
         else {
-            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
-            else { fetch('control?cmd=SendTo,' + nodeNr + ',"event,' + utton + 'Event"'); }
+            if (unitNr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
+            else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event"'); }
         }
         setTimeout(fetchJson, 400);
     }
@@ -520,9 +507,9 @@ function buttonClick(utton, gState) {
 function getInput(ele, initalCLick) {
     if (event.type === 'click') {
         isittime = 0;
-        InputInterV = setTimeout(blurInput, 8000);
+        iIV = setTimeout(blurInput, 8000);
         ele.addEventListener('blur', (event) => {
-            clearTimeout(InputInterV)
+            clearTimeout(iIV)
             isittime = 1;
             setTimeout(fetchJson, 400);
         });
@@ -532,30 +519,32 @@ function getInput(ele, initalCLick) {
         isittime = 1;
         if (ele.value) {
             playSound(4000);
-            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
-            else { fetch('control?cmd=SendTo,' + nodeNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
+            if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
+            else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
             buttonClick(ele.id);
         }
         else { setTimeout(fetchJson, 400); }
-        clearTimeout(InputInterV);
+        clearTimeout(iIV);
     }
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
-    else { clearTimeout(InputInterV); InputInterV = setTimeout(blurInput, 5000); }
+    else { clearTimeout(iIV); iIV = setTimeout(blurInput, 5000); }
 }
 function blurInput() {
     isittime = 1;
 }
 function openNav(whatisit) {
-    if (whatisit) manNav = true;
-    if (nodeInterV) { clearInterval(nodeInterV); }
-    nodeInterV = setInterval(getNodes, 10000);
+    if (whatisit) manNav = 1;
+    if (nIV) { clearInterval(nIV); }
+    nIV = setInterval(getNodes, 10000);
     if (document.getElementById('mySidenav').offsetLeft === -280) {
+        getNodes();
         document.getElementById("mySidenav").style.left = "0";
     } else { closeNav(); }
 }
 function closeNav() {
-    manNav = false;
-    clearInterval(nodeInterV);
+    manNav = 0;
+    navOpen = 0;
+    clearInterval(nIV);
     document.getElementById("mySidenav").style.left = "-280px";
 }
 
@@ -569,55 +558,60 @@ function openSys() {
     }
 }
 async function getNodes(utton, allNodes, hasIt) {
+    responseTime = Date.now();
     if (!hasIt) {
-    response = await fetch("json");
-    myJson = await response.json();
+        response = await fetch("json");
+        myJson = await response.json();
     }
-    let html4 = '';
-    nodeInfos = myJson.nodes;
-    let i = -1;
-    myJson.nodes.forEach(node => {
-        i++
-        if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = false; } }
-        if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
-        else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
-        html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
-        if (utton || allNodes) {
-            if (allNodes) {
-                if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Long'); }
-                else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
+    if ((Date.now() - responseTime) < 5000) {
+        let html4 = '';
+        nInf = myJson.nodes;
+        let i = -1;
+        myJson.nodes.forEach(node => {
+            i++
+            if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = 0; } }
+            if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
+            else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
+            html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
+            if (utton || allNodes) {
+                if (allNodes) {
+                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Long'); }
+                    else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
+                }
+                else if (isittime) {
+                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
+                    else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
+                }
             }
-            else if (isittime) {
-                if (node.nr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
-                else { getUrl('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
-            }
+        })
+        i = 0
+        document.getElementById('menueList').innerHTML = html4;
+        if (hasParams) {
+            let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
+            document.getElementById('sensorList').innerHTML = html;
+            //changeCss()
+            hasParams = 0;
+            setTimeout(fetchJson, 3000);
         }
-    })
-    i = 0
-    document.getElementById('menueList').innerHTML = html4;
-    if (hasParams) {
-        let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
-        document.getElementById('sensorList').innerHTML = html;
-        //changeCss()
-        hasParams = false;
-        setTimeout(fetchJson, 3000);
+        else { if (!nIV) { setTimeout(fetchJson, 1000); } }
     }
-    else { if (!nodeInterV) { setTimeout(fetchJson, 1000); } }
 }
 
 function sendUpdate() {
-    setTimeout(getNodes.bind(null,'','',5), 600);
+    setTimeout(getNodes.bind(null, '', '', 1), 600);
 
 }
+
 function nodeChange(event) {
-    nodeInfos = nodeInfos[event];
-    if (nodeInfos) {
-        nodeNr = nodeInfos.nr;
-        nodePath = `http://${nodeInfos.ip}/tools`;
-        nodePath2 = `http://${nodeInfos.ip}/devices`;
-        jsonPath = `http://${nodeInfos.ip}/json`;
-        window.history.replaceState(null, null, '?unit=' + nodeNr);
-        fetchJson();
+    nInf = nInf[event];
+    if (nInf) {
+        nNr = nInf.nr;
+        nN = nInf.name;
+        nP = `http://${nInf.ip}/tools`;
+        nP2 = `http://${nInf.ip}/devices`;
+        jsonPath = `http://${nInf.ip}/json`;
+        window.history.replaceState(null, null, '?unit=' + nNr);
+        fetchJson(1);
     }
     if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
@@ -655,9 +649,9 @@ function splitOn() {
     else { document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; isOpen = 0; }
     setTimeout(fetchJson, 100);
 }
-function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nodePath2 + '"></iframe>'; closeNav(); } }
+function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '"></iframe>'; closeNav(); } }
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
-function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nodePath; }); }
+function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         if (cooK.includes("Snd=1")) { playSound(500); document.cookie = "Snd=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
@@ -678,18 +672,18 @@ function longPressB() {
             else {
                 if ((lBName.id).split("&")[1]) {
                     utton2 = (lBName.id).split("&")[0];
-                    nodeNr2 = (lBName.id).split("&")[1];
-                    fetch('control?cmd=SendTo,' + nodeNr2 + ',"event,' + utton2 + 'Long"');
+                    nNr2 = (lBName.id).split("&")[1];
+                    fetch('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Long"');
                     setTimeout(fetchJson, 400);
                 } else {
-                    if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
-                    else { getUrl('control?cmd=SendTo,' + nodeNr + ',"event,' + lBName.textContent + 'Long"', true); }
+                    if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                    else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
                     setTimeout(fetchJson, 400);
                 }
             }
             playSound(1000);
             isittime = 0;
-            InputInterV = setTimeout(blurInput, 500);
+            iIV = setTimeout(blurInput, 600);
         });
     });
 }
