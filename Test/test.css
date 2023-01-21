@@ -14,6 +14,17 @@ body {
     color: #4e4a4a;
 }
 
+#dateV {
+    opacity: 0;
+    top: 10px;
+    writing-mode: vertical-lr;
+    position: fixed;
+    pointer-events: none;
+}
+#openSys:hover #dateV {
+    opacity: 1;
+}
+
 #container {
     display: flex;
     position: absolute;

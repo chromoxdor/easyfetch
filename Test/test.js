@@ -62,6 +62,7 @@ async function fetchJson(event) {
                 htmlStaticSys + 'Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
                 htmlStaticSys + 'IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
                 htmlStaticSys + 'RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
+                htmlStaticSys + 'Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
                 htmlStaticSys + 'Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
 
             var jsonT = myJson.System['Local Time'];
