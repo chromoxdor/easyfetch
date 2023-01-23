@@ -40,10 +40,10 @@ async function fetchJson(event) {
     if (!jsonPath) { jsonPath = `/json`; }
     let nodeCheck = nNr;
     responseTime = Date.now();
-    response = await fetch(jsonPath);
+    response = await getUrl(jsonPath);
     myJson = await response.json();
     if (isittime) {
-        if ((Date.now() - responseTime) < 3000 && nodeCheck === nNr) {
+        if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
             html = '';
             html2 = '';
@@ -293,7 +293,7 @@ async function fetchJson(event) {
             if (event && dataT.length) { dataT2 = []; getTS(); }
         }
         else if (nodeCheck === nNr) {
-            document.getElementById('unitId').innerHTML = nN + ' takes too long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> choose another node or wait..';
+            document.getElementById('unitId').innerHTML = nN + ' takes very long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> Check connection, choose another node or wait..';
             document.getElementById('allList').style.filter = "blur(5px)";
         }
     }
@@ -459,8 +459,8 @@ function sliderChTS(event) {
     const slTName = slider.parentNode.parentNode;
     if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R"); }
     else { var secVal = document.getElementById(slTName.id + "L"); }
-    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { fetch('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; fetch('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
-    else { if (slider.id == slTName.id + "L") { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; fetch('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
+    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
+    else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
     clearTimeout(iIV);
     iIV = setTimeout(blurInput, 1000);
 }
@@ -478,8 +478,8 @@ function sliderChange(event) {
         if (slA < maxVal / 6 && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
     if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-    if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slA); fetch('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
-    else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slider.classList[1] + ',' + slA + '"'); fetch('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
+    if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + slider.classList[1] + ',' + slA); getUrl('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
+    else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slider.classList[1] + ',' + slA + '"'); getUrl('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
     clearTimeout(iIV);
     iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
@@ -489,17 +489,17 @@ function buttonClick(utton, gState) {
         if (utton.split("&")[1]) {
             utton2 = utton.split("&")[0];
             nNr2 = utton.split("&")[1];
-            fetch('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event"');
+            getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event"');
         }
         else if (utton.split("?")[1]) {
             gpioNr = utton.split("?")[1];
             gS = gState == 1 ? 0 : 1
-            if (unitNr === unitNr1) { fetch('control?cmd=gpio,' + gpioNr + ',' + gS); }
-            else { fetch('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
+            else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
         }
         else {
-            if (unitNr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
-            else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+            else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event"'); }
         }
         setTimeout(fetchJson, 400);
     }
@@ -520,8 +520,8 @@ function getInput(ele, initalCLick) {
         isittime = 1;
         if (ele.value) {
             playSound(4000);
-            if (unitNr === unitNr1) { fetch('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
-            else { fetch('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
+            else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
             buttonClick(ele.id);
         }
         else { setTimeout(fetchJson, 400); }
@@ -674,11 +674,11 @@ function longPressB() {
                 if ((lBName.id).split("&")[1]) {
                     utton2 = (lBName.id).split("&")[0];
                     nNr2 = (lBName.id).split("&")[1];
-                    fetch('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Long"');
+                    getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Long"');
                     setTimeout(fetchJson, 400);
                 } else {
-                    if (unitNr === unitNr1 && !executed) { fetch('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
-                    else { fetch('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
+                    if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                    else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
                     setTimeout(fetchJson, 400);
                 }
             }
@@ -715,6 +715,17 @@ function playSound(freQ) {
         g.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.01)
         o.stop(context.currentTime + 0.01)
     }
+}
+//timeout fetch requests
+async function getUrl(url) {
+    let controller = new AbortController();
+    setTimeout(() => controller.abort(), 5000);
+    try {
+        response = await fetch(url, {
+            signal: controller.signal
+        });
+    } catch {}
+    return response;
 }
 
 !function (e, n) { "use strict"; var t = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = 0, r = 0; function m(e) { var t; u(), e = void 0 !== (t = e).changedTouches ? t.changedTouches[0] : t, this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || n.addEventListener("click", function e(t) { var a; n.removeEventListener("click", e, !0), (a = t).stopImmediatePropagation(), a.preventDefault(), a.stopPropagation() }, !0) } function u(n) { var a; (a = t) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), t = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, t) { t = t || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = n.createEvent("CustomEvent"); return a.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (n) { e.setTimeout(n, 1e3 / 60) }, n.addEventListener(a ? "pointerup" : i ? "touchend" : "mouseup", u, !0), n.addEventListener(a ? "pointermove" : i ? "touchmove" : "mousemove", function e(n) { var t = Math.abs(o - n.clientX), a = Math.abs(r - n.clientY); (t >= 10 || a >= 10) && u(n) }, !0), n.addEventListener("wheel", u, !0), n.addEventListener("scroll", u, !0), n.addEventListener(a ? "pointerdown" : i ? "touchstart" : "mousedown", function a(i) { var s, c, l; o = i.clientX, r = i.clientY, u(s = i), l = parseInt(function e(t, a, i) { for (; t && t !== n.documentElement;) { var o = t.getAttribute(a); if (o) return o; t = t.parentNode } return "600" }(c = s.target, "data-long-press-delay", "600"), 10), t = function n(t, a) { if (!e.requestAnimationFrame && !e.webkitRequestAnimationFrame && !(e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame) && !e.oRequestAnimationFrame && !e.msRequestAnimationFrame) return e.setTimeout(t, a); var i = new Date().getTime(), o = {}, r = function () { new Date().getTime() - i >= a ? t.call() : o.value = requestAnimFrame(r) }; return o.value = requestAnimFrame(r), o }(m.bind(c, s), l) }, !0) }(window, document);
