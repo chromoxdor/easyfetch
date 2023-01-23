@@ -180,10 +180,6 @@ iframe {
     margin-top: -4px;
 }
 
-slider::-webkit-slider-runnable-track {
-    background: black;
-}
-
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 0;

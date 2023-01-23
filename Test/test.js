@@ -38,11 +38,11 @@ async function fetchJson(event) {
     if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
     if (!jsonPath) { jsonPath = `/json`; }
+    let nodeCheck = nNr;
+    responseTime = Date.now();
+    response = await fetch(jsonPath);
+    myJson = await response.json();
     if (isittime) {
-        let nodeCheck = nNr;
-        responseTime = Date.now();
-        response = await fetch(jsonPath);
-        myJson = await response.json();
         if ((Date.now() - responseTime) < 3000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
             html = '';
