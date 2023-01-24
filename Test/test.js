@@ -159,7 +159,7 @@ async function fetchJson(event) {
                                 else if ((sensor.TaskName).includes("pButtons")) {
                                     if (item.Value > -1) {
                                         itemNB = itemN.split("&")[0];
-                                        html += '<div class="btnTile push sensorset" onpointerdown="playSound(3000), pushClick(\'' + itemN + '\',1)" onpointerup="pushClick(\'' + itemN + '\',0)"><div id="' + itemN + '" class="noLong sensors" style="font-weight:bold;">' + itemNB + '</div></div>';
+                                        html += '<div class="btnTile push sensorset" onpointerdown="playSound(3000), pushClick(\'' + itemN + '\',1)" onpointerup="pushClick(\'' + itemN + '\',0)"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>';
                                     }
                                 }
                                 //number input
@@ -201,7 +201,7 @@ async function fetchJson(event) {
                                 else { wasUsed = false; }
                             }
                             //handle tile hiding of dummy tiles
-                            if (["dButtons", "vInput", "tSlider", "vSlider"].some(v => (sensor.TaskName).includes(v))) {
+                            if (["dButtons","pButtons", "vInput", "tSlider", "vSlider"].some(v => (sensor.TaskName).includes(v))) {
                                 if (item.Name.includes("noValAuto")) {
                                     if (window.innerWidth >= 450) {
                                         html += '<div class="sensorset"><div></div><div</div></div>';
@@ -491,6 +491,7 @@ function sliderChange(event) {
     iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
 }
+
 function buttonClick(utton, gState) {
     if (isittime) {
         if (utton.split("&")[1]) {
@@ -703,7 +704,6 @@ function longPressB() {
                     setTimeout(fetchJson, 400);
                 }
             }
-            console.log(lBName);
             playSound(1000);
             isittime = 0;
             iIV = setTimeout(blurInput, 600);
@@ -724,18 +724,18 @@ function minutesToDhm(minutes) {
 
 function playSound(freQ) {
     if ((cooK.includes("Snd=1") || freQ < 1000) && (isittime || freQ != 3000)) {
-        var context = new AudioContext()
-        var o = context.createOscillator()
-        var g = context.createGain()
+        c = new AudioContext()
+        o = c.createOscillator()
+        g = c.createGain()
         frequency = freQ
         o.frequency.value = frequency
         o.type = "sawtooth"
         o.connect(g)
-        g.connect(context.destination)
+        g.connect(c.destination)
         g.gain.setValueAtTime(0.05, 0)
         o.start(0)
-        g.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 0.01)
-        o.stop(context.currentTime + 0.01)
+        g.gain.exponentialRampToValueAtTime(0.00001, c.currentTime + 0.01)
+        o.stop(c.currentTime + 0.01)
     }
 }
 //timeout fetch requests
