@@ -21,6 +21,7 @@ body {
     position: fixed;
     pointer-events: none;
 }
+
 #openSys:hover #dateV {
     opacity: 1;
 }
@@ -159,7 +160,7 @@ iframe {
     min-height: 60px;
 }
 
-.clickables:active {
+.clickables:active, .push:active {
     transform: scale(0.95);
     -webkit-transform: scale(0.95);
     transition: 0.1s
@@ -350,7 +351,7 @@ input[type=number] {
     padding: 0 2px 0 1px;
 }
 
-.on {
+.on, .push:active {
     background-color: #3e88cb !important;
 }
 
@@ -654,7 +655,7 @@ input::placeholder {
         background: #444444;
     }
 
-    .on {
+    .on, .push:active {
         background-color: #44607a !important
     }
 

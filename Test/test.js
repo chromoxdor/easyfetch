@@ -148,11 +148,18 @@ async function fetchJson(event) {
                                 if ((sensor.TaskName).includes("dButtons")) {
                                     if (item.Value > -1) {
                                         itemNB = itemN.split("&")[0];
-                                        if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="on'; }
+                                        if ((kindN === "C" && item.Value < 2) || item.Value === 1) { html += '<div class="btnTile on'; }
                                         else if (item.Value === 2) { html += '<div class="btnTile alert'; }
-                                        else { html += '<div class="btnTile off '; }
+                                        else { html += '<div class="btnTile '; }
                                         if (itemN.split("&")[1] == "A") { html += htmlStatic1 + 'getNodes(\'' + itemNB + '\')"><div  class="sensors nodes" style="font-weight:bold;">' + itemNB + '</div></div>'; }
                                         else { html += htmlStatic1 + 'buttonClick(\'' + itemN + '\')"><div id="' + itemN + '" class="sensors" style="font-weight:bold;">' + itemNB + '</div></div>'; }
+                                    }
+                                }
+                                //push buttons
+                                else if ((sensor.TaskName).includes("pButtons")) {
+                                    if (item.Value > -1) {
+                                        itemNB = itemN.split("&")[0];
+                                        html += '<div class="btnTile push sensorset" onpointerdown="playSound(3000), pushClick(\'' + itemN + '\',1)" onpointerup="pushClick(\'' + itemN + '\',0)"><div id="' + itemN + '" class="noLong sensors" style="font-weight:bold;">' + itemNB + '</div></div>';
                                     }
                                 }
                                 //number input
@@ -505,6 +512,20 @@ function buttonClick(utton, gState) {
     }
 }
 
+function pushClick(utton, b) {
+    if (b == 0) { isittime = 1; playSound(1000); }
+    else { isittime = 0 }
+    if (utton.split("&")[1]) {
+        utton2 = utton.split("&")[0];
+        nNr2 = utton.split("&")[1];
+        getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event,' + b + '"');
+    }
+    else {
+        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event,' + b); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event,' + b + '"'); }
+    }
+}
+
 function getInput(ele, initalCLick) {
     if (event.type === 'click') {
         isittime = 0;
@@ -682,6 +703,7 @@ function longPressB() {
                     setTimeout(fetchJson, 400);
                 }
             }
+            console.log(lBName);
             playSound(1000);
             isittime = 0;
             iIV = setTimeout(blurInput, 600);
@@ -724,7 +746,7 @@ async function getUrl(url) {
         response = await fetch(url, {
             signal: controller.signal
         });
-    } catch {}
+    } catch { }
     return response;
 }
 
