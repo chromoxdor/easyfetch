@@ -518,11 +518,11 @@ function pushClick(utton, b) {
     if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
         nNr2 = utton.split("&")[1];
-        getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event,' + b + '"');
+        getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event=' + b + '"');
     }
     else {
-        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event,' + b); }
-        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event,' + b + '"'); }
+        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event=' + b); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event=,' + b + '"'); }
     }
 }
 
