@@ -83,7 +83,9 @@ async function fetchJson(event) {
                     utton = sensor.TaskName;
                     htS1 = ' sensorset clickables" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div>'
-                    if (sensor.TaskEnabled === "true" && sensor.TaskValues && !sensor.TaskName.includes("XX") && !sensor.Type.includes("Display") && !hasParams) {
+                    exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
+                    exC2 = !sensor.Type.includes("Display")
+                    if (sensor.TaskEnabled === "true" && sensor.TaskValues && !sensor.TaskName.includes("XX") && exC && exC2 && !hasParams) {
                         someoneEn = 1;
                         firstItem = true;
                         sensor.TaskValues.forEach(item => {
@@ -277,7 +279,7 @@ async function fetchJson(event) {
                         html += '</div>';
                         html3 += '</div>';
                     }
-                    else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX") && !sensor.Type.includes("Display") && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                    else if (sensor.TaskEnabled === "true" && !sensor.TaskName.includes("XX") && exC && exC2 && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + sensor.TaskName + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                 });
                 if (!someoneEn && !hasParams) {
                     html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
