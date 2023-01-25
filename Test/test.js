@@ -31,6 +31,7 @@ var msTs = 0; //start time
 var msTe = 0;
 var manNav;
 var cooK = document.cookie;
+var gesVal;
 
 async function fetchJson(event) {
     urlParams = new URLSearchParams(window.location.search);
@@ -458,6 +459,15 @@ function updateSlider(event) {
         slA = Number(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length) + slKind;
         amount.textContent = slA;
     }
+    if (slider.classList[1] == 'npSl') { sliderId = slider.id.split("?")[0]; }
+    hVal = document.getElementById(sliderId+'?H')?.value;
+    sVal = document.getElementById(sliderId+'?S')?.value;
+    vVal = document.getElementById(sliderId+'?V')?.value;
+    gesVal= [hVal,sVal,vVal];
+    console.log(gesVal);
+    vVal = vVal ?? 0;
+    if (sVal && hVal) {sGrad = document.getElementById(sliderId+'?S');
+    sGrad.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,'+vVal+'%),hsl('+hVal+',100%,50%))';}
 }
 
 function sliderChTS(event) {
@@ -484,14 +494,7 @@ function sliderChange(event) {
         if (slA > maxVal * 5 / 6 && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
         if (slA < maxVal / 6 && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
-    if ((slider.id.match(/\?/g) || []).length >= 3 || slider.classList[1] == 'npSl') { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-        hVal = document.getElementById(sliderId+'?H')?.value;
-        sVal = document.getElementById(sliderId+'?S')?.value;
-        vVal = document.getElementById(sliderId+'?V')?.value;
-        gesVal= [hVal,sVal,vVal];
-        vVal = vVal ?? 0;
-        if (sVal && hVal) {sGrad = document.getElementById(sliderId+'?S');
-        sGrad.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,'+vVal+'%),hsl('+hVal+',100%,50%))';}
+    if ((slider.id.match(/\?/g) || []).length >= 3) { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
         gesVal=gesVal.filter(n => n)
     if (unitNr === unitNr1) { 
         getUrl('control?cmd=taskvalueset,' + slider.classList[2] + ',' + slA); 
