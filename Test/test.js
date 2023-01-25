@@ -417,8 +417,9 @@ function paramS() {
     })
     neoS = document.querySelectorAll(".npS");
     neoS.forEach(sID => {
-        hVal = document.getElementById(sID.id.split("?")[0]+'?H').value;
-        sID.style.backgroundImage = 'linear-gradient(to right, hsl(0,100%,100%),hsl('+hVal+',100%,50%))';
+        hVal = document.getElementById(sID.id.split("?")[0]+'?H')?.value;
+        vVal = document.getElementById(sID.id.split("?")[0]+'?V')?.value || 0;
+        sID.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,'+vVal+'%),hsl('+hVal+',100%,50%))';
     });
 }
 
@@ -485,12 +486,14 @@ function sliderChange(event) {
         if (slA < maxVal / 6 && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
     if ((slider.id.match(/\?/g) || []).length >= 3 || slider.classList[1] == 'npSl') { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
-        hVal = document.getElementById(sliderId+'?H')?.value || false;
-        sVal = document.getElementById(sliderId+'?S')?.value || false;
-        vVal = document.getElementById(sliderId+'?V')?.value || false;
+        hVal = document.getElementById(sliderId+'?H')?.value;
+        sVal = document.getElementById(sliderId+'?S')?.value;
+        vVal = document.getElementById(sliderId+'?V')?.value;
         gesVal= [hVal,sVal,vVal];
+        vVal = vVal ?? 0;
         if (sVal && hVal) {sGrad = document.getElementById(sliderId+'?S');
-        sGrad.style.backgroundImage = 'linear-gradient(to right, hsl(0,100%,100%),hsl('+hVal+',100%,50%))';}
+        sGrad.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,'+vVal+'%),hsl('+hVal+',100%,50%))';}
+        gesVal=gesVal.filter(n => n)
     if (unitNr === unitNr1) { 
         getUrl('control?cmd=taskvalueset,' + slider.classList[2] + ',' + slA); 
         if (slider.classList[1] != 'npSl') {getUrl('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
