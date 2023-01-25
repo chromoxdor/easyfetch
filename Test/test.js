@@ -205,29 +205,26 @@ async function fetchJson(event) {
                                 else if ((sensor.TaskName).includes("neoPixel")) {
                                     switch (item.Name) {
                                         case 'h':
-                                            html2 += '<input type="range" min="0" max="360"  step="1" value="' + num2Value + '" id="' + sensor.TaskName + '?H"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npH noVal ">';
+                                            html2 += '<input type="range" min="0" max="360"  step="1" value="' + num2Value + '" id="' + sensor.TaskName + '?H"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npH noVal">';
                                             break;
                                         case 's':
-                                            html2 += '<input type="range" min="0" max="100"  step="1" value="' + num2Value + '" id="' + sensor.TaskName + '?S"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npS noVal ">';
+                                            html2 += '<input type="range" min="0" max="100"  step="1" value="' + num2Value + '" id="' + sensor.TaskName + '?S"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npS noVal">';
                                             break;
                                         case 'v':
                                             html2 += '<input type="range" min="0" max="100"  step="1" value="' + num2Value + '" id="' + sensor.TaskName + '?V"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npV noVal">';
                                             break;
                                         default:
-
                                     }
                                 }
-                                else { wasUsed = false; }
-                            }
-                            //handle tile hiding of dummy tiles
-                            if (sensor.TaskDeviceNumber == 33) {
-                                if (item.Name.includes("noValAuto")) {
+                                 //handle hiding of dummy tiles
+                                else if (item.Name.includes("noValAuto")) {
                                     if (window.innerWidth >= 450) {
                                         html += '<div class="sensorset"><div></div><div</div></div>';
                                     }
                                 }
                                 else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div></div><div</div></div>'; }
-                                wasUsed = true;
+                    
+                                else { wasUsed = false; }
                             }
                             //big values---------------------------------------------------------
                             if ((sensor.TaskName).includes("bigVal")) {
