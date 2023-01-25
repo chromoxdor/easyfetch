@@ -60,7 +60,8 @@ iframe {
 
 #allList {
     display: flex;
-    transform: translate3d(0, 0, 0); /*safari blur issue fix*/
+    transform: translate3d(0, 0, 0);
+    /*safari blur issue fix*/
     grid-row-gap: 1vh;
     margin: auto;
     padding: 5px;
@@ -69,6 +70,10 @@ iframe {
     padding-bottom: 40px;
     padding-top: 40px;
     color: white;
+}
+
+#allList > div > *:not(.bigNum) {
+    box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
 
 .allExtra {
@@ -160,21 +165,34 @@ iframe {
     min-height: 60px;
 }
 
-.clickables:active, .push:active {
+.clickables:active,
+.push:active {
     transform: scale(0.95);
     -webkit-transform: scale(0.95);
     transition: 0.1s
 }
 
-.slider {
+.slider,
+.npSl {
     -webkit-appearance: none;
     position: absolute;
-    top: 0;
+    height: inherit;
+}
+
+.slider {
+    mix-blend-mode: color;
+    background: #847d7d;
     width: calc(100% + 44.2px);
     left: -24.2px;
-    mix-blend-mode: color;
-    height: inherit;
-    background: #847d7d;
+}
+
+.npSl {
+    width: 100%;
+    left: -0.2px;
+    position: inherit;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 5px;
 }
 
 .sliderAmount {
@@ -200,10 +218,33 @@ iframe {
     border-right: 20px solid #837c7c;
 }
 
+.npSl::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 42px;
+    cursor: pointer;
+    box-shadow: 0 0 2px 0 #ffffff;
+    background: #3e88cb;
+}
 
-.slider::-moz-range-track {
-    height: 100vh;
-    background: #ebebeb;
+.npSl::-moz-range-thumb {
+    width: 20px;
+    height: 42px;
+    cursor: pointer;
+    box-shadow: 0 0 2px 0 #ffffff;
+    background: #3e88cb;
+    border: 0;
+}
+
+.npH {
+    background-image: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta,red);
+}
+
+.npV {
+    background-image: linear-gradient(to right, black, white);
+}
+.npS {
+    background-image: linear-gradient(to right, white, black);
 }
 
 .slTS {
@@ -273,7 +314,6 @@ iframe {
     overflow: hidden;
     position: relative;
     background: #736f6f;
-    box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
 
 .slTimeText {
@@ -299,7 +339,6 @@ iframe {
     position: relative;
     align-items: stretch;
     cursor: pointer;
-    box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
 
 .valueBig {
@@ -329,12 +368,13 @@ iframe {
     text-align: end;
     color: inherit;
 }
+
 .vInputs:focus-visible {
     width: inherit;
 }
 
 input:focus::placeholder {
-    opacity:0.2;
+    opacity: 0.2;
 }
 
 input::-webkit-outer-spin-button,
@@ -351,7 +391,8 @@ input[type=number] {
     padding: 0 2px 0 1px;
 }
 
-.on, .push:active {
+.on,
+.push:active {
     background-color: #3e88cb !important;
 }
 
@@ -459,7 +500,7 @@ input::placeholder {
 
 #menueList {
     overflow: scroll;
-    -ms-overflow-style: none; 
+    -ms-overflow-style: none;
     scrollbar-width: none;
     transition: .2s;
     width: max-content;
@@ -586,12 +627,14 @@ input::placeholder {
         color: #b3b3b3;
     }
 
-    input::placeholder, #allList{
+    input::placeholder,
+    #allList {
         color: #b3b3b3;
     }
-    
 
-    iframe, .slTimeSetWrap {
+
+    iframe,
+    .slTimeSetWrap {
         background: black;
     }
 
@@ -634,11 +677,10 @@ input::placeholder {
 
     .slider {
         mix-blend-mode: lighten;
-        background-color: #444444 !important
+        background: #444444;
     }
 
     .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
         box-shadow: -100vw 0 0 100vw #44607a;
         border-left: 20px solid #44607a;
         border-right: 20px solid #444444;
@@ -650,12 +692,23 @@ input::placeholder {
         border-right: 20px solid #444444;
     }
 
-    .slider::-moz-range-track {
-        height: 100vh;
-        background: #444444;
+    .npSl::-webkit-slider-thumb {
+        box-shadow: 0 0 4px 3px grey;
+        background: #44607a;
+    }
+    
+    .npSl::-moz-range-thumb {
+        box-shadow: 0 0 4px 3px grey;
+        background: #44607a;
     }
 
-    .on, .push:active {
+    .npS, .npH, .npV {
+        background-color: #9b9b9b;
+        background-blend-mode: multiply;
+    }
+
+    .on,
+    .push:active {
         background-color: #44607a !important
     }
 
