@@ -45,7 +45,6 @@ async function fetchJson(event) {
     let nodeCheck = nNr;
     responseTime = Date.now();
     myJson = jsonPath;
-    console.log (myJson)
     if (isittime) {
         if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
@@ -294,8 +293,7 @@ async function fetchJson(event) {
             document.getElementById('bigNumber').innerHTML = html3;
 
             if (firstRun) {
-                console.log(!cooK.includes("Snd="))
-                if (!cooK.includes("Snd=")){console.log("true"); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;"}
+                if (!cooK.includes("Snd=")){console.log("cook");document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;"; cooK = document.cookie;}
                 if (userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
@@ -489,8 +487,8 @@ function sliderChTS(event) {
     else { var secVal = document.getElementById(slTName.id + "L"); }
     if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl(tvSet + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl(tvSet + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl(evnT + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
     else { if (slider.id == slTName.id + "L") { getUrl(sndTo + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl(sndTo + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl(sndTo + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
-    clearTimeout(iIV);
-    iIV = setTimeout(blurInput, 1000);
+    //clearTimeout(iIV);
+    //iIV = setTimeout(blurInput, 1000);
 }
 
 function sliderChange(event) {
@@ -517,8 +515,8 @@ function sliderChange(event) {
         if (slider.classList[1] != 'npSl') { getUrl(sndTo + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
         else { getUrl(sndTo + nNr + ',"event,' + sliderId + 'Event=' + gesVal + '"'); }
     }
-    clearTimeout(iIV);
-    iIV = setTimeout(blurInput, 1000);
+    //clearTimeout(iIV);
+    //iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
 }
 
@@ -650,6 +648,7 @@ async function getNodes(utton, allNodes, hasIt) {
 
 function sendUpdate() {
     setTimeout(getNodes.bind(null, '', '', 1), 600);
+    isittime=1;
 
 }
 
