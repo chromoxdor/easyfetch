@@ -241,10 +241,10 @@ iframe {
 }
 
 .npV {
-    background-image: linear-gradient(to right, black, white);
+    background-image: linear-gradient(to right, #333, white);
 }
 .npS {
-    background-image: linear-gradient(to right, white, black);
+    background-image: linear-gradient(to right, white,#333);
 }
 
 .slTS {
@@ -393,11 +393,11 @@ input[type=number] {
 
 .on,
 .push:active {
-    background-color: #3e88cb !important;
+    background: #3e88cb !important;
 }
 
 .alert {
-    background-color: #d8524f !important
+    background: #d8524f !important
 }
 
 .btnTile {
@@ -709,11 +709,11 @@ input::placeholder {
 
     .on,
     .push:active {
-        background-color: #44607a !important
+        background: #44607a !important
     }
 
     .alert {
-        background-color: #553044 !important
+        background: #553044 !important
     }
 
     .valueBig {

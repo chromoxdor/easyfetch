@@ -41,11 +41,11 @@ async function fetchJson(event) {
     myParam = urlParams.get('unit');
     if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
-    if (!jsonPath) { jsonPath = `/json`; }
+    if (!jsonPath) { jsonPath = IP1; }
     let nodeCheck = nNr;
     responseTime = Date.now();
-    response = await getUrl(jsonPath);
-    myJson = await response.json();
+    myJson = jsonPath;
+    console.log (myJson)
     if (isittime) {
         if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
@@ -294,6 +294,8 @@ async function fetchJson(event) {
             document.getElementById('bigNumber').innerHTML = html3;
 
             if (firstRun) {
+                console.log(!cooK.includes("Snd="))
+                if (!cooK.includes("Snd=")){console.log("true"); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;"}
                 if (userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
@@ -304,8 +306,8 @@ async function fetchJson(event) {
                 longPressS();
                 longPressN();
                 unitNr1 = myJson.System['Unit Number'];
-                nP2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
-                nP = 'http://' + myJson.WiFi['IP Address'] + '/tools';
+                nP2 = myJson.WiFi['IP Address'];
+                nP = myJson.WiFi['IP Address'];
                 firstRun = 0;
             }
             if (unitNr === unitNr1) { styleU = "&#8858;"; }
@@ -318,7 +320,7 @@ async function fetchJson(event) {
             changeCss();
             resizeText();
             longPressB();
-            if (event && dataT.length) { dataT2 = []; getTS(); }
+            if (event && dataT.length) { dataT2 = []; getTS();}
         }
         else if (nodeCheck === nNr) {
             document.getElementById('unitId').innerHTML = nN + ' takes very long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> Check connection, choose another node or wait..';
@@ -611,15 +613,12 @@ function openSys() {
 }
 async function getNodes(utton, allNodes, hasIt) {
     responseTime = Date.now();
-    if (!hasIt) {
-        response = await getUrl("json");
-        myJson = await response.json();
-    }
+        myJson = IP1
     if ((Date.now() - responseTime) < 5000) {
         let html4 = '';
         nInf = myJson.nodes;
         let i = -1;
-        myJson.nodes.forEach(node => {
+        nInf.forEach(node => {
             i++
             if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = 0; } }
             if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
@@ -659,11 +658,12 @@ function nodeChange(event) {
     if (nInf) {
         nNr = nInf.nr;
         nN = nInf.name;
-        nP = `http://${nInf.ip}/tools`;
-        nP2 = `http://${nInf.ip}/devices`;
-        jsonPath = `http://${nInf.ip}/json`;
+        nP = nInf.ip;
+        nP2 = nInf.ip;
+        jsonPath = eval(nInf.ip);
         window.history.replaceState(null, null, '?unit=' + nNr);
-        fetchJson(1);
+        setTimeout(fetchJson.bind(1), 100);
+        //fetchJson(1);
     }
     if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
@@ -699,7 +699,7 @@ function splitOn() {
     else { document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; isOpen = 0; }
     setTimeout(fetchJson, 100);
 }
-function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '"></iframe>'; closeNav(); } }
+function iFr() { if (isOpen === 1) { document.getElementById('framie').innerHTML = '<iframe src="https://espeasy.readthedocs.io/en/latest/"></iframe>'; closeNav(); } }
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 function longPressS() {
@@ -767,14 +767,7 @@ function playSound(freQ) {
 }
 //timeout fetch requests
 async function getUrl(url) {
-    let controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-    try {
-        response = await fetch(url, {
-            signal: controller.signal
-        });
-    } catch { }
-    return response;
+ console.log(url);
 }
 
 !function (e, n) { "use strict"; var t = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = 0, r = 0; function m(e) { var t; u(), e = void 0 !== (t = e).changedTouches ? t.changedTouches[0] : t, this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || n.addEventListener("click", function e(t) { var a; n.removeEventListener("click", e, !0), (a = t).stopImmediatePropagation(), a.preventDefault(), a.stopPropagation() }, !0) } function u(n) { var a; (a = t) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), t = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, t) { t = t || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = n.createEvent("CustomEvent"); return a.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (n) { e.setTimeout(n, 1e3 / 60) }, n.addEventListener(a ? "pointerup" : i ? "touchend" : "mouseup", u, !0), n.addEventListener(a ? "pointermove" : i ? "touchmove" : "mousemove", function e(n) { var t = Math.abs(o - n.clientX), a = Math.abs(r - n.clientY); (t >= 10 || a >= 10) && u(n) }, !0), n.addEventListener("wheel", u, !0), n.addEventListener("scroll", u, !0), n.addEventListener(a ? "pointerdown" : i ? "touchstart" : "mousedown", function a(i) { var s, c, l; o = i.clientX, r = i.clientY, u(s = i), l = parseInt(function e(t, a, i) { for (; t && t !== n.documentElement;) { var o = t.getAttribute(a); if (o) return o; t = t.parentNode } return "600" }(c = s.target, "data-long-press-delay", "600"), 10), t = function n(t, a) { if (!e.requestAnimationFrame && !e.webkitRequestAnimationFrame && !(e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame) && !e.oRequestAnimationFrame && !e.msRequestAnimationFrame) return e.setTimeout(t, a); var i = new Date().getTime(), o = {}, r = function () { new Date().getTime() - i >= a ? t.call() : o.value = requestAnimFrame(r) }; return o.value = requestAnimFrame(r), o }(m.bind(c, s), l) }, !0) }(window, document);
