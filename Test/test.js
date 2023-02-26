@@ -89,7 +89,7 @@ async function fetchJson(event) {
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
                     exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
                     exC2 = !sensor.Type.includes("Display")
-                    if (sensor.TaskEnabled === "true" && sensor.TaskValues && !utton.includes("XX") && exC && exC2 && !hasParams) {
+                    if (sensor.TaskEnabled === "true" || sensor.TaskEnabled && sensor.TaskValues && !utton.includes("XX") && exC && exC2 && !hasParams) {
                         someoneEn = 1;
                         firstItem = true;
                         sensor.TaskValues.forEach(item => {
@@ -281,7 +281,7 @@ async function fetchJson(event) {
                         html += '</div>';
                         html3 += '</div>';
                     }
-                    else if (sensor.TaskEnabled === "true" && !utton.includes("XX") && exC && exC2 && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                    else if (sensor.TaskEnabled === "true" || sensor.TaskEnabled && !utton.includes("XX") && exC && exC2 && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                 });
                 if (!someoneEn && !hasParams) {
                     html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
@@ -423,7 +423,7 @@ function paramS() {
     neoS.forEach(sID => {
         hVal = document.getElementById(sID.id.split("?")[0] + '?H')?.value;
         vVal = document.getElementById(sID.id.split("?")[0] + '?V')?.value || 20;
-        if (vVal < 20)vVal = 20;
+        if (vVal < 20) vVal = 20;
         sID.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,' + vVal + '%),hsl(' + hVal + ',100%,50%))';
     });
 }
@@ -472,7 +472,7 @@ function updateSlider(event) {
         gesVal = [hVal, sVal, vVal];
         vVal = vVal ?? 0;
         if (sVal && hVal) {
-            if (vVal < 20)vVal = 20;
+            if (vVal < 20) vVal = 20;
             sGrad = document.getElementById(sliderId + '?S');
             sGrad.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,' + vVal + '%),hsl(' + hVal + ',100%,50%))';
         }
