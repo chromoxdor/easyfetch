@@ -222,15 +222,16 @@ async function fetchJson(event) {
                                         default:
                                     }
                                 }
-                                //handle hiding of dummy tiles
-                                else if (iN.includes("noValAuto")) {
+                            }
+                            //handle tile hiding of dummy tiles
+                            if (sensor.TaskDeviceNumber == 33) {
+                                if (item.Name.includes("noValAuto")) {
                                     if (window.innerWidth >= 450) {
                                         html += '<div class="sensorset"><div></div><div</div></div>';
                                     }
                                 }
-                                else if (iN.includes("noVal")) { html += '<div class="sensorset"><div></div><div</div></div>'; }
-
-                                else { wasUsed = false; }
+                                else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div></div><div</div></div>'; }
+                                wasUsed = true;
                             }
                             //big values---------------------------------------------------------
                             if ((utton).includes("bigVal")) {
@@ -309,7 +310,7 @@ async function fetchJson(event) {
                 nP = 'http://' + myJson.WiFi['IP Address'] + '/tools';
                 firstRun = 0;
             }
-            if (unitNr === unitNr1) { styleU = "&#8858;"; }
+            if (unitNr === unitNr1) { styleU = "&#8858;&#xFE0E;"; }
             else { styleU = ""; }
             if (!hasParams) {
                 document.getElementById('unitId').innerHTML = styleU + unit + '<span class="numberUnit"> (' + myJson.WiFi.RSSI + ')</span>';
@@ -552,7 +553,7 @@ function pushClick(utton, b) {
     }
     else {
         if (unitNr === unitNr1) { getUrl(evnT + utton + 'Event=' + b); }
-        else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event=,' + b + '"'); }
+        else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event=' + b + '"'); }
     }
 }
 
@@ -706,7 +707,8 @@ function longPressN() { document.getElementById('mOpen').addEventListener('long-
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         if (cooK.includes("Snd=1")) { playSound(500); document.cookie = "Snd=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        else { playSound(900); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        else if (cooK.includes("Snd=0")) { playSound(900); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+        else { document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
         cooK = document.cookie;
     });
 }
