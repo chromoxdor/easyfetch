@@ -222,16 +222,7 @@ async function fetchJson(event) {
                                         default:
                                     }
                                 }
-                            }
-                            //handle tile hiding of dummy tiles
-                            if (sensor.TaskDeviceNumber == 33) {
-                                if (item.Name.includes("noValAuto")) {
-                                    if (window.innerWidth >= 450) {
-                                        html += '<div class="sensorset"><div></div><div</div></div>';
-                                    }
-                                }
-                                else if (item.Name.includes("noVal")) { html += '<div class="sensorset"><div></div><div</div></div>'; }
-                                wasUsed = true;
+                                else { wasUsed = false; }
                             }
                             //big values---------------------------------------------------------
                             if ((utton).includes("bigVal")) {
@@ -274,7 +265,18 @@ async function fetchJson(event) {
                             if (!wasUsed) {
                                 if (firstItem == true) { html += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
                                 if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
-                                else if (iN.includes("noVal")) { html += '<div class="values therest"><div>&nbsp;</div><div></div></div>'; }
+                                //handle tile hiding of dummy tiles
+                                if (["dButtons", "vInput", "pButtons"].some(v => (sensor.TaskName).includes(v))) {
+                                    wasUsed = true;
+                                    if (item.Name.includes("noValAuto")) {
+                                        if (window.innerWidth >= 450) {
+                                            html += '<div class="sensorset"></div>';
+                                        }
+                                    }
+                                    else if (item.Name.includes("noVal")) { html += '<div class="sensorset"></div>'; }
+
+                                }
+
                                 else if (sensor.TaskDeviceNumber == 81) { html += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
                                 else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
                             }
@@ -382,7 +384,7 @@ function changeCss() {
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
-            html += '<div class="sensorset"><div></div><div</div></div>'
+            html += '<div class="sensorset"></div>'
         }
     }
     document.getElementById('sensorList').innerHTML = html;
