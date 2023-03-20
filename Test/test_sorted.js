@@ -50,6 +50,7 @@ async function fetchJson(event) {
         if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
             html = '';
+            html1 = '';
             html2 = '';
             html3 = '';
             dataT = [];
@@ -272,23 +273,25 @@ async function fetchJson(event) {
                             }
                             // if all items with a specific delaration are processed do the rest---------------------------------------------------------
                             if (!wasUsed) {
-                                if (firstItem == true) { html += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
-                                if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
+                                if (firstItem == true) { html1 += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
+                                if (isTspeak) { html1 += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
                                 //else if (iN.includes("noVal")) { html += '<div class="values therest"><div>&nbsp;</div><div></div></div>'; }
-                                else if (sensor.TaskDeviceNumber == 81) { html += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
-                                else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
+                                else if (sensor.TaskDeviceNumber == 81) { html1 += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
+                                else { html1 += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
                             }
                             firstItem = false;
                         });
                         html += '</div>';
+                        html1 += '</div>';
                         html3 += '</div>';
                     }
-                    else if (taskEnabled === "true" && !utton.includes("XX") && exC && exC2 && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                    else if (taskEnabled === "true" && !utton.includes("XX") && exC && exC2 && !hasParams) { html1 += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
                 });
                 if (!someoneEn && !hasParams) {
                     html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
                 }
             }
+            html = html += html1;
 
             document.getElementById('sysInfo').innerHTML = syshtml;
             document.getElementById('sensorList').innerHTML = html;
