@@ -309,8 +309,11 @@ async function fetchJson(event) {
                 longPressS();
                 longPressN();
                 unitNr1 = myJson.System['Unit Number'];
-                nP2 = 'http://' + myJson.WiFi['IP Address'] + '/devices';
-                nP = 'http://' + myJson.WiFi['IP Address'] + '/tools';
+                initIP=0;
+                if (myJson.WiFi['IP Address'] == "(IP unset)") {initIP = "192.168.4.1"}
+                else {initIP = myJson.WiFi['IP Address']}
+                nP2 = 'http://' + initIP + '/devices';
+                nP = 'http://' + initIP + '/tools';
                 firstRun = 0;
             }
             if (unitNr === unitNr1) { styleU = "&#8858;&#xFE0E;"; }
