@@ -720,7 +720,7 @@ function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         makemeCookies("Snd=1", "Snd=0")
     });
-    document.getElementById('container').addEventListener('long-press', function (e) {
+    document.getElementById('nOpen').addEventListener('long-press', function (e) {
         makemeCookies("Sort=0", "Sort=1")
     });
 }
