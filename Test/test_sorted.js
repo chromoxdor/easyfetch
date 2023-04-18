@@ -86,10 +86,10 @@ async function fetchJson(event) {
             else {
                 myJson.Sensors.forEach(sensor => {
                     utton = sensor.TaskName;
-                    htS1 = ' sensorset clickables" onclick="playSound(3000), ';
+                    htS1 = ' sensorset clickables" onmouseup="setTimeout(blurInput.bind(null, \'1\',), 100);" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
                     exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
-                    exC2 = !sensor.Type.includes("Display")
+                    exC2 = !sensor.Type?.includes("Display")
                     taskEnabled = sensor.TaskEnabled.toString();
                     if (taskEnabled === "true" && sensor.TaskValues && !utton.includes("XX") && exC && exC2 && !hasParams) {
                         someoneEn = 1;

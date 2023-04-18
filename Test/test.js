@@ -50,6 +50,7 @@ async function fetchJson(event) {
         if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
             document.getElementById('allList').style.filter = "blur(0)";
             html = '';
+            html1 = '';
             html2 = '';
             html3 = '';
             dataT = [];
@@ -85,10 +86,10 @@ async function fetchJson(event) {
             else {
                 myJson.Sensors.forEach(sensor => {
                     utton = sensor.TaskName;
-                    htS1 = ' sensorset clickables" onclick="playSound(3000), ';
+                    htS1 = ' sensorset clickables" onmouseup="setTimeout(blurInput.bind(null, \'1\',), 100);" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
                     exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
-                    exC2 = !sensor.Type.includes("Display")
+                    exC2 = !sensor.Type?.includes("Display")
                     taskEnabled = sensor.TaskEnabled.toString();
                     if (taskEnabled === "true" && sensor.TaskValues && !utton.includes("XX") && exC && exC2 && !hasParams) {
                         someoneEn = 1;
@@ -272,23 +273,31 @@ async function fetchJson(event) {
                             }
                             // if all items with a specific delaration are processed do the rest---------------------------------------------------------
                             if (!wasUsed) {
-                                if (firstItem == true) { html += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
-                                if (isTspeak) { html += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
+                                if (firstItem == true) { html1 += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
+                                if (isTspeak) { html1 += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
                                 //else if (iN.includes("noVal")) { html += '<div class="values therest"><div>&nbsp;</div><div></div></div>'; }
-                                else if (sensor.TaskDeviceNumber == 81) { html += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
-                                else { html += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
+                                else if (sensor.TaskDeviceNumber == 81) { html1 += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
+                                else { html1 += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
                             }
                             firstItem = false;
+
                         });
                         html += '</div>';
+                        html1 += '</div>';
                         html3 += '</div>';
+                        if (!cooK.includes("Sort=1")) {
+                            html += html1;
+                            html1 = '';
+                        }
                     }
-                    else if (taskEnabled === "true" && !utton.includes("XX") && exC && exC2 && !hasParams) { html += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+                    else if (taskEnabled === "true" && !utton.includes("XX") && exC && exC2 && !hasParams) { html1 += '<div  class="sensorset clickables" onclick="buttonClick(\'' + utton + '\')"><div class="sensors" style="font-weight:bold;">' + utton + '</div><div></div><div></div></div>'; someoneEn = 1; document.getElementById('sensorList').innerHTML = html; }
+
                 });
                 if (!someoneEn && !hasParams) {
                     html += '<div class="sensorset clickables" onclick="splitOn(); topF()"> <div class="sensors" style="font-weight:bold;">no tasks enabled or visible...</div>';
                 }
             }
+            html += html1;
 
             document.getElementById('sysInfo').innerHTML = syshtml;
             document.getElementById('sensorList').innerHTML = html;
@@ -306,9 +315,9 @@ async function fetchJson(event) {
                 longPressS();
                 longPressN();
                 unitNr1 = myJson.System['Unit Number'];
-                initIP=0;
-                if (myJson.WiFi['IP Address'] == "(IP unset)") {initIP = "192.168.4.1"}
-                else {initIP = myJson.WiFi['IP Address']}
+                initIP = 0;
+                if (myJson.WiFi['IP Address'] == "(IP unset)") { initIP = "192.168.4.1" }
+                else { initIP = myJson.WiFi['IP Address'] }
                 nP2 = 'http://' + initIP + '/devices';
                 nP = 'http://' + initIP + '/tools';
                 firstRun = 0;
@@ -709,11 +718,17 @@ function topF() { document.body.scrollTop = 0; document.documentElement.scrollTo
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
-        if (cooK.includes("Snd=1")) { playSound(500); document.cookie = "Snd=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        else if (cooK.includes("Snd=0")) { playSound(900); document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        else { document.cookie = "Snd=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-        cooK = document.cookie;
+        makemeCookies("Snd=1", "Snd=0")
     });
+    document.getElementById('container').addEventListener('long-press', function (e) {
+        makemeCookies("Sort=0", "Sort=1")
+    });
+}
+function makemeCookies(x, y) {
+    if (cooK.includes(x)) {playSound(500); document.cookie = y + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+    else if (cooK.includes(y)) {playSound(900); document.cookie = x + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+    else {playSound(500); document.cookie = y + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+    cooK = document.cookie;
 }
 function longPressB() {
     var executed = false;
@@ -756,7 +771,7 @@ function minutesToDhm(minutes) {
 }
 
 function playSound(freQ) {
-    if ((cooK.includes("Snd=1") || freQ < 1000) && (isittime || freQ != 3000)) {
+    if ((!cooK.includes("Snd=0") || freQ < 1000) && (isittime || freQ != 3000)) {
         c = new AudioContext()
         o = c.createOscillator()
         g = c.createGain()
