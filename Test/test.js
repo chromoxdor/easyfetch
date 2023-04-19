@@ -372,7 +372,7 @@ function changeCss() {
     var list3 = document.querySelectorAll(".bigNum");
     //var numBig = document.getElementsByClassName('valuesBig').length;
     var sList = document.getElementById("sensorList");
-    var numSet = document.getElementsByClassName('sensorset').length;
+    var numSet = sList.getElementsByClassName('sensorset').length;
     if (bigLength === 4 || numSet > 9) {
         y = x + x + x + x;
         coloumnSet = 4;
