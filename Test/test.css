@@ -131,22 +131,6 @@ iframe {
     transition: 0.8s ease-out;
 }
 
-.sensorL4 {
-    grid-template-columns: auto auto auto auto;
-}
-
-.sensorL3 {
-    grid-template-columns: auto auto auto;
-}
-
-.sensorL2 {
-    grid-template-columns: auto auto;
-}
-
-.sensorL1 {
-    grid-template-columns: auto !important;
-}
-
 #sliderList {
     display: grid;
     grid-column-gap: 1vh;
@@ -603,7 +587,7 @@ input::placeholder {
     }
 
     #sensorList {
-        grid-template-columns: auto auto;
+        grid-template-columns: auto auto !important; 
         grid-column-gap: 5px;
         grid-row-gap: 5px;
 

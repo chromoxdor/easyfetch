@@ -11,6 +11,7 @@ var nP2;
 var nN; //nodeName
 var unitNr;
 var unitNr1;
+var fJ; //fetchJson interval
 var nIV; //nodeinterval
 var iIV; //InputInterV
 var isOpen;
@@ -86,7 +87,7 @@ async function fetchJson(event) {
             else {
                 myJson.Sensors.forEach(sensor => {
                     utton = sensor.TaskName;
-                    htS1 = ' sensorset clickables" onmouseup="setTimeout(blurInput.bind(null, \'1\',), 100);" onclick="playSound(3000), ';
+                    htS1 = ' sensorset clickables" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
                     exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
                     exC2 = !sensor.Type?.includes("Display")
@@ -308,12 +309,13 @@ async function fetchJson(event) {
                 if (userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
-                setInterval(fetchJson, 2000);
+                fJ = setInterval(fetchJson, 2000);
                 setInterval(getTS, 10000);
                 getTS();
                 getNodes();
                 longPressS();
                 longPressN();
+                addEonce()
                 unitNr1 = myJson.System['Unit Number'];
                 initIP = 0;
                 if (myJson.WiFi['IP Address'] == "(IP unset)") { initIP = "192.168.4.1" }
@@ -332,7 +334,18 @@ async function fetchJson(event) {
             changeCss();
             resizeText();
             longPressB();
-            if (event && dataT.length) { dataT2 = []; getTS(); }
+
+            //2-row switching----------
+            mW = 450;
+            mW2 = 9999;
+            if (cooK.includes("Two=1")) { mW = mW2; mW2 = 450 }
+            for (Array of document.styleSheets) {
+                for (Array of Array.cssRules) {
+                    if (Array.conditionText == "screen and (max-width: " + mW2 + "px)") { Array.media.mediaText = "screen and (max-width: " + mW + "px)" };
+                }
+            }
+            //-----------------------
+            if (event && dataT.length) { getTS() }
         }
         else if (nodeCheck === nNr) {
             document.getElementById('unitId').innerHTML = nN + ' takes very long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> Check connection, choose another node or wait..';
@@ -352,45 +365,42 @@ async function getTS() {
 }
 
 function changeCss() {
+    x = "auto ";
     var numSl = document.querySelectorAll('input[type=range]').length;
     if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
     else { document.getElementById("allList").classList.remove('allExtra'); }
     var list3 = document.querySelectorAll(".bigNum");
-    var numBigger = document.getElementsByClassName('bigNum').length;
-    var numBig = document.getElementsByClassName('valuesBig').length;
-    var element = document.getElementById("sensorList");
-    var numSet = element.getElementsByClassName('sensorset').length;
-    if (bigLength === 1 || (!numBigger && numSet < 2)) {
-        element.classList.add('sensorL1');
-        element.classList.remove('sensorL2', 'sensorL3', 'sensorL4');
+    //var numBig = document.getElementsByClassName('valuesBig').length;
+    var sList = document.getElementById("sensorList");
+    var numSet = document.getElementsByClassName('sensorset').length;
+    if (bigLength === 4 || numSet > 9) {
+        y = x + x + x + x;
+        coloumnSet = 4;
+    }
+    else if (bigLength === 3 || numSet > 4) {
+        y = x + x + x;
+        coloumnSet = 3;
+    }
+    else if (bigLength === 2 || numSet > 1) {
+        y = x + x;
+        coloumnSet = 2;
+    }
+    else if (bigLength === 1 || numSet < 2) {
+        y = x;
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
         coloumnSet = 1;
     }
-    else if (bigLength === 2 || (!numBigger && numSet < 5 && numSet > 1)) {
-        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        element.classList.add('sensorL2');
-        coloumnSet = 2;
-    }
-    else if (bigLength === 3 || (!numBigger && numSet < 10 && numSet > 4)) {
-        element.classList.remove('sensorL1', 'sensorL2', 'sensorL4');
-        element.classList.add('sensorL3');
-        coloumnSet = 3;
-    }
-    else if (bigLength === 4 || (!numBigger && numSet > 9)) {
-        element.classList.remove('sensorL1', 'sensorL2', 'sensorL3');
-        element.classList.add('sensorL4');
-        coloumnSet = 4;
-    }
     else {
-        element.classList.remove('sensorL1', 'sensorL3', 'sensorL4');
-        element.classList.add('sensorL2');
+        y = x + x;
         coloumnSet = 2;
     }
+    sList.style.gridTemplateColumns = y;
+
     if (bigLength > 1) {
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
     }
     //calculate and add extra tiles
-    if (window.innerWidth < 450) { if (bigLength === 1 && !numBigger || bigLength === 0 && numSet === 1) { coloumnSet = 1 } else { coloumnSet = 2 } };
+    if (window.innerWidth < 450 || cooK.includes("Two=1")) { if (bigLength === 1 && !numBigger || bigLength === 0 && numSet === 1) { coloumnSet = 1 } else { coloumnSet = 2 } };
     if (numSet % coloumnSet != 0) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
@@ -411,6 +421,16 @@ function paramS() {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
     });
+    neoS = document.querySelectorAll(".npS");
+    neoS.forEach(sID => {
+        hVal = document.getElementById(sID.id.split("?")[0] + '?H')?.value;
+        vVal = document.getElementById(sID.id.split("?")[0] + '?V')?.value || 20;
+        if (vVal < 20) vVal = 20;
+        sID.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,' + vVal + '%),hsl(' + hVal + ',100%,50%))';
+    });
+}
+
+function addEonce() {
     document.addEventListener('touchstart', e => {
         msTs = Date.now();
         tsX = e.changedTouches[0].screenX
@@ -433,13 +453,6 @@ function paramS() {
             closeNav()
         }
     })
-    neoS = document.querySelectorAll(".npS");
-    neoS.forEach(sID => {
-        hVal = document.getElementById(sID.id.split("?")[0] + '?H')?.value;
-        vVal = document.getElementById(sID.id.split("?")[0] + '?V')?.value || 20;
-        if (vVal < 20) vVal = 20;
-        sID.style.backgroundImage = 'linear-gradient(to right, hsl(0,0%,' + vVal + '%),hsl(' + hVal + ',100%,50%))';
-    });
 }
 
 function checkDirection() {
@@ -535,24 +548,22 @@ function sliderChange(event) {
 }
 
 function buttonClick(utton, gState) {
-    if (isittime) {
-        if (utton.split("&")[1]) {
-            utton2 = utton.split("&")[0];
-            nNr2 = utton.split("&")[1];
-            getUrl(sndTo + nNr2 + ',"event,' + utton2 + 'Event"');
-        }
-        else if (utton.split("?")[1]) {
-            gpioNr = utton.split("?")[1];
-            gS = gState == 1 ? 0 : 1
-            if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-            else { getUrl(sndTo + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
-        }
-        else {
-            if (unitNr === unitNr1) { getUrl(evnT + utton + 'Event'); }
-            else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event"'); }
-        }
-        setTimeout(fetchJson, 400);
+    if (utton.split("&")[1]) {
+        utton2 = utton.split("&")[0];
+        nNr2 = utton.split("&")[1];
+        getUrl(sndTo + nNr2 + ',"event,' + utton2 + 'Event"');
     }
+    else if (utton.split("?")[1]) {
+        gpioNr = utton.split("?")[1];
+        gS = gState == 1 ? 0 : 1
+        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
+        else { getUrl(sndTo + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+    }
+    else {
+        if (unitNr === unitNr1) { getUrl(evnT + utton + 'Event'); }
+        else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event"'); }
+    }
+    setTimeout(fetchJson, 400);
 }
 
 function pushClick(utton, b) {
@@ -677,6 +688,7 @@ function nodeChange(event) {
         nP2 = `http://${nInf.ip}/devices`;
         jsonPath = `http://${nInf.ip}/json`;
         window.history.replaceState(null, null, '?unit=' + nNr);
+        dataT2 = [];
         fetchJson(1);
     }
     if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
@@ -718,16 +730,23 @@ function topF() { document.body.scrollTop = 0; document.documentElement.scrollTo
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
-        makemeCookies("Snd=1", "Snd=0")
+        e.preventDefault();
+        mC("Snd=1", "Snd=0")
     });
     document.getElementById('nOpen').addEventListener('long-press', function (e) {
-        makemeCookies("Sort=0", "Sort=1")
+        e.preventDefault();
+        mC("Sort=0", "Sort=1")
+    });
+    document.getElementById('openSys').addEventListener('long-press', function (e) {
+        e.preventDefault();
+        mC("Two=0", "Two=1")
     });
 }
-function makemeCookies(x, y) {
-    if (cooK.includes(x)) {playSound(500); document.cookie = y + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-    else if (cooK.includes(y)) {playSound(900); document.cookie = x + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
-    else {playSound(500); document.cookie = y + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;" }
+function mC(x, y) {
+    z = "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;"
+    if (cooK.includes(x)) { playSound(500); document.cookie = y + z }
+    else if (cooK.includes(y)) { playSound(900); document.cookie = x + z }
+    else { playSound(500); document.cookie = y + z }
     cooK = document.cookie;
 }
 function longPressB() {
@@ -735,6 +754,7 @@ function longPressB() {
     const longButtons = document.querySelectorAll(".clickables");
     longButtons.forEach(longButton => {
         longButton.addEventListener('long-press', function (e) {
+            e.preventDefault();
             const lBName = longButton.querySelector(".sensors");
             const lBNode = longButton.querySelector(".nodes");
             if (lBNode) {
@@ -759,15 +779,15 @@ function longPressB() {
     });
 }
 
-function minutesToDhm(minutes) {
-    var d = Math.floor(minutes / (60 * 24));
-    var h = Math.floor(minutes % (60 * 24) / 60);
-    var m = Math.floor(minutes % 60);
+function minutesToDhm(min) {
+    var d = Math.floor(min / (60 * 24));
+    var h = Math.floor(min % (60 * 24) / 60);
+    var m = Math.floor(min % 60);
 
-    var dDisplay = d > 0 ? d + (d == 1 ? " day " : " days ") : "";
-    var hDisplay = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
-    var mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
-    return dDisplay + hDisplay + mDisplay;
+    var dDis = d > 0 ? d + (d == 1 ? " day " : " days ") : "";
+    var hDis = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
+    var mDis = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
+    return dDis + hDis + mDis;
 }
 
 function playSound(freQ) {
@@ -798,4 +818,16 @@ async function getUrl(url) {
     return response;
 }
 
-!function (e, n) { "use strict"; var t = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = 0, r = 0; function m(e) { var t; u(), e = void 0 !== (t = e).changedTouches ? t.changedTouches[0] : t, this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || n.addEventListener("click", function e(t) { var a; n.removeEventListener("click", e, !0), (a = t).stopImmediatePropagation(), a.preventDefault(), a.stopPropagation() }, !0) } function u(n) { var a; (a = t) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), t = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, t) { t = t || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = n.createEvent("CustomEvent"); return a.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (n) { e.setTimeout(n, 1e3 / 60) }, n.addEventListener(a ? "pointerup" : i ? "touchend" : "mouseup", u, !0), n.addEventListener(a ? "pointermove" : i ? "touchmove" : "mousemove", function e(n) { var t = Math.abs(o - n.clientX), a = Math.abs(r - n.clientY); (t >= 10 || a >= 10) && u(n) }, !0), n.addEventListener("wheel", u, !0), n.addEventListener("scroll", u, !0), n.addEventListener(a ? "pointerdown" : i ? "touchstart" : "mousedown", function a(i) { var s, c, l; o = i.clientX, r = i.clientY, u(s = i), l = parseInt(function e(t, a, i) { for (; t && t !== n.documentElement;) { var o = t.getAttribute(a); if (o) return o; t = t.parentNode } return "600" }(c = s.target, "data-long-press-delay", "600"), 10), t = function n(t, a) { if (!e.requestAnimationFrame && !e.webkitRequestAnimationFrame && !(e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame) && !e.oRequestAnimationFrame && !e.msRequestAnimationFrame) return e.setTimeout(t, a); var i = new Date().getTime(), o = {}, r = function () { new Date().getTime() - i >= a ? t.call() : o.value = requestAnimFrame(r) }; return o.value = requestAnimFrame(r), o }(m.bind(c, s), l) }, !0) }(window, document);
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        console.log("visible");
+        clearTimeout(fJ);
+        fetchJson();
+        fJ = setInterval(fetchJson, 2000);
+    } else {
+        console.log("invisible");
+        clearTimeout(fJ);
+    }
+});
+
+!function(e,t){"use strict";var n=null,a="PointerEvent"in e||e.navigator&&"msPointerEnabled"in e.navigator,i="ontouchstart"in e||navigator.MaxTouchPoints>0||navigator.msMaxTouchPoints>0,o=a?"pointerdown":i?"touchstart":"mousedown",r=a?"pointerup":i?"touchend":"mouseup",m=a?"pointermove":i?"touchmove":"mousemove",u=a?"pointerleave":i?"touchleave":"mouseleave",s=0,c=0,l=10,v=10;function f(e){p(),e=function(e){if(void 0!==e.changedTouches)return e.changedTouches[0];return e}(e),this.dispatchEvent(new CustomEvent("long-press",{bubbles:!0,cancelable:!0,detail:{clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY},clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY,screenX:e.screenX,screenY:e.screenY}))||t.addEventListener("click",function e(n){t.removeEventListener("click",e,!0),function(e){e.stopImmediatePropagation(),e.preventDefault(),e.stopPropagation()}(n)},!0)}function d(a){p(a);var i=a.target,o=parseInt(function(e,n,a){for(;e&&e!==t.documentElement;){var i=e.getAttribute(n);if(i)return i;e=e.parentNode}return a}(i,"data-long-press-delay","600"),10);n=function(t,n){if(!(e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame&&e.mozCancelRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame))return e.setTimeout(t,n);var a=(new Date).getTime(),i={},o=function(){(new Date).getTime()-a>=n?t.call():i.value=requestAnimFrame(o)};return i.value=requestAnimFrame(o),i}(f.bind(i,a),o)}function p(t){var a;(a=n)&&(e.cancelAnimationFrame?e.cancelAnimationFrame(a.value):e.webkitCancelAnimationFrame?e.webkitCancelAnimationFrame(a.value):e.webkitCancelRequestAnimationFrame?e.webkitCancelRequestAnimationFrame(a.value):e.mozCancelRequestAnimationFrame?e.mozCancelRequestAnimationFrame(a.value):e.oCancelRequestAnimationFrame?e.oCancelRequestAnimationFrame(a.value):e.msCancelRequestAnimationFrame?e.msCancelRequestAnimationFrame(a.value):clearTimeout(a)),n=null}"function"!=typeof e.CustomEvent&&(e.CustomEvent=function(e,n){n=n||{bubbles:!1,cancelable:!1,detail:void 0};var a=t.createEvent("CustomEvent");return a.initCustomEvent(e,n.bubbles,n.cancelable,n.detail),a},e.CustomEvent.prototype=e.Event.prototype),e.requestAnimFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(t){e.setTimeout(t,1e3/60)},t.addEventListener(r,p,!0),t.addEventListener(u,p,!0),t.addEventListener(m,function(e){var t=Math.abs(s-e.clientX),n=Math.abs(c-e.clientY);(t>=l||n>=v)&&p()},!0),t.addEventListener("wheel",p,!0),t.addEventListener("scroll",p,!0),t.addEventListener(o,function(e){s=e.clientX,c=e.clientY,d(e)},!0)}(window,document);
