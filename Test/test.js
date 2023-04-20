@@ -38,6 +38,20 @@ var tvSet = 'control?cmd=taskvalueset,';
 var evnT = 'control?cmd=event,';
 
 async function fetchJson(event) {
+    //2-row switching and invert color scheme----------
+    mW = 450;
+    mW2 = 9999;
+    if (cooK.includes("Two=1")) {mW = mW2; mW2 = 450 }
+    for (Array of document.styleSheets) {
+        for (e of Array.cssRules) {
+            if (e.conditionText == "screen and (max-width: " + mW2 + "px)") { e.media.mediaText = "screen and (max-width: " + mW + "px)" };
+            if (e.conditionText?.includes("prefers-color-scheme")) {
+                if (cooK.includes("Col=1")){e.media.mediaText = "(prefers-color-scheme: light)" }
+                else {e.media.mediaText = "(prefers-color-scheme: dark)" }
+                };
+        }
+    }
+    //-----------------------
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
     if (myParam == null) { hasParams = 0; }
@@ -309,7 +323,7 @@ async function fetchJson(event) {
                 if (userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
-                fJ = setInterval(fetchJson, 1000);
+                fJ = setInterval(fetchJson, 2000);
                 setInterval(getTS, 10000);
                 getTS();
                 getNodes();
@@ -335,20 +349,7 @@ async function fetchJson(event) {
             resizeText();
             longPressB();
 
-            //2-row switching and invert color scheme----------
-            mW = 450;
-            mW2 = 9999;
-            if (cooK.includes("Two=1")) {mW = mW2; mW2 = 450 }
-            for (Array of document.styleSheets) {
-                for (e of Array.cssRules) {
-                    if (e.conditionText == "screen and (max-width: " + mW2 + "px)") { e.media.mediaText = "screen and (max-width: " + mW + "px)" };
-                    if (e.conditionText?.includes("prefers-color-scheme")) {
-                        if (cooK.includes("Col=1")){e.media.mediaText = "(prefers-color-scheme: light)" }
-                        else {e.media.mediaText = "(prefers-color-scheme: dark)" }
-                        };
-                }
-            }
-            //-----------------------
+            
             if (event && dataT.length) { getTS() }
         }
         else if (nodeCheck === nNr) {
