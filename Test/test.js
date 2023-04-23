@@ -375,22 +375,24 @@ function changeCss() {
     if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
     else { document.getElementById("allList").classList.remove('allExtra'); }
     var list3 = document.querySelectorAll(".bigNum");
-    //var numBig = document.getElementsByClassName('valuesBig').length;
+    var nBig = document.getElementsByClassName('valuesBig').length;
     var sList = document.getElementById("sensorList");
     var numSet = sList.getElementsByClassName('sensorset').length;
-    if (bigLength === 4 || numSet > 9) {
+    z=0;
+    if (!nBig) z = numSet; //if there are no big values orient on number of "normal" tiles
+    if (bigLength === 4 || z > 9) {
         y = x + x + x + x;
         coloumnSet = 4;
     }
-    else if (bigLength === 3 || numSet > 4) {
+    else if (bigLength === 3 || z > 4) {
         y = x + x + x;
         coloumnSet = 3;
     }
-    else if (bigLength === 2 || numSet > 1) {
+    else if (bigLength === 2 || z > 1) {
         y = x + x;
         coloumnSet = 2;
     }
-    else if (bigLength === 1 || numSet < 2) {
+    else if (bigLength === 1 || z < 2) {
         y = x;
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
         coloumnSet = 1;
