@@ -587,7 +587,7 @@ input::placeholder {
     }
 
     #sensorList {
-        grid-template-columns: auto auto !important; 
+        grid-template-columns: auto auto !important;
         grid-column-gap: 5px;
         grid-row-gap: 5px;
 
