@@ -1,4 +1,3 @@
-var userAgent = window.navigator.userAgent;
 var firstRun = 1;
 var wasUsed;
 var whichSl;
@@ -31,26 +30,24 @@ var teY = 0;
 var msTs = 0; //start time
 var msTe = 0;
 var manNav;
-var cooK = document.cookie;
 var gesVal;
-var sndTo = 'control?cmd=SendTo,';
-var tvSet = 'control?cmd=taskvalueset,';
-var evnT = 'control?cmd=event,';
 
 async function fetchJson(event) {
-    //2-row switching and invert color scheme----------
-    mW = 450;
-     mW2 = 9999;
-     if (cooK.includes("Two=1")) {mW = mW2; mW2 = 450 }
-     for (Array of document.styleSheets) {
-         for (e of Array.cssRules) {
-             if (e.conditionText == "screen and (max-width: " + mW2 + "px)") { e.media.mediaText = "screen and (max-width: " + mW + "px)" };
-             if (e.conditionText?.includes("prefers-color-scheme")) {
-                 if (cooK.includes("Col=1")){e.media.mediaText = "(prefers-color-scheme: light)" }
-                 else {e.media.mediaText = "(prefers-color-scheme: dark)" }
-                 };
-         }
-     }
+    if (!document.cookie.includes("Snd=")){mC("Snd")}
+    //invert color scheme----------
+    try {
+        for (Array of document.styleSheets) {
+            for (e of Array.cssRules) {
+                if (e.conditionText?.includes("prefers-color-scheme")) {
+                    if (document.cookie.includes("Col=1")) { e.media.mediaText = "(prefers-color-scheme: light)" }
+                    else { e.media.mediaText = "(prefers-color-scheme: dark)" }
+                };
+            }
+        }
+    }
+    catch (err) {
+        console.log(err); // or just pass/continue/return true/any way of doing nothing
+    }
     //-----------------------
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
@@ -73,17 +70,16 @@ async function fetchJson(event) {
             unit = myJson.WiFi.Hostname;
             unitNr = myJson.System['Unit Number'];
             sysInfo = myJson.System
-            htSys = '<div class="syspair"><div>';
-            syshtml = (htSys + 'Sysinfo</div><div>' + unit + '</div></div>' +
-                htSys + 'Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
-                htSys + 'Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
-                htSys + 'Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
-                htSys + 'Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
-                htSys + 'Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
-                htSys + 'IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
-                htSys + 'RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
-                htSys + 'Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
-                htSys + 'Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
+            syshtml = ('<div class="syspair"><div>Sysinfo</div><div>' + unit + '</div></div>' +
+                '<div class="syspair"><div>Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
+                '<div class="syspair"><div>Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
+                '<div class="syspair"><div>Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
+                '<div class="syspair"><div>Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
+                '<div class="syspair"><div>Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
+                '<div class="syspair"><div>IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
+                '<div class="syspair"><div>RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
+                '<div class="syspair"><div>Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
+                '<div class="syspair"><div>Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
 
             jsonT = myJson.System['Local Time'];
             clockBig = jsonT.split(" ")[1];
@@ -100,8 +96,19 @@ async function fetchJson(event) {
             }
             else {
                 myJson.Sensors.forEach(sensor => {
+                    var bigSpan = "";
                     utton = sensor.TaskName;
-                    htS1 = ' sensorset clickables" onclick="playSound(3000), ';
+                    if (utton.includes("_")) utton = utton.replaceAll("_", " ")
+                    if (utton.includes("?")) {
+                        tBG = "background:#" + utton.split("?")[1];
+                        utton = utton.split("?")[0];
+                        if (getComputedStyle(document.body).backgroundColor == "rgb(0, 0, 0)") {
+                            tBG = tBG + "80"
+                        }
+                    }
+                    else tBG = "";
+
+                    htS1 = ' sensorset clickables" style="' + tBG + '" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
                     exC = !![38].indexOf(sensor.TaskDeviceNumber); //all PluginNR in an array that need to be excluded 
                     exC2 = !sensor.Type?.includes("Display")
@@ -139,7 +146,7 @@ async function fetchJson(event) {
                                 dataT.push([chanN, fieldN, item.NrDecimals, i]);
                             }
                             else { isTspeak = false; }
-                            //normal tiles = html; slider = html2; big values = html3
+                            //buttons = html; sensor tiles = html1; slider = html2; big values = html3
                             //switch---------------------------------------------------------
                             if (sensor.TaskDeviceNumber == 1) {
                                 wasUsed = true;
@@ -203,11 +210,12 @@ async function fetchJson(event) {
                                     slName = iN;
                                     slKind = "";
                                     if ((iN.match(/\?/g) || []).length >= 3) {
-                                        slName = iN.split("?")[0];
-                                        slMin = iN.split("?")[1];
-                                        slMax = iN.split("?")[2];
-                                        slStep = iN.split("?")[3];
-                                        slKind = iN.split("?")[4];
+                                        slV = iN.split("?")
+                                        slName = slV[0];
+                                        slMin = slV[1];
+                                        slMax = slV[2];
+                                        slStep = slV[3];
+                                        slKind = slV[4];
                                     }
                                     if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                     html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + iN + '"class="slider sL ' + sensor.TaskNumber + ',' + item.ValueNumber;
@@ -231,18 +239,15 @@ async function fetchJson(event) {
                                 }
                                 //neopixel slider
                                 else if ((utton).includes("neoPixel")) {
-                                    html2 += '<input type="range"max="'
-                                    neo1 = 'min="0" value="' + num2Value + '" id="' + utton;
-                                    neo2 = '"class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber;
                                     switch (iN) {
                                         case 'h':
-                                            html2 += '359"' + neo1 + '?H' + neo2 + ' npH noVal">';
+                                            html2 += '<input type="range" max="359" min="0" value="' + num2Value + '" id="' + utton + '?H" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npH noVal">';
                                             break;
                                         case 's':
-                                            html2 += '100"' + neo1 + '?S' + neo2 + ' npS noVal">';
+                                            html2 += '<input type="range" max="100" min="0" value="' + num2Value + '" id="' + utton + '?S" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npS noVal">';
                                             break;
                                         case 'v':
-                                            html2 += '100"' + neo1 + '?V' + neo2 + ' npV noVal">';
+                                            html2 += '<input type="range" max="100" min="0" value="' + num2Value + '" id="' + utton + '?V" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npV noVal">';
                                             break;
                                         default:
                                     }
@@ -252,19 +257,19 @@ async function fetchJson(event) {
                             //big values---------------------------------------------------------
                             if ((utton).includes("bigVal")) {
                                 wasUsed = true;
-                                let htmlBig1 = `<div class="valuesBig" style="font-weight:bold;text-align:left;">`;
+                                let htmlBig1 = '<div class="valuesBig" style="font-weight:bold;text-align:left;">';
                                 if (firstItem == true) {
                                     html3 += '<div class="bigNum">';
                                     if (bigLength < sensor.TaskValues.length) { bigLength = sensor.TaskValues.length };
                                 }
+                                htmlBig2 = '<div style="' + tBG + '" class="bigNumWrap '
                                 if (!(iN).includes("XX")) {
+                                    if (sensor.TaskValues.length === 3 && !(sensor.TaskValues).some(item => iN === 'XX')) { if (window.innerWidth < 450 || document.cookie.includes("Two=1")) { bigSpan = "bigSpan" } }
                                     if ((utton).includes("bigValC")) {
-                                        if (sensor.TaskValues.length === 3 && !(sensor.TaskValues).some(item => iN === 'XX')) { html3 += '<div class="bigNumWrap bigC bigSpan">'; }
-                                        else { html3 += '<div class="bigNumWrap bigC">'; }
+                                        html3 += htmlBig2 + 'bigC ' + bigSpan + '">';
                                     }
                                     else {
-                                        if (sensor.TaskValues.length === 3 && !(sensor.TaskValues).some(item => iN === 'XX')) { html3 += '<div class="bigNumWrap bigSpan">'; }
-                                        else { html3 += '<div class="bigNumWrap">'; }
+                                        html3 += htmlBig2 + bigSpan + '">';
                                     }
                                     htS3 = htmlBig1 + iN + '</div><div id="'
                                     if (["Clock", "Uhr", "Zeit", "Time"].some(v => (iN).includes(v))) { //(item.Name).toLowerCase().includes(v)
@@ -281,18 +286,20 @@ async function fetchJson(event) {
                                     }
                                     else if (iN.includes("noVal")) { html3 += htmlBig1 + '</div><div class="valueBig"></span></div></div>'; }
                                     else {
-                                        if (isTspeak) { html3 += htmlBig1 + itemN + '</div><div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
+                                        if (isTspeak) { html3 += htmlBig1 + itemN + '</div><div id="' + itemN + 'TS" class="valueBig">' + itemTSName + '<span>' + kindN + '</span></div></div>'; }
                                         else { html3 += htmlBig1 + itemN + '</div><div class="valueBig">' + num2Value + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; }
                                     }
                                 }
                             }
-                            // if all items with a specific delaration are processed do the rest---------------------------------------------------------
+                            // if all items with a specific declaration are processed do the rest---------------------------------------------------------
                             if (!wasUsed) {
+                                if (itemN.includes(".")) itemN = itemN.replaceAll(".", " ")
+                                if (itemN.includes("_")) itemN = itemN.replaceAll("_", "&nbsp")
                                 if (firstItem == true) { html1 += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
-                                if (isTspeak) { html1 += '<div class="values thingspeak"><div>' + itemN + '</div><div id="' + itemN + 'TS">' + itemTSName + kindN + '</div></div>'; }
+                                if (isTspeak) { html1 += '<div class=row><div class=odd>' + itemN + '</div><div class=even id="' + itemN + 'TS">' + itemTSName + ' ' + kindN + '</div></div>'; }
                                 //else if (iN.includes("noVal")) { html += '<div class="values therest"><div>&nbsp;</div><div></div></div>'; }
                                 else if (sensor.TaskDeviceNumber == 81) { html1 += '<div class="cron"><div>' + itemN + '</div><div style="font-size: 10pt;">' + item.Value + '</div></div>'; }
-                                else { html1 += '<div class="values therest"><div>' + itemN + '</div><div>' + num2Value + kindN + '</div></div>'; }
+                                else { html1 += '<div class=row><div class=odd>' + itemN + '</div><div class=even>' + num2Value + ' ' + kindN + '</div></div>'; }
                             }
                             firstItem = false;
 
@@ -300,7 +307,7 @@ async function fetchJson(event) {
                         html += '</div>';
                         html1 += '</div>';
                         html3 += '</div>';
-                        if (!cooK.includes("Sort=1")) {
+                        if (!document.cookie.includes("Sort=1")) {
                             html += html1;
                             html1 = '';
                         }
@@ -320,7 +327,7 @@ async function fetchJson(event) {
             document.getElementById('bigNumber').innerHTML = html3;
 
             if (firstRun) {
-                if (userAgent.match(/iPhone/i)) {
+                if (window.navigator.userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
                 fJ = setInterval(fetchJson, 2000);
@@ -393,7 +400,6 @@ function changeCss() {
         coloumnSet = 2;
     }
     else if (bigLength == 1 || z < 2) {
-
         y = x;
         m = "important"
         if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
@@ -404,22 +410,19 @@ function changeCss() {
         coloumnSet = 2;
     }
 
-    if (bigLength > 1) {
-        if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.remove('bigNumOne'); } }
-    }
-
-    if (window.innerWidth < 450 || cooK.includes("Two=1")) {
-        if ((bigLength == 1 && list3.length == 1) || (bigLength == 0 && numSet == 1)) {
+    if (window.innerWidth < 450 || document.cookie.includes("Two=1")) {
+        if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].style.cssText = "display: grid; grid-template-columns: auto auto;"; } }
+        if (bigLength == 1 || (bigLength == 0 && numSet == 1)) {
             coloumnSet = 1
             y = x;
             m = "important"
         }
-        else { coloumnSet = 2}
+        else { coloumnSet = 2; y = x + x }
     };
+
     sList.style.setProperty('grid-template-columns', y, m);
 
     //calculate and add extra tiles
-    document.getElementById("sensorList").style.gridTemplateColumns = "auto !important;";
     if (numSet % coloumnSet != 0 && coloumnSet != 1) {
         calcTile = coloumnSet - (numSet - coloumnSet * Math.floor(numSet / coloumnSet));
         for (let i = 1; i <= calcTile; i++) {
@@ -531,8 +534,8 @@ function sliderChTS(event) {
     const slTName = slider.parentNode.parentNode;
     if (slider.id == slTName.id + "L") { var secVal = document.getElementById(slTName.id + "R"); }
     else { var secVal = document.getElementById(slTName.id + "L"); }
-    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl(tvSet + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl(tvSet + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl(evnT + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
-    else { if (slider.id == slTName.id + "L") { getUrl(sndTo + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl(sndTo + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl(sndTo + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
+    if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
+    else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
     clearTimeout(iIV);
     iIV = setTimeout(blurInput, 1000);
 }
@@ -552,14 +555,14 @@ function sliderChange(event) {
     if ((slider.id.match(/\?/g) || []).length >= 3 || slider.classList[1] == 'npSl') { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
     if (gesVal) gesVal = gesVal.filter(n => n)
     if (unitNr === unitNr1) {
-        getUrl(tvSet + slider.classList[2] + ',' + slA);
-        if (slider.classList[1] != 'npSl') { getUrl(evnT + sliderId + 'Event=' + slA + OnOff); }
-        else { getUrl(evnT + sliderId + 'Event=' + gesVal) }
+        getUrl('control?cmd=taskvalueset,' + slider.classList[2] + ',' + slA);
+        if (slider.classList[1] != 'npSl') { getUrl('control?cmd=event,' + sliderId + 'Event=' + slA + OnOff); }
+        else { getUrl('control?cmd=event,' + sliderId + 'Event=' + gesVal) }
     }
     else {
-        getUrl(sndTo + nNr + ',"taskvalueset,' + slider.classList[2] + ',' + slA + '"');
-        if (slider.classList[1] != 'npSl') { getUrl(sndTo + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
-        else { getUrl(sndTo + nNr + ',"event,' + sliderId + 'Event=' + gesVal + '"'); }
+        getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slider.classList[2] + ',' + slA + '"');
+        if (slider.classList[1] != 'npSl') { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + gesVal + '"'); }
     }
     clearTimeout(iIV);
     iIV = setTimeout(blurInput, 1000);
@@ -570,17 +573,17 @@ function buttonClick(utton, gState) {
     if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
         nNr2 = utton.split("&")[1];
-        getUrl(sndTo + nNr2 + ',"event,' + utton2 + 'Event"');
+        getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event"');
     }
     else if (utton.split("?")[1]) {
         gpioNr = utton.split("?")[1];
         gS = gState == 1 ? 0 : 1
         if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-        else { getUrl(sndTo + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
     }
     else {
-        if (unitNr === unitNr1) { getUrl(evnT + utton + 'Event'); }
-        else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event"'); }
+        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event"'); }
     }
     setTimeout(fetchJson, 400);
 }
@@ -591,11 +594,11 @@ function pushClick(utton, b) {
     if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
         nNr2 = utton.split("&")[1];
-        getUrl(sndTo + nNr2 + ',"event,' + utton2 + 'Event=' + b + '"');
+        getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event=' + b + '"');
     }
     else {
-        if (unitNr === unitNr1) { getUrl(evnT + utton + 'Event=' + b); }
-        else { getUrl(sndTo + nNr + ',"event,' + utton + 'Event=' + b + '"'); }
+        if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event=' + b); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + utton + 'Event=' + b + '"'); }
     }
 }
 
@@ -614,8 +617,8 @@ function getInput(ele, initalCLick) {
         isittime = 1;
         if (ele.value) {
             playSound(4000);
-            if (unitNr === unitNr1) { getUrl(tvSet + ele.classList[1] + ',' + ele.value); }
-            else { getUrl(sndTo + nNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
+            if (unitNr === unitNr1) { getUrl('control?cmd=taskvalueset,' + ele.classList[1] + ',' + ele.value); }
+            else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + ele.classList[1] + ',' + ele.value + '"'); }
             buttonClick(ele.id);
         }
         else { setTimeout(fetchJson, 400); }
@@ -671,11 +674,11 @@ async function getNodes(utton, allNodes, hasIt) {
             html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
             if (utton || allNodes) {
                 if (allNodes) {
-                    if (node.nr === unitNr1) { fetch(evnT + utton + 'Long'); }
+                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Long'); }
                     else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
                 }
                 else if (isittime) {
-                    if (node.nr === unitNr1) { fetch(evnT + utton + 'Event'); }
+                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
                     else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
                 }
             }
@@ -731,13 +734,15 @@ function resizeText() {
     resizeText({ elements: document.querySelectorAll('.valueBig'), step: 1 })
 }
 function launchFs(element) {
-    if (element.requestFullscreen) {
+    element.requestFullscreen();
+    //seems to not be necessary anymore
+    /*if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.webkitRequestFullscreen) {
         element.webkitRequestFullscreen();
     } else if (element.msRequestFullscreen) {
         element.msRequestFullscreen();
-    }
+    }*/
 }
 function splitOn() {
     if (document.getElementById('framie').offsetWidth === 0) { isOpen = 1; iFr(isOpen); document.getElementById('framie').style.width = "100%"; }
@@ -750,27 +755,25 @@ function longPressN() { document.getElementById('mOpen').addEventListener('long-
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         e.preventDefault();
-        mC("Snd=1", "Snd=0")
+        mC("Snd")
     });
     document.getElementById('nOpen').addEventListener('long-press', function (e) {
         e.preventDefault();
-        mC("Sort=0", "Sort=1")
+        mC("Sort")
     });
     document.getElementById('openSys').addEventListener('long-press', function (e) {
         e.preventDefault();
-        mC("Two=0", "Two=1")
+        mC("Two")
     });
     document.getElementById('unitId').addEventListener('long-press', function (e) {
         e.preventDefault();
-        mC("Col=0", "Col=1")
+        mC("Col")
     });
 }
-function mC(x, y) {
-    z = "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;"
-    if (cooK.includes(x)) { playSound(500); document.cookie = y + z }
-    else if (cooK.includes(y)) { playSound(900); document.cookie = x + z }
-    else { playSound(500); document.cookie = y + z }
-    cooK = document.cookie;
+function mC(y) {
+    if((document.cookie.match('(^|;)\\s*' + y + '\\s*=\\s*([^;]+)')?.pop() || '') == 1){ playSound(500); document.cookie = y+ '=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;'}
+    else { playSound(900); document.cookie = y+ '=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;'}
+    document.cookie = document.cookie
 }
 function longPressB() {
     var executed = false;
@@ -787,11 +790,11 @@ function longPressB() {
                 if ((lBName.id).split("&")[1]) {
                     utton2 = (lBName.id).split("&")[0];
                     nNr2 = (lBName.id).split("&")[1];
-                    getUrl(sndTo + nNr2 + ',"event,' + utton2 + 'Long"');
+                    getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Long"');
                     setTimeout(fetchJson, 400);
                 } else {
-                    if (unitNr === unitNr1 && !executed) { getUrl(evnT + lBName.textContent + 'Long'); executed = true; }
-                    else { getUrl(sndTo + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
+                    if (unitNr === unitNr1 && !executed) { getUrl('control?cmd=event,' + lBName.textContent + 'Long'); executed = true; }
+                    else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + lBName.textContent + 'Long"'); executed = true; }
                     setTimeout(fetchJson, 400);
                 }
             }
@@ -814,7 +817,7 @@ function minutesToDhm(min) {
 }
 
 function playSound(freQ) {
-    if ((!cooK.includes("Snd=0") || freQ < 1000) && (isittime || freQ != 3000)) {
+    if ((!document.cookie.includes("Snd=0") || freQ < 1000) && (isittime || freQ != 3000)) {
         c = new AudioContext()
         o = c.createOscillator()
         g = c.createGain()
@@ -843,12 +846,12 @@ async function getUrl(url) {
 
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        console.log("visible");
+        //console.log("visible");
         clearTimeout(fJ);
         fetchJson();
         fJ = setInterval(fetchJson, 2000);
     } else {
-        console.log("invisible");
+        //console.log("invisible");
         clearTimeout(fJ);
     }
 });

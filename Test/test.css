@@ -47,7 +47,7 @@ iframe {
     width: 100%;
     height: 100%;
     border: 0;
-    background-color: white;
+    background: white;
     box-shadow: 4px 0 13px -7px #000000;
 }
 
@@ -82,16 +82,14 @@ iframe {
 
 #bigNumber {
     display: grid;
-    grid-column-gap: 1vh;
-    grid-row-gap: 1vh;
+    gap: 1vh;
     transition: 0.8s ease-out;
 }
 
 .bigNum {
     display: flex;
     grid-template-columns: auto auto auto auto;
-    grid-row-gap: 1vh;
-    grid-column-gap: 1vh;
+    gap: 1vh;
     width: -webkit-fill-available;
     justify-content: start;
     transition: 0.8s ease-out;
@@ -125,16 +123,14 @@ iframe {
 
 #sensorList {
     display: grid;
-    grid-column-gap: 1vh;
-    grid-row-gap: 1vh;
+    gap: 1vh;
     justify-content: center;
     transition: 0.8s ease-out;
 }
 
 #sliderList {
     display: grid;
-    grid-column-gap: 1vh;
-    grid-row-gap: 1vh;
+    gap: 1vh;
     min-width: 288px;
     transition: 0.8s ease-out;
 }
@@ -143,10 +139,6 @@ iframe {
     width: inherit;
     height: 40px;
     background: #837c7c;
-}
-
-#sensorList .sensorset {
-    min-height: 60px;
 }
 
 .clickables:active,
@@ -168,6 +160,7 @@ iframe {
     background: #847d7d;
     width: calc(100% + 44.2px);
     left: -24.2px;
+    top: 0;
 }
 
 .npSl {
@@ -241,11 +234,11 @@ iframe {
     top: 0px;
     mix-blend-mode: overlay;
     pointer-events: none;
-    background-color: #8a8787;
+    background: #8a8787;
 }
 
 .slTS:hover {
-    background-color: transparent;
+    background: transparent;
 }
 
 .slTS:nth-child(1)::-webkit-slider-thumb {
@@ -308,7 +301,7 @@ iframe {
 }
 
 .sensorset:not(.btnTile) {
-    background-color: #847d7d;
+    background: #847d7d;
 }
 
 .sensorset {
@@ -386,20 +379,32 @@ input[type=number] {
 
 .btnTile {
     background: #635d5d;
+    min-height: 60px;
 }
 
 .sensors {
-    padding-bottom: 2%;
+    padding-bottom: 4px;
     overflow-wrap: anywhere;
 }
 
-.values {
-    display: grid;
-    grid-template-columns: auto auto;
+.row {
+    display: flex;
     justify-content: space-between;
-    grid-column-gap: 5px;
+}
+
+.odd {
+    padding-right: 1px;
     overflow-wrap: anywhere;
-    align-items: end;
+}
+
+.odd:hover {
+    overflow: visible;
+}
+
+.even {
+    word-spacing: -2px;
+    white-space: nowrap;
+    align-self: self-end;
 }
 
 .cron {
@@ -436,7 +441,7 @@ input::placeholder {
     z-index: 20;
     top: 0;
     left: -280px;
-    background-color: #111111d9;
+    background: #111111d9;
     transition: 0.6s;
     overflow-y: hidden;
     display: flex;
@@ -537,6 +542,11 @@ input::placeholder {
     flex-shrink: 999;
 }
 
+.bigSpan:nth-child(1) {
+    grid-row: 1 / span 2;
+    height: 100%;
+}
+
 
 @media screen and (max-height: 450px) {
     framie {
@@ -576,28 +586,17 @@ input::placeholder {
         grid-row-gap: 5px;
     }
 
-    .bigSpan:nth-child(1) {
-        grid-row: 1 / span 2;
-        height: 100%;
-    }
-
     #sliderList {
-        grid-column-gap: 1vh;
-        grid-row-gap: 5px;
+        gap: 5px 1vh;
     }
 
     #sensorList {
-        grid-template-columns: auto auto !important;
-        grid-column-gap: 5px;
-        grid-row-gap: 5px;
+        gap: 5px;
 
     }
 
     .bigNum {
-        display: grid;
-        grid-template-columns: auto auto;
-        grid-column-gap: 5px;
-        grid-row-gap: 5px;
+        gap: 5px;
         width: 50%;
     }
 
@@ -608,7 +607,7 @@ input::placeholder {
 
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: rgb(0, 0, 0);
+        background: rgb(0, 0, 0);
         color: #b3b3b3;
     }
 
@@ -637,7 +636,7 @@ input::placeholder {
 
     .slTS {
         mix-blend-mode: lighten;
-        background-color: #444444 !important;
+        background: #444444 !important;
     }
 
     .slTS:nth-child(1)::-webkit-slider-thumb {
@@ -688,7 +687,7 @@ input::placeholder {
     }
 
     .npS, .npH, .npV {
-        background-color: #9b9b9b;
+        background: #9b9b9b;
         background-blend-mode: multiply;
     }
 
@@ -711,6 +710,6 @@ input::placeholder {
 
     .sensorset:not(.btnTile),
     #sliderList .sensorset {
-        background-color: #444;
+        background: #444;
     }
 }
