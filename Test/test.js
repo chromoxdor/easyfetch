@@ -31,6 +31,7 @@ var msTs = 0; //start time
 var msTe = 0;
 var manNav;
 var gesVal;
+var iO;
 
 async function fetchJson(event) {
     if (!document.cookie.includes("Snd=")) { mC("Snd") }
@@ -134,6 +135,7 @@ async function fetchJson(event) {
                                 slMin = 0;
                                 slStep = 1;
                                 whichSl = 0;
+                                bS = "";
                                 //thingspeak check
                                 if ((iN.match(/\&/g) || []).length >= 2) {
                                     i++;
@@ -153,7 +155,6 @@ async function fetchJson(event) {
                                     wasUsed = true;
                                     if ((iN === "btnStateC" && item.Value < 2) || item.Value === 1) { bS = "on"; }
                                     else if (item.Value === 2) { bS = "alert"; }
-                                    else { bS = ""; }
                                     if (sensor.TaskDeviceGPIO1 && iN.includes("State")) {
                                         if (iN === "iState") { item.Value = item.Value == 1 ? 0 : 1 };
                                         utton = utton + "?" + sensor.TaskDeviceGPIO1;
@@ -176,7 +177,6 @@ async function fetchJson(event) {
                                     //button coloring
                                     if ((kindN === "C" && item.Value < 2) || item.Value === 1) { bS = "on"; }
                                     else if (item.Value === 2) { bS = "alert"; }
-                                    else { bS = ""; }
                                     //handle tile hiding of dummy tiles
                                     if (["dButtons", "vInput", "pButtons"].some(v => (sensor.TaskName).includes(v)) && item.Name.includes("noVal")) {
                                         if (item.Name.includes("noValAuto")) {
@@ -631,9 +631,11 @@ function getInput(ele, initalCLick) {
     else if (event.key === 'Escape') { document.getElementById(ele.id).value = ""; }
     else { clearTimeout(iIV); iIV = setTimeout(blurInput, 5000); }
 }
+
 function blurInput() {
     isittime = 1;
 }
+
 function openNav(whatisit) {
     navOpen = 1;
     if (whatisit) manNav = 1;
@@ -644,6 +646,7 @@ function openNav(whatisit) {
         document.getElementById("mySidenav").style.left = "0";
     } else { closeNav(); }
 }
+
 function closeNav() {
     manNav = 0;
     navOpen = 0;
@@ -719,6 +722,7 @@ function nodeChange(event) {
     }
     if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
+
 function resizeText() {
     const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
     const resizeText = ({ element, elements, minSize = 10, maxSize = 115, step = 1, unit = 'pt' }) => {
@@ -749,19 +753,23 @@ function launchFs(element) {
     }*/
 }
 function splitOn(x) {
-    if (document.getElementById('framie').offsetWidth === 0) { iFr(x, 1); document.getElementById('framie').style.width = "100%"; }
-    else { document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; }
+    if (document.getElementById('framie').offsetWidth === 0) { iO = 1; iFr(x); document.getElementById('framie').style.width = "100%"; }
+    else { iO = 0; document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; }
     setTimeout(fetchJson, 100);
 }
-function iFr(x, y) {
-    if (y) {
+
+function iFr(x) {
+    if (iO) {
         if (x) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '?index=' + x + '&page=1"></iframe>'; }
         else { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '"></iframe>' }
         closeNav();
     }
 }
+
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
+
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
+
 function longPressS() {
     document.getElementById('closeBtn').addEventListener('long-press', function (e) {
         e.preventDefault();
@@ -780,11 +788,13 @@ function longPressS() {
         mC("Col")
     });
 }
+
 function mC(y) {
     if ((document.cookie.match('(^|;)\\s*' + y + '\\s*=\\s*([^;]+)')?.pop() || '') == 1) { playSound(500); document.cookie = y + '=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;' }
     else { playSound(900); document.cookie = y + '=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;' }
     document.cookie = document.cookie
 }
+
 function longPressB() {
     var executed = false;
     const longButtons = document.querySelectorAll(".clickables");
