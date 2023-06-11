@@ -1,7 +1,6 @@
 var firstRun = 1;
-var wasUsed;
-var whichSl;
-var slA; //sliderAmount
+//var wasUsed;
+//var slA; //sliderAmount
 var bigLength = 0;
 var jsonPath;
 var nNr; //nodeNr
@@ -13,7 +12,6 @@ var unitNr1;
 var fJ; //fetchJson interval
 var nIV; //nodeinterval
 var iIV; //InputInterV
-var isOpen;
 var navOpen;
 var myParam;
 var hasParams = 1;
@@ -60,8 +58,7 @@ async function fetchJson(event) {
     response = await getUrl(jsonPath);
     myJson = await response.json();
     if (isittime) {
-        if ((Date.now() - responseTime) < 2000 && nodeCheck === nNr) {
-            document.getElementById('allList').style.filter = "blur(0)";
+        if (nodeCheck === nNr) {
             html = '';
             html1 = '';
             html2 = '';
@@ -134,7 +131,6 @@ async function fetchJson(event) {
                                 slMax = 1023;
                                 slMin = 0;
                                 slStep = 1;
-                                whichSl = 0;
                                 bS = "";
                                 //thingspeak check
                                 if ((iN.match(/\&/g) || []).length >= 2) {
@@ -363,12 +359,9 @@ async function fetchJson(event) {
 
             if (event && dataT.length) { getTS() }
         }
-        else if (nodeCheck === nNr) {
-            document.getElementById('unitId').innerHTML = nN + ' takes very long to answer! (' + (Date.now() - responseTime) + 'ms)<br /> Check connection, choose another node or wait..';
-            document.getElementById('allList').style.filter = "blur(5px)";
-        }
     }
 }
+
 async function getTS() {
     if (dataT) {
         for (Array of dataT) {
@@ -505,6 +498,7 @@ function updateSlTS(event) {
     amount.textContent = hours;
     amount2.textContent = padded;
 }
+
 function updateSlider(event) {
     NrofSlides++;
     isittime = 0;
@@ -663,44 +657,42 @@ function openSys() {
         document.getElementById('menueWrap1').style.flexShrink = "999";
     }
 }
+
 async function getNodes(utton, allNodes, hasIt) {
-    responseTime = Date.now();
     if (!hasIt) {
         response = await getUrl("json");
         myJson = await response.json();
     }
-    if ((Date.now() - responseTime) < 5000) {
-        let html4 = '';
-        nInf = myJson.nodes;
-        let i = -1;
-        myJson.nodes.forEach(node => {
-            i++
-            if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = 0; } }
-            if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
-            else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
-            html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
-            if (utton || allNodes) {
-                if (allNodes) {
-                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Long'); }
-                    else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
-                }
-                else if (isittime) {
-                    if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
-                    else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
-                }
+    let html4 = '';
+    nInf = myJson.nodes;
+    let i = -1;
+    myJson.nodes.forEach(node => {
+        i++
+        if (node.nr == myParam) { if (hasParams) { nodeChange(i); hasParams = 0; } }
+        if (node.nr === unitNr1) { if (node.nr === unitNr) { styleN = "&#8857;&#xFE0E;"; } else { styleN = "&#8858;&#xFE0E;"; } }
+        else if (node.nr === unitNr) { styleN = "&#183;&#xFE0E;"; } else { styleN = ""; }
+        html4 += '<div class="menueItem"><div class="serverUnit" style="text-align: center;">' + styleN + '</div><div id="' + node.name + '" class="nc" onclick="sendUpdate(); nodeChange(' + i + ');iFr();">' + node.name + '<span class="numberUnit">' + node.nr + '</span></div></div>';
+        if (utton || allNodes) {
+            if (allNodes) {
+                if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Long'); }
+                else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Long"'); }
             }
-        })
-        i = 0
-        document.getElementById('menueList').innerHTML = html4;
-        if (hasParams) {
-            let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
-            document.getElementById('sensorList').innerHTML = html;
-            //changeCss()
-            hasParams = 0;
-            setTimeout(fetchJson, 3000);
+            else if (isittime) {
+                if (node.nr === unitNr1) { fetch('control?cmd=event,' + utton + 'Event'); }
+                else { fetch('/control?cmd=SendTo,' + node.nr + ',"event,' + utton + 'Event"'); }
+            }
         }
-        else { if (!nIV) { setTimeout(fetchJson, 1000); } }
+    })
+    i = 0
+    document.getElementById('menueList').innerHTML = html4;
+    if (hasParams) {
+        let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
+        document.getElementById('sensorList').innerHTML = html;
+        //changeCss()
+        hasParams = 0;
+        setTimeout(fetchJson, 3000);
     }
+    else { if (!nIV) { setTimeout(fetchJson, 1000); } }
 }
 
 function sendUpdate() {
@@ -741,6 +733,7 @@ function resizeText() {
     }
     resizeText({ elements: document.querySelectorAll('.valueBig'), step: 1 })
 }
+
 function launchFs(element) {
     element.requestFullscreen();
     //seems to not be necessary anymore
@@ -752,6 +745,7 @@ function launchFs(element) {
         element.msRequestFullscreen();
     }*/
 }
+
 function splitOn(x) {
     if (document.getElementById('framie').offsetWidth === 0) { iO = 1; iFr(x); document.getElementById('framie').style.width = "100%"; }
     else { iO = 0; document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; }
@@ -855,7 +849,7 @@ function playSound(freQ) {
 //timeout fetch requests
 async function getUrl(url) {
     let controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
+    setTimeout(() => controller.abort(), 2000);
     try {
         response = await fetch(url, {
             signal: controller.signal
@@ -875,5 +869,4 @@ document.addEventListener("visibilitychange", () => {
         clearTimeout(fJ);
     }
 });
-
-!function (e, t) { "use strict"; var n = null, a = "PointerEvent" in e || e.navigator && "msPointerEnabled" in e.navigator, i = "ontouchstart" in e || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0, o = a ? "pointerdown" : i ? "touchstart" : "mousedown", r = a ? "pointerup" : i ? "touchend" : "mouseup", m = a ? "pointermove" : i ? "touchmove" : "mousemove", u = a ? "pointerleave" : i ? "touchleave" : "mouseleave", s = 0, c = 0, l = 10, v = 10; function f(e) { p(), e = function (e) { if (void 0 !== e.changedTouches) return e.changedTouches[0]; return e }(e), this.dispatchEvent(new CustomEvent("long-press", { bubbles: !0, cancelable: !0, detail: { clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY }, clientX: e.clientX, clientY: e.clientY, offsetX: e.offsetX, offsetY: e.offsetY, pageX: e.pageX, pageY: e.pageY, screenX: e.screenX, screenY: e.screenY })) || t.addEventListener("click", function e(n) { t.removeEventListener("click", e, !0), function (e) { e.stopImmediatePropagation(), e.preventDefault(), e.stopPropagation() }(n) }, !0) } function d(a) { p(a); var i = a.target, o = parseInt(function (e, n, a) { for (; e && e !== t.documentElement;) { var i = e.getAttribute(n); if (i) return i; e = e.parentNode } return a }(i, "data-long-press-delay", "600"), 10); n = function (t, n) { if (!(e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame && e.mozCancelRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame)) return e.setTimeout(t, n); var a = (new Date).getTime(), i = {}, o = function () { (new Date).getTime() - a >= n ? t.call() : i.value = requestAnimFrame(o) }; return i.value = requestAnimFrame(o), i }(f.bind(i, a), o) } function p(t) { var a; (a = n) && (e.cancelAnimationFrame ? e.cancelAnimationFrame(a.value) : e.webkitCancelAnimationFrame ? e.webkitCancelAnimationFrame(a.value) : e.webkitCancelRequestAnimationFrame ? e.webkitCancelRequestAnimationFrame(a.value) : e.mozCancelRequestAnimationFrame ? e.mozCancelRequestAnimationFrame(a.value) : e.oCancelRequestAnimationFrame ? e.oCancelRequestAnimationFrame(a.value) : e.msCancelRequestAnimationFrame ? e.msCancelRequestAnimationFrame(a.value) : clearTimeout(a)), n = null } "function" != typeof e.CustomEvent && (e.CustomEvent = function (e, n) { n = n || { bubbles: !1, cancelable: !1, detail: void 0 }; var a = t.createEvent("CustomEvent"); return a.initCustomEvent(e, n.bubbles, n.cancelable, n.detail), a }, e.CustomEvent.prototype = e.Event.prototype), e.requestAnimFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (t) { e.setTimeout(t, 1e3 / 60) }, t.addEventListener(r, p, !0), t.addEventListener(u, p, !0), t.addEventListener(m, function (e) { var t = Math.abs(s - e.clientX), n = Math.abs(c - e.clientY); (t >= l || n >= v) && p() }, !0), t.addEventListener("wheel", p, !0), t.addEventListener("scroll", p, !0), t.addEventListener(o, function (e) { s = e.clientX, c = e.clientY, d(e) }, !0) }(window, document);
+!function(e,t){"use strict";var n=null,a="PointerEvent"in e||e.navigator&&"msPointerEnabled"in e.navigator,i="ontouchstart"in e||navigator.MaxTouchPoints>0||navigator.msMaxTouchPoints>0,o=0,r=0;function m(e){var n;s(),e=(n=e,void 0!==n.changedTouches?n.changedTouches[0]:n),this.dispatchEvent(new CustomEvent("long-press",{bubbles:!0,cancelable:!0,detail:{clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY},clientX:e.clientX,clientY:e.clientY,offsetX:e.offsetX,offsetY:e.offsetY,pageX:e.pageX,pageY:e.pageY,screenX:e.screenX,screenY:e.screenY}))||t.addEventListener("click",function e(n){var a;t.removeEventListener("click",e,!0),(a=n).stopImmediatePropagation(),a.preventDefault(),a.stopPropagation()},!0)}function s(t){var a;(a=n)&&(e.cancelAnimationFrame?e.cancelAnimationFrame(a.value):e.webkitCancelAnimationFrame?e.webkitCancelAnimationFrame(a.value):e.webkitCancelRequestAnimationFrame?e.webkitCancelRequestAnimationFrame(a.value):e.mozCancelRequestAnimationFrame?e.mozCancelRequestAnimationFrame(a.value):e.oCancelRequestAnimationFrame?e.oCancelRequestAnimationFrame(a.value):e.msCancelRequestAnimationFrame?e.msCancelRequestAnimationFrame(a.value):clearTimeout(a)),n=null}function u(e,n,a){for(;e&&e!==t.documentElement;){var i=e.getAttribute(n);if(i)return i;e=e.parentNode}return a}"function"!=typeof e.CustomEvent&&(e.CustomEvent=function(e,n){n=n||{bubbles:!1,cancelable:!1,detail:void 0};var a=t.createEvent("CustomEvent");return a.initCustomEvent(e,n.bubbles,n.cancelable,n.detail),a},e.CustomEvent.prototype=e.Event.prototype),e.requestAnimFrame=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(t){e.setTimeout(t,1e3/60)},t.addEventListener(a?"pointerup":i?"touchend":"mouseup",s,!0),t.addEventListener(a?"pointerleave":i?"touchleave":"mouseleave",s,!0),t.addEventListener(a?"pointermove":i?"touchmove":"mousemove",function e(t){var n=Math.abs(o-t.clientX),a=Math.abs(r-t.clientY);(n>=10||a>=10)&&s(t)},!0),t.addEventListener("wheel",s,!0),t.addEventListener("scroll",s,!0),t.addEventListener(a?"pointerdown":i?"touchstart":"mousedown",function t(a){var i,u;o=a.clientX,r=a.clientY,s(i=a),u=i.target,n=function t(n,a){if(!e.requestAnimationFrame&&!e.webkitRequestAnimationFrame&&!(e.mozRequestAnimationFrame&&e.mozCancelRequestAnimationFrame)&&!e.oRequestAnimationFrame&&!e.msRequestAnimationFrame)return e.setTimeout(n,a);var i=new Date().getTime(),o={},r=function(){var e;new Date().getTime()-i>=a?n.call():o.value=requestAnimFrame(r)};return o.value=requestAnimFrame(r),o}(m.bind(u,i),600)},!0)}(window,document);

@@ -687,7 +687,7 @@ input::placeholder {
     }
 
     .npS, .npH, .npV {
-        background: #9b9b9b;
+        background-color: #9b9b9b;
         background-blend-mode: multiply;
     }
 
