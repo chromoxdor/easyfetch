@@ -96,7 +96,6 @@ async function fetchJson(event) {
                 myJson.Sensors.forEach(sensor => {
                     var bigSpan = "";
                     utton = sensor.TaskName;
-                    if (utton.includes("_")) utton = utton.replaceAll("_", " ")
                     if (utton.includes("?")) {
                         tBG = "background:#" + utton.split("?")[1];
                         utton = utton.split("?")[0];
@@ -290,8 +289,8 @@ async function fetchJson(event) {
                                 }
                                 // if all items with a specific declaration are processed do the rest---------------------------------------------------------
                                 if (!wasUsed) {
-                                    if (itemN.includes(".")) itemN = itemN.replaceAll(".", " ")
-                                    if (itemN.includes("_")) itemN = itemN.replaceAll("_", "&nbsp")
+                                    if (itemN.includes("_")) itemN = itemN.replaceAll("_", " ")
+                                    if (itemN.includes(".")) itemN = itemN.replaceAll(".", "<br>")
                                     if (sensor.TaskDeviceNumber == 43) { if (item.Value === 1) { bS = "on"; } html += '<div class="btnTile ' + bS + ' sensorset clickables" onclick="playSound(3000); splitOn(' + sensor.TaskNumber + '); topF()""><div class="sensors" style="font-weight:bold;">' + utton + '</div><div class=even style="font-size: 20pt;">&#x23F2;&#xFE0E;</div></div></div>' }
                                     else {
                                         if (firstItem == true) { html1 += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
