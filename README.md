@@ -221,20 +221,27 @@ You should now see all the ESPEasy device tasks and states.
 The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVal2, bigValtwo,...
 
 * dButtons  --- creates an array of buttons (dummy device)
+* pButtons  --- creates an array of push buttons (dummy device)
+* vInput  --- creates an array of number Inputs (dummy device)
 * bigVal / bigValC --- creates "big values" (any device)
 * vSlider / nvSlider --- creates an array of "ordinary" slider (dummy device)
 * tSlider  --- creates an array of "time" slider (dummy device)
+* neoPixel  --- creates a Slider for a neopixel device (valuenames can be named "h"(ue) and/or "s"(saturation) and/or "v"(alue) ) (dummy device)
 * XX --- hides the task (any device)
 
 **Options via valuename:**
 
 The valuename needs to contain one of these phrases.
 
-* btnState / btnStateC --- renders a button if beein the first value (any device)
-* clock / time / uhr / zeit --- valuename for displaying the time set in espeasy (big values)
-* date / datum  --- valuename for displaying the date set in espeasy (big values)
-* year / jahr  --- valuename for displaying the year set in espeasy (big values)
-* XX --- append this to the valuename to hide it (any value)
+* State / iState --- renders a button if beein the first value (switch plugin) - since mega-20221224
+* btnState / btnStateC --- renders a button if beein the first value (switch plugin) - before mega-20221224 (needs additional rules)
+* Clock / Time / Uhr / Zeit --- valuename for displaying the time set in espeasy (big values)
+* Date / Datum  --- valuename for displaying the date set in espeasy (big values)
+* Year / Jahr  --- valuename for displaying the year set in espeasy (big values)
+* XX --- append this to the valuename to hide this value (any value)
+for Buttons, Inputs, Big Values:
+* noVal --- makes an empty tile (any value)
+* noValAuto --- append this to the valuename to hide it (any value)
 
 These options needs to be at the and of the valuename:
 
