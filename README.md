@@ -34,7 +34,7 @@ There are 3 possible categories:
 
 ## Creating a Dashboard:
 
-Here you can see the corresponding devices page of the unit: "testesp":
+Here you can see the corresponding devices page of the unit: "testesp" (click on the ⌂︎ - symbol to open the split view):
 
 <img width="740" alt="main split" src="https://user-images.githubusercontent.com/33860956/158621473-f1e1525d-5028-4299-9bc5-15b2d6bc7ff9.png">
 
@@ -119,7 +119,7 @@ You should now see all the ESPEasy device tasks and states.
  - Every slider calls an event when finished sliding. (e.g. “sliderEvent”)
  - To create a slider name a dummy device either "vSlider", "nvSlider" or "tSlider"
 
-    1. The ordinary slider: There are two versions too.
+    1. The ordinary slider: There are two versions too:
 
         1. The slider with values displayed: name a task something consisting of “vSlider” and every item will become a Slider with values shown while sliding
 
