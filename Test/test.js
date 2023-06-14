@@ -433,11 +433,13 @@ function paramS() {
     sliders.forEach(slider => {
         slider.addEventListener("input", updateSlTS);
         slider.addEventListener('change', sliderChTS);
+        slider.addEventListener("pointerup", (event) => {blurInput()});
     });
     var sliders = document.querySelectorAll(".sL");
     sliders.forEach(slider => {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
+        slider.addEventListener("pointerup", (event) => {blurInput()});
     });
     neoS = document.querySelectorAll(".npS");
     neoS.forEach(sID => {
