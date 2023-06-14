@@ -239,10 +239,8 @@ The valuename needs to contain one of these phrases:
 * Date / Datum  --- valuename for displaying the date set in espeasy (big values)
 * Year / Jahr  --- valuename for displaying the year set in espeasy (big values)
 * XX --- append this to the valuename to hide this value (any value)
-
-  for Buttons, Inputs, Big Values only:
-* noVal --- makes an empty tile (any value)
-* noValAuto --- append this to the valuename to hide it (any value)
+* noVal --- makes an empty tile (buttons, inputs, big values)
+* noValAuto --- append this to the valuename to hide it (buttons, inputs, big values)
 
 
 These options needs to be at the and of the valuename:
