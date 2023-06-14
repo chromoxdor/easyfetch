@@ -231,7 +231,7 @@ The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVa
 
 **Options via valuename:**
 
-The valuename needs to contain one of these phrases.
+The valuename needs to contain one of these phrases:
 
 * State / iState --- renders a button if beein the first value (switch plugin) - since mega-20221224
 * btnState / btnStateC --- renders a button if beein the first value (switch plugin) - before mega-20221224 (needs additional rules)
@@ -239,15 +239,18 @@ The valuename needs to contain one of these phrases.
 * Date / Datum  --- valuename for displaying the date set in espeasy (big values)
 * Year / Jahr  --- valuename for displaying the year set in espeasy (big values)
 * XX --- append this to the valuename to hide this value (any value)
-for Buttons, Inputs, Big Values:
+
+  for Buttons, Inputs, Big Values only:
 * noVal --- makes an empty tile (any value)
 * noValAuto --- append this to the valuename to hide it (any value)
+
 
 These options needs to be at the and of the valuename:
 
 * Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>" --- (any valuename)
 
 * vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the number of decimals of the value to correspond with the stepsize)
+
 
 This options needs to be at the very end and of the valuename:
   (e.g. "iamaslider?0?100?0.5?ms)
