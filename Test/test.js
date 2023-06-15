@@ -174,7 +174,7 @@ async function fetchJson(event) {
                                     //handle tile hiding of dummy tiles
                                     if (["dButtons", "vInput", "pButtons"].some(v => (sensor.TaskName).includes(v)) && item.Name.includes("noVal")) {
                                         if (item.Name.includes("noValAuto")) {
-                                            if (window.innerWidth >= 450) {
+                                            if (window.innerWidth >= 450 && document.cookie.includes("Two=1")) {
                                                 html += '<div class="sensorset btnTile"></div>';
                                             }
                                         }
@@ -198,7 +198,7 @@ async function fetchJson(event) {
                                     //number input
                                     else if ((utton).includes("vInput")) {
                                         if (!itemN) { itemN = "&nbsp;" }
-                                        html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)">' + itemN + '</div><div class="valWrap btnTile"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="getInput(this,1)"> <div class="kindInput">' + kindN + '</div></div></div>';
+                                        html += '<div class="sensorset clickables"><div class="sensors" style="font-weight:bold" onclick="getInput(this.nextElementSibling.firstChild)">' + itemN + '</div><div class="valWrap"><input type="number" class="vInputs ' + sensor.TaskNumber + ',' + item.ValueNumber + '" id="' + itemN + '"name="' + utton + '" placeholder="' + num2Value + '" onkeydown="getInput(this)" onclick="getInput(this,1)"> <div class="kindInput">' + kindN + '</div></div></div>';
                                     }
                                     //normal slider
                                     else if ((utton).includes("vSlider")) {

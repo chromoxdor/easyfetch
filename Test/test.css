@@ -72,7 +72,7 @@ iframe {
     color: white;
 }
 
-#allList > div > *:not(.bigNum) {
+#allList>div>*:not(.bigNum) {
     box-shadow: 0 0 10px 1px rgb(0 0 0 / 15%);
 }
 
@@ -214,14 +214,15 @@ iframe {
 }
 
 .npH {
-    background-image: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta,red);
+    background-image: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
 }
 
 .npV {
     background-image: linear-gradient(to right, #333, white);
 }
+
 .npS {
-    background-image: linear-gradient(to right, white,#333);
+    background-image: linear-gradient(to right, white, #333);
 }
 
 .slTS {
@@ -327,7 +328,7 @@ iframe {
 }
 
 .valWrap {
-    background: #ffffff28;
+    background: #635d5d;
     border-radius: 5px;
     text-align: end;
     display: flex;
@@ -679,13 +680,15 @@ input::placeholder {
         box-shadow: 0 0 4px 3px grey;
         background: #44607a;
     }
-    
+
     .npSl::-moz-range-thumb {
         box-shadow: 0 0 4px 3px grey;
         background: #44607a;
     }
 
-    .npS, .npH, .npV {
+    .npS,
+    .npH,
+    .npV {
         background-color: #9b9b9b;
         background-blend-mode: multiply;
     }
@@ -703,7 +706,8 @@ input::placeholder {
         background: none;
     }
 
-    .btnTile {
+    .btnTile,
+    .valWrap {
         background: #333;
     }
 
