@@ -149,14 +149,18 @@ async function fetchJson(event) {
                                     wasUsed = true;
                                     if ((iN === "btnStateC" && item.Value < 2) || item.Value === 1) { bS = "on"; }
                                     else if (item.Value === 2) { bS = "alert"; }
-                                    if (sensor.TaskDeviceGPIO1 && iN.includes("State")) {
+                                    if (sensor.TaskDeviceGPIO1 && iN === "State" || iN === "iState") {
                                         if (iN === "iState") { item.Value = item.Value == 1 ? 0 : 1 };
                                         utton = utton + "?" + sensor.TaskDeviceGPIO1;
                                         html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htS2;
                                     }
-                                    else if (sensor.TaskDeviceGPIO1 && iN === "ledState") {
+                                    //needs an extra plugin in espeasy
+                                    /*else if (sensor.TaskDeviceGPIO1 && iN === "ledState") {
                                         html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + utton + '"class="slider ' + sensor.TaskNumber + ',' + item.ValueNumber;
                                         html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + utton + '</div></div></div>';
+                                    }*/
+                                    else if (iN === "pState") {
+                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\')"><div id="' + utton + '" class="sensors" style="font-weight:bold;">' + utton + '</div></div>'; 
                                     }
                                     else if (itemN.includes("btnState")) {
                                         if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
@@ -543,14 +547,15 @@ function sliderChTS(event) {
 function sliderChange(event) {
     playSound(4000);
     slider = event.target;
-    maxVal = slider.attributes.max.nodeValue;
-    minVal = slider.attributes.min.nodeValue;
+    maxVal = parseFloat(slider.attributes.max.nodeValue);
+    minVal = parseFloat(slider.attributes.min.nodeValue);
     OnOff = "";
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     slA = event.target.value;
     if (NrofSlides == 1 && slider.classList[1] != 'npSl') {
-        if (slA > maxVal * 5 / 6 && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
-        if (slA < maxVal / 6 && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
+        df = (maxVal-minVal)*1/6;
+        if (slA > (maxVal - df) && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
+        if (slA < (minVal + df) && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
     if ((slider.id.match(/\?/g) || []).length >= 3 || slider.classList[1] == 'npSl') { sliderId = slider.id.split("?")[0]; } else { sliderId = slider.id; }
     if (gesVal) gesVal = gesVal.filter(n => n)
