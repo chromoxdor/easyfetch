@@ -235,6 +235,7 @@ The valuename needs to contain one of these phrases:
 
 * State / iState --- renders a button if beein the first value (switch plugin) - since mega-20221224
 * btnState / btnStateC --- renders a button if beein the first value (switch plugin) - before mega-20221224 (needs additional rules)
+* pState --- creates an event instead of toggeling the corresponding gpio (switch plugin) - used for pushbuttons 
 * Clock / Time / Uhr / Zeit --- valuename for displaying the time set in espeasy (big values)
 * Date / Datum  --- valuename for displaying the date set in espeasy (big values)
 * Year / Jahr  --- valuename for displaying the year set in espeasy (big values)
