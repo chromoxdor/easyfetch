@@ -50,6 +50,7 @@ async function fetchJson(event) {
     //-----------------------
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
+    if (urlParams.get('cmd') == "reboot") {window.location.href = window.location.origin + "/tools?cmd=reboot"}
     if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
     if (!jsonPath) { jsonPath = `/json`; }
@@ -734,7 +735,7 @@ function resizeText() {
                 overflow = isOverflown(parent)
                 if (!overflow) i += step
             }
-            el.style.fontSize = `${i - step}${unit}`
+            el.style.fontSize = `${i - step - 1}${unit}`
             el.style.lineHeight = "0.75"
         })
     }
