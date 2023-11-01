@@ -583,9 +583,10 @@ function buttonClick(utton, gState) {
     }
     else if (utton.split("?")[1]) {
         gpioNr = utton.split("?")[1];
+        uN = utton.split("?")[0];
         gS = gState == 1 ? 0 : 1
-        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); }
-        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); }
+        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); getUrl('control?cmd=event,' + uN + 'Event');}
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); getUrl('control?cmd=SendTo,' + nNr + ',"event,' + uN + 'Event"');}
     }
     else {
         if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
