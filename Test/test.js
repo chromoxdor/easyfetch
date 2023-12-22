@@ -50,7 +50,7 @@ async function fetchJson(event) {
     //-----------------------
     urlParams = new URLSearchParams(window.location.search);
     myParam = urlParams.get('unit');
-    if (urlParams.get('cmd') == "reboot") {window.location.href = window.location.origin + "/tools?cmd=reboot"}
+    if (urlParams.get('cmd') == "reboot") { window.location.href = window.location.origin + "/tools?cmd=reboot" }
     if (myParam == null) { hasParams = 0; }
     someoneEn = 0;
     if (!jsonPath) { jsonPath = `/json`; }
@@ -161,7 +161,7 @@ async function fetchJson(event) {
                                         html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + utton + '</div></div></div>';
                                     }*/
                                     else if (iN === "pState") {
-                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\')"><div id="' + utton + '" class="sensors" style="font-weight:bold;">' + utton + '</div></div>'; 
+                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\')"><div id="' + utton + '" class="sensors" style="font-weight:bold;">' + utton + '</div></div>';
                                     }
                                     else if (itemN.includes("btnState")) {
                                         if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
@@ -295,7 +295,11 @@ async function fetchJson(event) {
                                 if (!wasUsed) {
                                     if (itemN.includes("_")) itemN = itemN.replaceAll("_", " ")
                                     if (itemN.includes(".")) itemN = itemN.replaceAll(".", "<br>")
-                                    if (sensor.TaskDeviceNumber == 43) { if (item.Value === 1) { bS = "on"; } html += '<div class="btnTile ' + bS + ' sensorset clickables" onclick="playSound(3000); splitOn(' + sensor.TaskNumber + '); topF()""><div class="sensors" style="font-weight:bold;">' + utton + '</div><div class=even style="font-size: 20pt;">&#x23F2;&#xFE0E;</div></div></div>' }
+                                    if (sensor.TaskDeviceNumber == 43) {
+                                        if (firstItem) {
+                                            if (item.Value === 1) { bS = "on"; } html += '<div class="btnTile ' + bS + ' sensorset clickables" onclick="playSound(3000); splitOn(' + sensor.TaskNumber + '); topF()""><div class="sensors" style="font-weight:bold;">' + utton + '</div><div class=even style="font-size: 20pt;">&#x23F2;&#xFE0E;</div></div></div>'
+                                        }
+                                    }
                                     else {
                                         if (firstItem == true) { html1 += '<div class="' + htS1 + 'buttonClick(\'' + utton + '\')">' + htS2; }
                                         if (!item.Name.toString().includes("XX")) {
@@ -554,7 +558,7 @@ function sliderChange(event) {
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     slA = event.target.value;
     if (NrofSlides == 1 && slider.classList[1] != 'npSl') {
-        df = (maxVal-minVal)*1/6;
+        df = (maxVal - minVal) * 1 / 6;
         if (slA > (maxVal - df) && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
         if (slA < (minVal + df) && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
@@ -585,8 +589,8 @@ function buttonClick(utton, gState) {
         gpioNr = utton.split("?")[1];
         uN = utton.split("?")[0];
         gS = gState == 1 ? 0 : 1
-        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); getUrl('control?cmd=event,' + uN + 'Event');}
-        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); getUrl('control?cmd=SendTo,' + nNr + ',"event,' + uN + 'Event"');}
+        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + gS); getUrl('control?cmd=event,' + uN + 'Event'); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + gS + '"'); getUrl('control?cmd=SendTo,' + nNr + ',"event,' + uN + 'Event"'); }
     }
     else {
         if (unitNr === unitNr1) { getUrl('control?cmd=event,' + utton + 'Event'); }
