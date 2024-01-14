@@ -559,7 +559,7 @@ function sliderChange(event) {
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     slA = event.target.value;
     if (NrofSlides == 1 && slider.classList[3] == 'swSlider') {
-        df = (maxVal - minVal) * 1 / 8;
+        df = (maxVal - minVal) * 1 / 10;
         if (slA > (maxVal - df) && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
         if (slA < (minVal + df) && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
