@@ -219,6 +219,7 @@ async function fetchJson(event) {
                                         }
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                         html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + iN + '"class="slider sL ' + sensor.TaskNumber + ',' + item.ValueNumber;
+                                        if ((utton).includes("vSliderSw")) { html2 += " swSlider"; } // add switch functionality 
                                         if ((utton).includes("nvSlider")) { html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div></div></div>'; }
                                         else { html2 += '"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + slName + '</div><div class="sliderAmount" style="text-align: right;">' + num2Value + slKind + '</div></div></div>'; }
                                     }
@@ -557,8 +558,8 @@ function sliderChange(event) {
     OnOff = "";
     parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     slA = event.target.value;
-    if (NrofSlides == 1 && slider.classList[1] != 'npSl') {
-        df = (maxVal - minVal) * 1 / 6;
+    if (NrofSlides == 1 && slider.classList[3] == 'swSlider') {
+        df = (maxVal - minVal) * 1 / 8;
         if (slA > (maxVal - df) && currVal !== maxVal) { slA = maxVal; OnOff = ",1"; isittime = 1;; setTimeout(fetchJson, 500); }
         if (slA < (minVal + df) && currVal !== minVal) { slA = minVal; OnOff = ",0"; isittime = 1;; setTimeout(fetchJson, 500); }
     }
