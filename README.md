@@ -128,11 +128,12 @@ You should now see all the ESPEasy device tasks and states.
         - For both kinds of slider you can set a minimum, a maximum and the steps.
         - To achieve this add ?<minimum>?<maximum>?<steps> to the itemname (e.g. slider?0?100?0.1)
         - For the slider that shows values (vSlider) you can also add a unit of measurement if you set you personal range (e.g. slider?0?100?0.1?°C)
-        - This slider has a "switch" function. If you click on the left 1/6th of the slider, the value becomes the set minimum (default=0) and if you click on the right 1/6th, it becomes the maximum (default=1023)
 
           Notice: if you use this you must use it altogether. Standard values if unset are min=0 max=1023 step=1.
 
           <img width="600" alt="vS1" src="https://user-images.githubusercontent.com/33860956/159258001-6dcc11d5-e6cb-471e-b115-4cfb14c600e6.png">
+         
+         - If you add "Sw" to the Taskname (e.g. “vSliderSw” ), a "switch" function is added to the slider. If you click on the left 1/10th of the slider, the value becomes the set minimum (default=0) and if you click on   the right 1/10th, it becomes the maximum (default=1023)
 
    2. The "time" slider: Name a task something consisting of “tSlider” and every item will become a "time" slider. (Important! To make this work you need to set the number of decimals to 4)
       - The "time" slider stores the values of both times in one number. This makes it easier to store these values with the regulator - level 
@@ -225,6 +226,8 @@ The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVa
 * vInput  --- creates an array of number Inputs (dummy device)
 * bigVal / bigValC --- creates "big values" (any device)
 * vSlider / nvSlider --- creates an array of "ordinary" slider (dummy device)
+  - To add "switch"-behavior in a slider a "Sw" needs do be added to "vSlider" or "nvSlider"
+e.g.: "vSliderSw"
 * tSlider  --- creates an array of "time" slider (dummy device)
 * neoPixel  --- creates a Slider for a neopixel device (valuenames can be named "h"(ue) and/or "s"(saturation) and/or "v"(alue) ) (dummy device)
 * XX --- hides the task (any device)
@@ -240,7 +243,7 @@ The valuename needs to contain one of these phrases:
 * Date / Datum  --- valuename for displaying the date set in espeasy (big values)
 * Year / Jahr  --- valuename for displaying the year set in espeasy (big values)
 * XX --- append this to the valuename to hide this value (any value)
-* noVal --- generates an empty tile (buttons, inputs, big values)
+* noVal --- generates an empty tile (buttons, slider, inputs, big values)
 * noValAuto --- generates an empty tile which hides automatically in 2-row mode (buttons, inputs, big values)
 
 
