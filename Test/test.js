@@ -152,8 +152,8 @@ async function fetchJson(event) {
                                     else if (item.Value === 2) { bS = "alert"; }
                                     if (sensor.TaskDeviceGPIO1 && iN === "State" || iN === "iState") {
                                         if (iN === "iState") { item.Value = item.Value == 1 ? 0 : 1 };
-                                        utton = utton + "?" + sensor.TaskDeviceGPIO1;
-                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\', \'' + item.Value + '\')">' + htS2;
+                                        uttonGP = utton + "?" + sensor.TaskDeviceGPIO1;
+                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + uttonGP + '\', \'' + item.Value + '\')">' + htS2;
                                     }
                                     //needs an extra plugin in espeasy
                                     /*else if (sensor.TaskDeviceGPIO1 && iN === "ledState") {
@@ -161,7 +161,10 @@ async function fetchJson(event) {
                                         html2 += ' noVal"><div  class="sensors" style="align-items: flex-end;"><div style="font-weight:bold;">' + utton + '</div></div></div>';
                                     }*/
                                     else if (iN === "pState") {
-                                        html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + utton + '\')"><div id="' + utton + '" class="sensors" style="font-weight:bold;">' + utton + '</div></div>';
+                                        if (sensor.TaskDeviceGPIO1) {
+                                            uttonGP = utton + "?" + sensor.TaskDeviceGPIO1;
+                                            html += '<div class="' + bS + ' btnTile push sensorset" onpointerdown="playSound(3000), pushClick(\'' + uttonGP + '\',1)" onpointerup="pushClick(\'' + uttonGP + '\',0)"><div id="' + utton + '" class="sensors" style="font-weight:bold;">' + utton + '</div></div>';
+                                        }
                                     }
                                     else if (itemN.includes("btnState")) {
                                         if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
@@ -217,6 +220,7 @@ async function fetchJson(event) {
                                             slStep = slV[3];
                                             slKind = slV[4];
                                         }
+                                        if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                         html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + iN + '"class="slider sL ' + sensor.TaskNumber + ',' + item.ValueNumber;
                                         if ((utton).includes("vSliderSw")) { html2 += " swSlider"; } // add switch functionality 
@@ -603,7 +607,12 @@ function buttonClick(utton, gState) {
 function pushClick(utton, b) {
     if (b == 0) { isittime = 1; playSound(1000); }
     else { isittime = 0 }
-    if (utton.split("&")[1]) {
+    if (utton.split("?")[1]) {
+        gpioNr = utton.split("?")[1];
+        if (unitNr === unitNr1) { getUrl('control?cmd=gpio,' + gpioNr + ',' + b); }
+        else { getUrl('control?cmd=SendTo,' + nNr + ',"gpio,' + gpioNr + ',' + b + '"'); }
+    }
+    else if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
         nNr2 = utton.split("&")[1];
         getUrl('control?cmd=SendTo,' + nNr2 + ',"event,' + utton2 + 'Event=' + b + '"');
