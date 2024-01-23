@@ -428,13 +428,13 @@ function paramS() {
     sliders.forEach(slider => {
         slider.addEventListener("input", updateSlTS);
         slider.addEventListener('change', sliderChTS);
-        slider.addEventListener("pointerup", (event) => { blurInput() });
+        slider.addEventListener("pointerup", (event) => { iIV = setTimeout(blurInput, 1000) });
     });
     var sliders = document.querySelectorAll(".sL");
     sliders.forEach(slider => {
         slider.addEventListener('input', updateSlider);
         slider.addEventListener('change', sliderChange);
-        slider.addEventListener("pointerup", (event) => { blurInput() });
+        slider.addEventListener("pointerup", (event) => { iIV = setTimeout(blurInput, 1000) });
     });
     neoS = document.querySelectorAll(".npS");
     neoS.forEach(sID => {
@@ -530,8 +530,6 @@ function sliderChTS(event) {
     else { var secVal = document.getElementById(slTName.id + "L"); }
     if (unitNr === unitNr1) { if (slider.id == slTName.id + "L") { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0")); } else { getUrl('control?cmd=taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0")); }; getUrl('control?cmd=event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1]) }
     else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
-    clearTimeout(iIV);
-    iIV = setTimeout(blurInput, 1000);
 }
 
 function sliderChange(event) {
@@ -559,8 +557,6 @@ function sliderChange(event) {
         if (slider.classList[1] != 'npSl') { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + slA + OnOff + '"'); }
         else { getUrl('control?cmd=SendTo,' + nNr + ',"event,' + sliderId + 'Event=' + gesVal + '"'); }
     }
-    clearTimeout(iIV);
-    iIV = setTimeout(blurInput, 1000);
     NrofSlides = 0;
 }
 
@@ -849,7 +845,6 @@ function playSound(freQ) {
 }
 //timeout fetch requests
 async function getUrl(url) {
-    console.log(url);
     let controller = new AbortController();
     setTimeout(() => controller.abort(), 2000);
     try {
