@@ -80,15 +80,9 @@ async function fetchJson(event) {
                 '<div class="syspair"><div>Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
                 '<div class="syspair"><div>Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
 
-            jsonT = myJson.System['Local Time'];
-            clockBig = jsonT.split(" ")[1];
-            clockBig = clockBig.split(':');
-            clockBig.pop();
-            clockBig = clockBig.join(':');
-            dateBig = jsonT.split(" ")[0];
-            dateD = dateBig.split('-')[2];
-            dateM = dateBig.split('-')[1];
-            dateY = dateBig.split('-')[0];
+            let [dateBig, clockBig] = myJson.System['Local Time'].split(" ");
+            clockBig = clockBig.split(':').slice(0, -1).join(':');
+            let [dateY, dateM, dateD] = dateBig.split('-');
 
             if (!myJson.Sensors.length) {
                 html += '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">no tasks configured...</div>';
@@ -97,14 +91,13 @@ async function fetchJson(event) {
                 myJson.Sensors.forEach(sensor => {
                     var bigSpan = "";
                     utton = sensor.TaskName;
-                    if (utton.includes("?")) {
-                        tBG = "background:#" + utton.split("?")[1];
+                    if (utton.includes("?")) { //if a tile has a custom color
+                        const [, bgColor] = getComputedStyle(document.body).backgroundColor.match(/\d+/g);
+                        tBG = `background:#${utton.split("?")[1]}${bgColor === "0" ? "80" : ""}`;
                         utton = utton.split("?")[0];
-                        if (getComputedStyle(document.body).backgroundColor == "rgb(0, 0, 0)") {
-                            tBG = tBG + "80"
-                        }
+                    } else {
+                        tBG = "";
                     }
-                    else tBG = "";
 
                     htS1 = ' sensorset clickables" style="' + tBG + '" onclick="playSound(3000), ';
                     htS2 = '<div  class="sensors" style="font-weight:bold;">' + utton + '</div>'
@@ -137,9 +130,7 @@ async function fetchJson(event) {
                                     if (dataT2.length === 0) { itemTSName = 0; }
                                     else { itemTSName = dataT2[i]; }
                                     isTspeak = true;
-                                    itemN = iN.split("&")[0];
-                                    chanN = iN.split("&")[1];
-                                    fieldN = iN.split("&")[2];
+                                    [itemN, chanN, fieldN] = iN.split("&");
                                     if (fieldN.includes("?")) { fieldN = fieldN.split("?")[0]; }
                                     dataT.push([chanN, fieldN, item.NrDecimals, i]);
                                 }
@@ -213,12 +204,7 @@ async function fetchJson(event) {
                                         slName = iN;
                                         slKind = "";
                                         if ((iN.match(/\?/g) || []).length >= 3) {
-                                            slV = iN.split("?")
-                                            slName = slV[0];
-                                            slMin = slV[1];
-                                            slMax = slV[2];
-                                            slStep = slV[3];
-                                            slKind = slV[4];
+                                            [slName, slMin, slMax, slStep, slKind] = iN.split("?");
                                         }
                                         if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
@@ -229,6 +215,7 @@ async function fetchJson(event) {
                                     }
                                     //time slider
                                     else if ((utton).includes("tSlider")) {
+                                        if (item.NrDecimals !== 4) iN = "For the Time slider the value must have<br>4 decimals!";
                                         slT1 = item.Value.toFixed(4);
                                         slT2 = (slT1 + "").split(".")[1];
                                         slT1 = Math.floor(slT1);
@@ -240,22 +227,14 @@ async function fetchJson(event) {
                                         const padded2 = minute2.toString().padStart(2, "0");
                                         htmlSlider1 = '<input class="slTS" type="range" min="0" max="1440" step="5" value="';
                                         html2 += '<div id="' + iN + '" class="slTimeSetWrap ' + utton + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + iN + '<div class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></div><div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + iN + 'L">' + htmlSlider1 + slT2 + '" id="' + iN + 'R"></div></div>';
-
-                                    }
+                                    }                                      
                                     //neopixel slider
-                                    else if ((utton).includes("neoPixel")) {
-                                        switch (iN) {
-                                            case 'h':
-                                                html2 += '<input type="range" max="359" min="0" value="' + num2Value + '" id="' + utton + '?H" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npH noVal">';
-                                                break;
-                                            case 's':
-                                                html2 += '<input type="range" max="100" min="0" value="' + num2Value + '" id="' + utton + '?S" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npS noVal">';
-                                                break;
-                                            case 'v':
-                                                html2 += '<input type="range" max="100" min="0" value="' + num2Value + '" id="' + utton + '?V" class="sL npSl ' + sensor.TaskNumber + ',' + item.ValueNumber + ' npV noVal">';
-                                                break;
-                                            default:
-                                        }
+                                    else if (utton.includes("neoPixel")) {
+                                        // Determine the type of the range based on the value of iN
+                                        const rangeType = iN === 'h' ? '?H' : iN === 's' ? '?S' : iN === 'v' ? '?V' : '';
+
+                                        // Create the HTML element with a range input, depending on the type
+                                        html2 += `<input type="range" max="${iN === 'h' ? 359 : 100}" min="0" value="${num2Value}" id="${utton}${rangeType}" class="sL npSl ${sensor.TaskNumber},${item.ValueNumber} np${iN.toUpperCase()} noVal">`;
                                     }
                                     else { wasUsed = false; }
                                 }
@@ -388,8 +367,9 @@ async function getTS() {
 }
 
 function changeCss() {
-    x = "auto ";
-    m = null;
+    let x = "auto ";
+    let m = null;
+    let coloumnSet, y, z;
     var numSl = document.querySelectorAll('input[type=range]').length;
     if (!numSl) { document.getElementById("allList").classList.add('allExtra'); }
     else { document.getElementById("allList").classList.remove('allExtra'); }
@@ -413,7 +393,7 @@ function changeCss() {
     else if (bigLength == 1 || z < 2) {
         y = x;
         m = "important"
-        if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
+        if (list3.length) { for (let i = 0; i < list3.length; ++i) { list3[i].classList.add('bigNumOne'); } }
         coloumnSet = 1;
     }
     else {
@@ -422,7 +402,7 @@ function changeCss() {
     }
 
     if (window.innerWidth < 450 || document.cookie.includes("Two=1")) {
-        if (list3.length) { for (var i = 0; i < list3.length; ++i) { list3[i].style.cssText = "display: grid; grid-template-columns: auto auto;"; } }
+        if (list3.length) { for (let i = 0; i < list3.length; ++i) { list3[i].style.cssText = "display: grid; grid-template-columns: auto auto;"; } }
         if (bigLength == 1 || (bigLength == 0 && numSet == 1)) {
             coloumnSet = 1
             y = x;
@@ -560,7 +540,7 @@ function sliderChange(event) {
     maxVal = parseFloat(slider.attributes.max.nodeValue);
     minVal = parseFloat(slider.attributes.min.nodeValue);
     OnOff = "";
-    parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
+    //parseFloat(event.target.value).toFixed(undefined !== event.target.step.split('.')[1] && event.target.step.split('.')[1].length);
     slA = event.target.value;
     if (NrofSlides == 1 && slider.classList[3] == 'swSlider') {
         df = (maxVal - minVal) * 1 / 10;
@@ -711,7 +691,6 @@ async function getNodes(utton, allNodes, hasIt) {
     if (hasParams) {
         let html = '<div class="sensorset clickables"><div  class="sensors" style="font-weight:bold;">can not find node # ' + myParam + '...</div></div>';
         document.getElementById('sensorList').innerHTML = html;
-        //changeCss()
         hasParams = 0;
         setTimeout(fetchJson, 3000);
     }
@@ -788,32 +767,28 @@ function topF() { document.body.scrollTop = 0; document.documentElement.scrollTo
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 
 function longPressS() {
-    document.getElementById('closeBtn').addEventListener('long-press', function (e) {
+    document.body.addEventListener('long-press', function (e) {
         e.preventDefault();
-        mC("Snd")
-    });
-    document.getElementById('nOpen').addEventListener('long-press', function (e) {
-        e.preventDefault();
-        mC("Sort")
-    });
-    document.getElementById('openSys').addEventListener('long-press', function (e) {
-        e.preventDefault();
-        mC("Two")
-    });
-    document.getElementById('unitId').addEventListener('long-press', function (e) {
-        e.preventDefault();
-        mC("Col")
+        if (e.target.id === 'closeBtn') {
+            mC("Snd");
+        } else if (e.target.id === 'nOpen') {
+            mC("Sort");
+        } else if (e.target.id === 'openSys') {
+            mC("Two");
+        } else if (e.target.id === 'unitId') {
+            mC("Col");
+        }
     });
 }
 
 function mC(y) {
-    if ((document.cookie.match('(^|;)\\s*' + y + '\\s*=\\s*([^;]+)')?.pop() || '') == 1) { playSound(500); document.cookie = y + '=0; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;' }
-    else { playSound(900); document.cookie = y + '=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;' }
-    document.cookie = document.cookie
+    const currentValue = (document.cookie.match(`(^|;)\\s*${y}\\s*=\\s*([^;]+)`)?.pop() || '') == 1;
+    playSound(currentValue ? 500 : 900);
+    document.cookie = `${y}=${currentValue ? 0 : 1}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/;`;
 }
 
 function longPressB() {
-    var executed = false;
+    let executed = false;
     const longButtons = document.querySelectorAll(".clickables");
     longButtons.forEach(longButton => {
         longButton.addEventListener('long-press', function (e) {
@@ -843,18 +818,21 @@ function longPressB() {
 }
 
 function minutesToDhm(min) {
-    var d = Math.floor(min / (60 * 24));
-    var h = Math.floor(min % (60 * 24) / 60);
-    var m = Math.floor(min % 60);
+    const d = Math.floor(min / (60 * 24));
+    const h = Math.floor((min % (60 * 24)) / 60);
+    const m = min % 60;
 
-    var dDis = d > 0 ? d + (d == 1 ? " day " : " days ") : "";
-    var hDis = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
-    var mDis = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
+    const format = (value, unit) => value > 0 ? `${value} ${unit}${value === 1 ? '' : 's'} ` : '';
+
+    const dDis = format(d, 'day');
+    const hDis = format(h, 'hour');
+    const mDis = format(m, 'minute');
+
     return dDis + hDis + mDis;
 }
 
 function playSound(freQ) {
-    if ((!document.cookie.includes("Snd=0") || freQ < 1000) && (isittime || freQ != 3000)) {
+    if ((!document.cookie.includes("Snd=0") || freQ < 1000) && (isittime || freQ !== 3000)) {
         c = new AudioContext()
         o = c.createOscillator()
         g = c.createGain()
@@ -871,6 +849,7 @@ function playSound(freQ) {
 }
 //timeout fetch requests
 async function getUrl(url) {
+    console.log(url);
     let controller = new AbortController();
     setTimeout(() => controller.abort(), 2000);
     try {
