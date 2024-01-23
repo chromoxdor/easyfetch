@@ -31,6 +31,10 @@ var manNav;
 var gesVal;
 var iO;
 
+
+//##############################################################################################################
+//      FETCH AND MAKE TILES
+//##############################################################################################################
 async function fetchJson(event) {
     console.log(window.self,window.top)
     if (!document.cookie.includes("Snd=")) { mC("Snd") }
@@ -321,8 +325,8 @@ async function fetchJson(event) {
             document.getElementById('sensorList').innerHTML = html;
             document.getElementById('sliderList').innerHTML = html2;
             document.getElementById('bigNumber').innerHTML = html3;
-
-            if (firstRun) {
+            //Things that only need to run once
+            if (firstRun) { 
                 if (window.navigator.userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
@@ -358,6 +362,9 @@ async function fetchJson(event) {
     }
 }
 
+//##############################################################################################################
+//      GET DATA FROM THINGSPEAK
+//##############################################################################################################
 async function getTS() {
     if (dataT) {
         for (Array of dataT) {
@@ -369,6 +376,9 @@ async function getTS() {
     }
 }
 
+//##############################################################################################################
+//      ADJUST THE STYLING
+//##############################################################################################################
 function changeCss() {
     let x = "auto ";
     let m = null;
@@ -426,6 +436,10 @@ function changeCss() {
     document.getElementById('sensorList').innerHTML = html;
     bigLength = 0;
 }
+
+//##############################################################################################################
+//      ADD ADDITIONAL STUFF
+//##############################################################################################################
 function paramS() {
     var sliders = document.querySelectorAll(".slTS");
     sliders.forEach(slider => {
@@ -448,6 +462,9 @@ function paramS() {
     });
 }
 
+//##############################################################################################################
+//      EVENTLISTENERS THAT NEED TO BE ADDED ONCE
+//##############################################################################################################
 function addEonce() {
     document.addEventListener('touchstart', e => {
         msTs = Date.now();
@@ -472,7 +489,9 @@ function addEonce() {
         }
     })
 }
-
+//##############################################################################################################
+//      SLIDE TO OPEN SIDENAV
+//##############################################################################################################
 function checkDirection() {
     touchtime = msTe - msTs
     touchDistX = teX - tsX
@@ -485,6 +504,9 @@ function checkDirection() {
     }
 }
 
+//##############################################################################################################
+//      TIMESLIDER UPDATE VALUES
+//##############################################################################################################
 function updateSlTS(event) {
     isittime = 0;
     slider = event.target;
@@ -498,6 +520,9 @@ function updateSlTS(event) {
     amount2.textContent = padded;
 }
 
+//##############################################################################################################
+//      NORMAL SLIDER UPDATE VALUES
+//##############################################################################################################
 function updateSlider(event) {
     NrofSlides++;
     isittime = 0;
@@ -525,6 +550,9 @@ function updateSlider(event) {
     }
 }
 
+//##############################################################################################################
+//      TIMESLIDER SEND EVENT ON CHANGE
+//##############################################################################################################
 function sliderChTS(event) {
     playSound(4000);
     slider = event.target;
@@ -535,6 +563,9 @@ function sliderChTS(event) {
     else { if (slider.id == slTName.id + "L") { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + event.target.value + '.' + secVal.value.toString().padStart(4, "0") + '"'); } else { getUrl('control?cmd=SendTo,' + nNr + ',"taskvalueset,' + slTName.classList[2] + ',' + secVal.value + '.' + event.target.value.toString().padStart(4, "0") + '"'); }; getUrl('control?cmd=SendTo,' + nNr + ',"event,' + slTName.classList[1] + 'Event=' + slTName.classList[2].split(",")[1] + '"') }
 }
 
+//##############################################################################################################
+//      NORMAL SLIDER SEND EVENT ON CHANGE
+//##############################################################################################################
 function sliderChange(event) {
     playSound(4000);
     slider = event.target;
@@ -563,6 +594,9 @@ function sliderChange(event) {
     NrofSlides = 0;
 }
 
+//##############################################################################################################
+//      NORMAL BUTTON EVENT
+//##############################################################################################################
 function buttonClick(utton, gState) {
     if (utton.split("&")[1]) {
         utton2 = utton.split("&")[0];
@@ -583,6 +617,9 @@ function buttonClick(utton, gState) {
     setTimeout(fetchJson, 400);
 }
 
+//##############################################################################################################
+//      PUSH BUTTON EVENT
+//##############################################################################################################
 function pushClick(utton, b) {
     if (b == 0) { isittime = 1; playSound(1000); }
     else { isittime = 0 }
@@ -602,6 +639,9 @@ function pushClick(utton, b) {
     }
 }
 
+//##############################################################################################################
+//      INPUT TILES EVENT
+//##############################################################################################################
 function getInput(ele, initalCLick) {
     if (event.type === 'click') {
         isittime = 0;
@@ -628,10 +668,16 @@ function getInput(ele, initalCLick) {
     else { clearTimeout(iIV); iIV = setTimeout(blurInput, 5000); }
 }
 
+//##############################################################################################################
+//      BLUR INPUT
+//##############################################################################################################
 function blurInput() {
     isittime = 1;
 }
 
+//##############################################################################################################
+//      OPEN THE SIDENAV
+//##############################################################################################################
 function openNav(whatisit) {
     navOpen = 1;
     if (whatisit) manNav = 1;
@@ -643,6 +689,9 @@ function openNav(whatisit) {
     } else { closeNav(); }
 }
 
+//##############################################################################################################
+//      CLOSE THE SIDENAV
+//##############################################################################################################
 function closeNav() {
     manNav = 0;
     navOpen = 0;
@@ -650,6 +699,9 @@ function closeNav() {
     document.getElementById("mySidenav").style.left = "-280px";
 }
 
+//##############################################################################################################
+//      OPEN SYTEM INFO
+//##############################################################################################################
 function openSys() {
     if (document.getElementById('sysInfo').offsetHeight === 0) {
         document.getElementById('menueWrap1').style.flexShrink = "0";
@@ -660,6 +712,9 @@ function openSys() {
     }
 }
 
+//##############################################################################################################
+//      NODES - MAKE A LIST FOR THE SIDENAV
+//##############################################################################################################
 async function getNodes(utton, allNodes, hasIt) {
     if (!hasIt) {
         response = await getUrl("json");
@@ -696,11 +751,17 @@ async function getNodes(utton, allNodes, hasIt) {
     else { if (!nIV) { setTimeout(fetchJson, 1000); } }
 }
 
+//##############################################################################################################
+//      GET NODES AFTER SOME TIME (when clicked on node in sidenav)
+//##############################################################################################################
 function sendUpdate() {
     setTimeout(getNodes.bind(null, '', '', 1), 600);
 
 }
 
+//##############################################################################################################
+//      CHANGE THE ADDRESS ACCORDING TO THE SELECTED NODE
+//##############################################################################################################
 function nodeChange(event) {
     nInf = nInf[event];
     if (nInf) {
@@ -716,6 +777,9 @@ function nodeChange(event) {
     if (window.innerWidth < 450 && document.getElementById('sysInfo').offsetHeight === 0) { closeNav(); }
 }
 
+//##############################################################################################################
+//      RESIZE THE TEXT FOR "BIG VALUES"
+//##############################################################################################################
 function resizeText() {
     const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => (scrollWidth > clientWidth) || (scrollHeight > clientHeight)
     const resizeText = ({ element, elements, minSize = 10, maxSize = 115, step = 1, unit = 'pt' }) => {
@@ -735,6 +799,9 @@ function resizeText() {
     resizeText({ elements: document.querySelectorAll('.valueBig'), step: 1 })
 }
 
+//##############################################################################################################
+//      FULLSCREEN
+//##############################################################################################################
 function launchFs(element) {
     element.requestFullscreen();
     //seems to not be necessary anymore
@@ -747,12 +814,15 @@ function launchFs(element) {
     }*/
 }
 
+//##############################################################################################################
+//      OPENS THE IFRAME 
+//##############################################################################################################
 function splitOn(x) {
     if (document.getElementById('framie').offsetWidth === 0) { iO = 1; iFr(x); document.getElementById('framie').style.width = "100%"; }
     else { iO = 0; document.getElementById('framie').style.width = "0"; document.getElementById('framie').innerHTML = ""; }
     setTimeout(fetchJson, 100);
 }
-
+// either open the the devices page or the page of a specific plugin (e.g. clock)
 function iFr(x) {
     if (iO) {
         if (x) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '?index=' + x + '&page=1"></iframe>'; }
@@ -761,8 +831,14 @@ function iFr(x) {
     }
 }
 
+//##############################################################################################################
+//      SCROLL TO THE TOP
+//##############################################################################################################
 function topF() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
 
+//##############################################################################################################
+//      LONGPRESS AND COOCKIE SECTION
+//##############################################################################################################
 function longPressN() { document.getElementById('mOpen').addEventListener('long-press', function (e) { window.location.href = nP; }); }
 
 function longPressS() {
@@ -780,6 +856,7 @@ function longPressS() {
     });
 }
 
+//make cockies
 function mC(y) {
     const currentValue = (document.cookie.match(`(^|;)\\s*${y}\\s*=\\s*([^;]+)`)?.pop() || '') == 1;
     playSound(currentValue ? 500 : 900);
@@ -816,6 +893,9 @@ function longPressB() {
     });
 }
 
+//##############################################################################################################
+//      HELPER
+//##############################################################################################################
 function minutesToDhm(min) {
     const d = Math.floor(min / (60 * 24));
     const h = Math.floor((min % (60 * 24)) / 60);
