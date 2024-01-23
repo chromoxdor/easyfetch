@@ -32,6 +32,7 @@ var gesVal;
 var iO;
 
 async function fetchJson(event) {
+    console.log(window.self,window.top)
     if (!document.cookie.includes("Snd=")) { mC("Snd") }
     //invert color scheme----------
     try {
@@ -206,6 +207,8 @@ async function fetchJson(event) {
                                         if ((iN.match(/\?/g) || []).length >= 3) {
                                             [slName, slMin, slMax, slStep, slKind] = iN.split("?");
                                         }
+                                        
+                                        num2Value = Number(num2Value).toFixed((slStep.toString().split('.')[1] || '').length);
                                         if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
                                         html2 += '<div class="sensorset"><input type="range" min="' + slMin + '" max="' + slMax + '"  step="' + slStep + '" value="' + num2Value + '" id="' + iN + '"class="slider sL ' + sensor.TaskNumber + ',' + item.ValueNumber;
