@@ -36,7 +36,6 @@ var iO;
 //      FETCH AND MAKE TILES
 //##############################################################################################################
 async function fetchJson(event) {
-    console.log(window.self,window.top)
     if (!document.cookie.includes("Snd=")) { mC("Snd") }
     //invert color scheme----------
     try {
@@ -96,6 +95,7 @@ async function fetchJson(event) {
                 myJson.Sensors.forEach(sensor => {
                     var bigSpan = "";
                     utton = sensor.TaskName;
+                    utton = utton.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in device and "BigValue" names
                     if (utton.includes("?")) { //if a tile has a custom color
                         const [, bgColor] = getComputedStyle(document.body).backgroundColor.match(/\d+/g);
                         tBG = `background:#${utton.split("?")[1]}${bgColor === "0" ? "80" : ""}`;
@@ -211,7 +211,7 @@ async function fetchJson(event) {
                                         if ((iN.match(/\?/g) || []).length >= 3) {
                                             [slName, slMin, slMax, slStep, slKind] = iN.split("?");
                                         }
-                                        
+
                                         num2Value = Number(num2Value).toFixed((slStep.toString().split('.')[1] || '').length);
                                         if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
@@ -234,7 +234,7 @@ async function fetchJson(event) {
                                         const padded2 = minute2.toString().padStart(2, "0");
                                         htmlSlider1 = '<input class="slTS" type="range" min="0" max="1440" step="5" value="';
                                         html2 += '<div id="' + iN + '" class="slTimeSetWrap ' + utton + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + iN + '<div class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></div><div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + iN + 'L">' + htmlSlider1 + slT2 + '" id="' + iN + 'R"></div></div>';
-                                    }                                      
+                                    }
                                     //neopixel slider
                                     else if (utton.includes("neoPixel")) {
                                         // Determine the type of the range based on the value of iN
@@ -284,8 +284,7 @@ async function fetchJson(event) {
                                 }
                                 // if all items with a specific declaration are processed do the rest---------------------------------------------------------
                                 if (!wasUsed) {
-                                    if (itemN.includes("_")) itemN = itemN.replaceAll("_", " ")
-                                    if (itemN.includes(".")) itemN = itemN.replaceAll(".", "<br>")
+                                    itemN = itemN.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in value names of sensor tiles
                                     if (sensor.TaskDeviceNumber == 43) {
                                         if (firstItem) {
                                             if (item.Value === 1) { bS = "on"; } html += '<div class="btnTile ' + bS + ' sensorset clickables" onclick="playSound(3000); splitOn(' + sensor.TaskNumber + '); topF()""><div class="sensors" style="font-weight:bold;">' + utton + '</div><div class=even style="font-size: 20pt;">&#x23F2;&#xFE0E;</div></div></div>'
@@ -326,7 +325,7 @@ async function fetchJson(event) {
             document.getElementById('sliderList').innerHTML = html2;
             document.getElementById('bigNumber').innerHTML = html3;
             //Things that only need to run once
-            if (firstRun) { 
+            if (firstRun) {
                 if (window.navigator.userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
@@ -489,8 +488,9 @@ function addEonce() {
         }
     })
 }
+
 //##############################################################################################################
-//      SLIDE TO OPEN SIDENAV
+//      TOUCHSLIDE TO OPEN SIDENAV
 //##############################################################################################################
 function checkDirection() {
     touchtime = msTe - msTs
