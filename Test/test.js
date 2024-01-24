@@ -121,13 +121,20 @@ async function fetchJson(event) {
                                 }
                                 else { num2Value = item.Value; }
                                 iN = item.Name.toString();
+                                //replace "_" and "." in value names
+                                const index = iN.indexOf('?') === -1 ? iN.indexOf('&') : iN.indexOf('?');
+                                index === -1 ? iN.length : index;
+                                iN = iN.slice(0, index).replace(/_/g, " ").replace(/\./g, "<br>") + iN.slice(index);;
+                                //split name into name and unit of measurement 
                                 itemN = iN.split("?")[0];
                                 kindN = iN.split("?")[1];
                                 if (!kindN) { kindN = ""; }
                                 if (kindN == "H") { kindN = "%"; }
+                                //default slider values
                                 slMax = 1023;
                                 slMin = 0;
                                 slStep = 1;
+                                //empty button State
                                 bS = "";
                                 //thingspeak check
                                 if ((iN.match(/\&/g) || []).length >= 2) {
@@ -211,7 +218,6 @@ async function fetchJson(event) {
                                         if ((iN.match(/\?/g) || []).length >= 3) {
                                             [slName, slMin, slMax, slStep, slKind] = iN.split("?");
                                         }
-
                                         num2Value = Number(num2Value).toFixed((slStep.toString().split('.')[1] || '').length);
                                         if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
@@ -284,7 +290,7 @@ async function fetchJson(event) {
                                 }
                                 // if all items with a specific declaration are processed do the rest---------------------------------------------------------
                                 if (!wasUsed) {
-                                    itemN = itemN.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in value names of sensor tiles
+                                    //itemN = itemN.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in value names of sensor tiles
                                     if (sensor.TaskDeviceNumber == 43) {
                                         if (firstItem) {
                                             if (item.Value === 1) { bS = "on"; } html += '<div class="btnTile ' + bS + ' sensorset clickables" onclick="playSound(3000); splitOn(' + sensor.TaskNumber + '); topF()""><div class="sensors" style="font-weight:bold;">' + utton + '</div><div class=even style="font-size: 20pt;">&#x23F2;&#xFE0E;</div></div></div>'
