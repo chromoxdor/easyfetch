@@ -221,6 +221,7 @@ async function fetchJson(event) {
                                         if ((iN.match(/\?/g) || []).length >= 3) {
                                             [slName, slMin, slMax, slStep, slKind] = iN.split("?");
                                         }
+                                        slName = changeNN(slName);
                                         num2Value = Number(num2Value).toFixed((slStep.toString().split('.')[1] || '').length);
                                         if (slName == "noVal") slName = "&nbsp;";
                                         if (!slKind) { slKind = ""; } if (slKind == "H") { slKind = "%"; }
@@ -241,6 +242,7 @@ async function fetchJson(event) {
                                         hour2 = Math.floor(slT2 / 60);
                                         minute2 = slT2 % 60;
                                         const padded2 = minute2.toString().padStart(2, "0");
+                                        iN = changeNN(iN);
                                         htmlSlider1 = '<input class="slTS" type="range" min="0" max="1440" step="5" value="';
                                         html2 += '<div id="' + iN + '" class="slTimeSetWrap ' + sensorName + ' ' + sensor.TaskNumber + ',' + item.ValueNumber + '" style="font-weight:bold;">' + iN + '<div class="slTimeText"> <span class="hAmount1">' + hour1 + '</span><span>:</span><span class="mAmount1">' + padded1 + '</span><span>-</span><span class="hAmount2">' + hour2 + '</span><span>:</span><span class="mAmount2">' + padded2 + '</span></div><div class="slTimeSet">' + htmlSlider1 + slT1 + '" id="' + iN + 'L">' + htmlSlider1 + slT2 + '" id="' + iN + 'R"></div></div>';
                                     }
@@ -286,7 +288,8 @@ async function fetchJson(event) {
                                         }
                                         else if (iN.includes("noVal")) { html3 += htmlBig1 + '</div><div class="valueBig"></span></div></div>'; }
                                         else {
-                                           html3 += htmlBig1 + itemN + '</div><div class="valueBig">' + num2Value + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>'; 
+                                            itemN = changeNN(itemN);
+                                            html3 += htmlBig1 + itemN + '</div><div class="valueBig">' + num2Value + '<span style="background:none;padding-right: 1%;">' + kindN + '</span></div></div>';
                                         }
                                     }
                                 }
@@ -334,7 +337,7 @@ async function fetchJson(event) {
             //Things that only need to run once
             if (firstRun) {
                 if (!document.cookie.includes("Snd=")) { mC("Snd") }
-                if (!document.cookie.includes("Two=")) { mC("Two") }
+                //if (!document.cookie.includes("Two=")) { mC("Two") }
                 if (window.navigator.userAgent.match(/iPhone/i)) {
                     document.body.style.height = "101vh";
                 }
@@ -377,7 +380,7 @@ async function getRemoteGPIOState(taskNum, unitToNum, gpioNum, unitFromNum, valu
 //##############################################################################################################
 
 function changeNN(nn) {
-  return nn.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in device and "BigValue" names
+    return nn.replace(/_/g, " ").replace(/\./g, "<br>"); //replace "_" and "." in device and "BigValue" names
 }
 
 //##############################################################################################################
