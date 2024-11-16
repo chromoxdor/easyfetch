@@ -69,16 +69,28 @@ async function fetchJson(event) {
             unit = myJson.WiFi.Hostname;
             unitNr = myJson.System['Unit Number'];
             sysInfo = myJson.System
-            syshtml = ('<div class="syspair"><div>Sysinfo</div><div>' + unit + '</div></div>' +
-                '<div class="syspair"><div>Local Time:</div><div>' + sysInfo['Local Time'] + '</div></div>' +
-                '<div class="syspair"><div>Uptime:</div><div>' + minutesToDhm(sysInfo['Uptime']) + '</div></div>' +
-                '<div class="syspair"><div>Load:</div><div>' + sysInfo['Load'] + '%</div></div>' +
-                '<div class="syspair"><div>Free Ram:</div><div>' + sysInfo['Free RAM'] + '</div></div>' +
-                '<div class="syspair"><div>Free Stack:</div><div>' + sysInfo['Free Stack'] + '</div></div>' +
-                '<div class="syspair"><div>IP Address:</div><div>' + myJson.WiFi['IP Address'] + '</div></div>' +
-                '<div class="syspair"><div>RSSI:</div><div>' + myJson.WiFi['RSSI'] + ' dBm</div></div>' +
-                '<div class="syspair"><div>Build:</div><div>' + sysInfo['Build'] + '</div></div>' +
-                '<div class="syspair"><div>Eco Mode:</div><div>' + (sysInfo['CPU Eco Mode'] == "true" ? 'on' : 'off') + '</div></div>')
+            let syshtml = `
+                        <div class="syspair"><div>Sysinfo</div><div>${unit}</div></div>
+                        <div class="syspair"><div>Local Time:</div><div>${sysInfo['Local Time']}</div></div>
+                        <div class="syspair"><div>Uptime:</div><div>${minutesToDhm(sysInfo['Uptime'])}</div></div>
+                        <div class="syspair"><div>Load:</div><div>${sysInfo['Load']}%</div></div>
+                        ${
+                            sysInfo['Internal Temperature'] 
+                            ? `<div class="syspair">
+                                <div>Temp:</div>
+                                <div style="color: ${sysInfo['Internal Temperature'] > 65 ? 'red' : 'inherit'};">
+                                    ${sysInfo['Internal Temperature']}°C
+                                </div>
+                                </div>` 
+                            : ''
+                        }
+                        <div class="syspair"><div>Free Ram:</div><div>${sysInfo['Free RAM']}</div></div>
+                        <div class="syspair"><div>Free Stack:</div><div>${sysInfo['Free Stack']}</div></div>
+                        <div class="syspair"><div>IP Address:</div><div>${myJson.WiFi['IP Address']}</div></div>
+                        <div class="syspair"><div>RSSI:</div><div>${myJson.WiFi['RSSI']} dBm</div></div>
+                        <div class="syspair"><div>Build:</div><div>${sysInfo['Build']}</div></div>
+                        <div class="syspair"><div>Eco Mode:</div><div>${sysInfo['CPU Eco Mode'] === "true" ? 'on' : 'off'}</div></div>
+                        `;
 
             let [dateBig, clockBig] = myJson.System['Local Time'].split(" ");
             clockBig = clockBig.split(':').slice(0, -1).join(':');
@@ -420,7 +432,7 @@ function changeCss() {
         y = x + x;
         coloumnSet = 2;
     }
-    widthLimit =  coloumnSet * 150 + (coloumnSet * (window.innerHeight/100));
+    widthLimit = coloumnSet * 150 + (coloumnSet * (window.innerHeight / 100));
     if (window.innerWidth < widthLimit || document.cookie.includes("Two=1")) {
         if (list3.length) { for (let i = 0; i < list3.length; ++i) { list3[i].style.cssText = "display: grid; grid-template-columns: auto auto;"; } }
         if (bigLength == 1 || (bigLength == 0 && numSet == 1)) {
