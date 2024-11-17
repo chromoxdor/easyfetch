@@ -843,25 +843,18 @@ function launchFs(element) {
 //##############################################################################################################
 //      OPENS THE IFRAME 
 //##############################################################################################################
-let currentX = null; // Keeps track of the current x value to enable toggling
-
 function splitOn(x) {
-    const framie = document.getElementById('framie');
-
-    if (framie.offsetWidth === 0 || (currentX !== x && x)) {
-        // Open or update iframe if closed or new x is provided
-        framie.style.width = "100%";
-        framie.innerHTML = `<iframe src="${nP2}${x ? `?index=${x}&page=1` : ''}"></iframe>`;
+    if (document.getElementById('framie').offsetWidth === 0) { iO = 1; iFr(x); document.getElementById('framie').style.width = "100%"; }
+    else { iO = 0; if (!x) {document.getElementById('framie').style.width = 0}; document.getElementById('framie').innerHTML = ""; }
+    setTimeout(fetchJson, 100);
+}
+// either open the the devices page or the page of a specific plugin (e.g. clock)
+function iFr(x) {
+    if (iO) {
+        if (x) { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '?index=' + x + '&page=1"></iframe>'; }
+        else { document.getElementById('framie').innerHTML = '<iframe src="' + nP2 + '"></iframe>' }
         closeNav();
-        currentX = x; // Update the current x
-    } else {
-        // Toggle iframe (close it) if the same x is provided again
-        framie.style.width = "0";
-        framie.innerHTML = "";
-        currentX = null; // Reset the current x
     }
-
-    setTimeout(fetchJson, 100); // Fetch new JSON data after toggling
 }
 
 
