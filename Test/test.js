@@ -845,7 +845,7 @@ function launchFs(element) {
 //##############################################################################################################
 function splitOn(x) {
     if (document.getElementById('framie').offsetWidth === 0) { iO = 1; iFr(x); document.getElementById('framie').style.width = "100%"; }
-    else { iO = 0; if (!x) {document.getElementById('framie').style.width = 0}; document.getElementById('framie').innerHTML = ""; }
+    else { iO = 0; document.getElementById('framie').style.width = 0; document.getElementById('framie').innerHTML = ""; }
     setTimeout(fetchJson, 100);
 }
 // either open the the devices page or the page of a specific plugin (e.g. clock)
