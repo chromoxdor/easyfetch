@@ -259,6 +259,7 @@ This options needs to be at the very end and of the valuename:
 * "?\<UM>"  --- unit of measurement (any valuename)
 * "&\<unit_number>" or "&A" --- sends the event to the specific unit or if "A" to all units (only dButtons)
 
-
+### Button cheat sheet:
+<img width="617" alt="settings" src="https://github.com/user-attachments/assets/5cdd2984-79b1-4c52-a8ab-bbf5bb40568b">
 
 
