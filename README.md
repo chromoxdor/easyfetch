@@ -230,6 +230,7 @@ The taskname needs to contain one of these phrases. E.g. 1bigVal, bigVal1, bigVa
 e.g.: "vSliderSw"
 * tSlider  --- creates an array of "time" slider (dummy device)
 * neoPixel  --- creates a Slider for a neopixel device (valuenames can be named "h"(ue) and/or "s"(saturation) and/or "v"(alue) ) (dummy device)
+* "?\<hexcolor>"  --- gives the a "normal" and "bigVal" tile a specific color (note: hexcolor must be added without "#" e.g. "MyValuename?00b300") (note2: "normal" tile means no dButtons,pButtons,vInput,Slider,neoPixel) 
 * XX --- hides the task (any device)
 
 **Options via valuename:**
@@ -247,9 +248,7 @@ The valuename needs to contain one of these phrases:
 * noValAuto --- generates an empty tile which hides automatically in 2-row mode (buttons, inputs, big values)
 
 
-These options needs to be at the and of the valuename:
-
-* Thingspeak (latest value of a field of a public channel ): "&\<thingspeakchannel>&\<field>" --- (any valuename)
+These option needs to be at the end of the valuename:
 
 * vSlider / nvSlider: "?\<min>?\<max>?\<step>"  (hint: change the number of decimals of the value to correspond with the stepsize)
 
