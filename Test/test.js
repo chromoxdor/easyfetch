@@ -164,6 +164,7 @@ async function fetchJson(event) {
                                     wasUsed = true;
                                     if ((iN === "btnStateC" && item.Value < 2) || item.Value === 1) { bS = "on"; }
                                     else if (item.Value === 2) { bS = "alert"; }
+
                                     if (sensor.TaskDeviceGPIO1 && iN === "State" || iN === "iState") {
                                         if (iN === "iState") { item.Value = item.Value == 1 ? 0 : 1 };
                                         uttonGP = sensorName + "|" + sensor.TaskDeviceGPIO1;
@@ -184,6 +185,10 @@ async function fetchJson(event) {
                                         if (itemN === "ibtnState") { item.Value = item.Value == 1 ? 0 : 1 };
                                         if (kindN) { sensorName = sensorName + "|" + kindN };
                                         html += '<div class="btnTile ' + bS + htS1 + 'buttonClick(\'' + sensorName + '\', \'' + item.Value + '\')">' + htS2;
+                                    }
+
+                                    else if (itemN.includes("XI")) {
+                                        html += '<div class="btnTile sensorset clickables ' + bS + '">' + htS2;
                                     }
                                     else { wasUsed = false; }
                                 }
