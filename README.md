@@ -5,6 +5,22 @@ If you like my work consider a donation: [![donate](https://img.shields.io/badge
 
 EasyFetch is an alternative dashboard in Tile Optic for ESPEasy (https://github.com/letscontrolit/ESPEasy). It was created to have a quick and relatively simple way of visualising data and interacting with the hardware (buttons & sliders) in a browser. Especially where no bigger infrastructure like a home automation server is needed (the ability to write complex rules in ESPEasy and the ability of communication between the nodes via a simple P2P network can often make a full-blown home automation system unnecessary).
 
+> [!WARNING]
+> **!!! ATTENTION: The following manual doesn't work anymore for recent versions of EasyFetch !!!**  
+> **!!! Renaming device— or valuenames is not necessary anymore !!!**
+>
+> The short updated manual for customising your dashboard:
+>
+> **On desktop:**  
+> Right-click on any tile: enters the "edit-mode" and opens the context menu.  
+> Left-click outside the tiles: applies changes without saving.  
+> Left-click on the "×︎" at the bottom closes the "edit-mode" without saving!
+>
+> **Smartphone:**  
+> Long-press on "☰︎": enters the "edit-mode"  
+> Longer touch on tile: opens context menu.  
+> Touch somewhere else: applies changes without saving.
+
 ![easyfetchmain](https://github.com/chromoxdor/easyfetch/assets/33860956/cd19b11f-40d6-42ef-9f26-86ef43c0920c)
 
 ***
@@ -86,14 +102,14 @@ endon
      ![button simple](https://user-images.githubusercontent.com/33860956/159255555-d7caea8e-4913-4a4b-98b7-f9a83e5c4f3c.png)
      (the device here is a sonoff s20 and since we do not need the first button, since its the hardwarebutton, on our dahboard we can hide it with the "XX" option. the second button is the actual relay so the state changes depending on the gpio state)
      
-        The rule for it:
-         <pre><code>
-          On buttonevent do
-           gpiotoggle,12
-          endon
-         </code></pre>
+    The rule for it:
+ ```
+  On buttonevent do
+   gpiotoggle,12
+  endon
+```
 
-     2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
+ 2. Name a dummy device something that consists "dButtons" and every value becomes a button. 
         - You can add an option for colorbuttons with "?C"(see picture below)
         - put "&\<unit_number>" to the end of the valuename to send this buttonevent to a specific device. (e.g. valuename "button&2" will result in this           command: `SendTo,2,"event,ButtonEvent"` or if longclicked `SendTo,2,"event,ButtonLong"`)
         - put "&A" to the end of the valuename and the event will be send to all connected nodes
