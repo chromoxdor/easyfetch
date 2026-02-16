@@ -14,10 +14,10 @@ EasyFetch is an alternative dashboard in Tile Optic for ESPEasy (https://github.
 > **On desktop:**  
 > Right-click on any tile: enters the "edit-mode" and opens the context menu.  
 > Left-click outside the tiles: applies changes without saving.  
-> Left-click on the "×︎" at the bottom closes the "edit-mode" without saving!
+> Left-click on the "×︎" at the bottom of the screen: closes the "edit-mode" without saving!
 >
 > **Smartphone:**  
-> Long-press on "☰︎": enters the "edit-mode"  
+> Long-press on "☰︎" at the bottom of the screen: enters the "edit-mode"  
 > Longer touch on tile: opens context menu.  
 > Touch somewhere else: applies changes without saving.
 
